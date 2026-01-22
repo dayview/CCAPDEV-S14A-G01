@@ -6,17 +6,46 @@
     <link rel="stylesheet" href="../css/stylesheet.css">
 </head>
 <body>
-<h1> BOOKING INFORMATION </h1>
-<p> Date </p>
-<p> Time In </p>
-<p> Time Out </p>
-<p> Building Code </p>
-<p> Room Number </p>
-<p> Seat </p>
 
-<button> RESERVE </button>
-<a href="signup.html" class="btn">Sign-Up</a>
-<a href="login.html" class="btn">Log-In</a>
+    <div class = "landing-panel">
+        <div class = "left-panel">
+            <div class = "light-rectangle"> </div>
+            <div class = "information-block">
+                <h1> BOOKING INFORMATION </h1>
+                <p> Date </p> <!-- get element by ID reserve_date -->
+                <p> Time In </p> <!-- get element by ID reserve_time -->
+                <p> Time Out </p> <!-- get element by ID reserve_time + 30 -->
+                <p> Building Code </p>
+                <p> Room Number </p>
+                <p> Seat </p>
+                <button> RESERVE </button>
+            </div>
+        </div>
+
+
+        <a href="signup.html" class="btn">Sign-Up</a>
+        <a href="login.html" class="btn">Log-In</a>
+
+        <div class = "dark-rectangle"> </div>
+        <label for = "reserve_date"> Date </label>
+        <input type = "date" id = "reserve_date" name = "reserve_date">
+        <label for = "reserve_time"> Time In </label>
+        <input type = "time" id = "reserve_time" name = "reserve_time">
+        <label for = "room"> Room </label>
+        <select id = "room" name = "room">
+            <option value = "G301"> G301 </option>
+            <option value = "G302"> G302 </option>
+            <option value = "G303"> G303 </option>
+            <option value = "G304A"> G304A </option>
+            <option value = "G304B"> G304B </option>
+            <option value = "G305A"> G305A </option>
+            <option value = "G305B"> G305B </option>
+            <option value = "G306A"> G306A </option>
+            <option value = "G306B"> G306B </option>
+            <option value = "G308A"> G308A </option>
+            <option value = "G308B"> G308B </option>
+        </select>
+    </div>
 
 </body>
 </html>
