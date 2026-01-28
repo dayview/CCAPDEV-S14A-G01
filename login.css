@@ -1,0 +1,7 @@
+.signup_block {
+    display: flex;
+    background-color: #3C5A14;
+    justify-content: center;
+    align-items: center;
+    padding: 50px;
+}

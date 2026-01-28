@@ -1,0 +1,35 @@
+* {
+    font-family: Poppins;
+}
+
+body {
+    background-image: url("../images/background_img.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.5);
+    z-index: -1;
+}
+
+.header {
+    width: 100%;
+    height: 30px;
+    background-color: #C5EAA0;
+    display: flex;
+}
+
+.header::after {
+    position: fixed;
+
+}
+
+.header h1 {
+    color: #3C5A14;
+}
