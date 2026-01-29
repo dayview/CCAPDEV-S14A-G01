@@ -54,10 +54,45 @@ body {
 
 .r_box {
     background-color: #669D31;
+    padding: 14px;
+    border-radius: 14px;
 }
 
-.room-title, .board-title {
+.r_box label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #1B1B1B;
+}
+
+.r_box input, .r_box select {
+    width: 100%;
+    border-radius: 10px;
+    border: 1px solid #CFCFCF;
+    outline: none;
+}
+
+.r_button {
+    width: 100%
+}
+
+.reserve-btn {
+    width: 100%;
+    margin-top: 1rem;
+    padding: 0.6rem 1rem;
+    background-color: #669D31;
     color: white;
+    border: none;
+    border-radius: 0.25rem;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.board-title {
+    color: white;
+    align-items: center;
 }
 
 .legend {
