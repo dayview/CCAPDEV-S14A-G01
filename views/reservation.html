@@ -1,131 +1,149 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Animo Lab Reservation</title>
-    <link rel="stylesheet" href="../css/main.css">
-    <link rel="stylesheet" href="../css/landing.css">
+  <head>
+    <meta charset="UTF-8" />
+    <title>AnimoLab Reservation</title>
+    <link rel="stylesheet" href="../css/main.css" />
+    <link rel="stylesheet" href="../css/landing.css" />
+  </head>
 
-</head>
+  <body>
+    <section class="header">
+      <h1><b>DLSU </b> Lab Reservation</h1>
+      <a href="user_profile.html" class="btn">User Profile</a>
+      <a href="signup.html" class="btn btn-">Sign-Up</a>
+      <a href="login.html" class="btn">Log-In</a>
+    </section>
 
-<body>
-
-<section class = "header">
-    <h1><b>DLSU </b> Lab Reservation</h1>
-    <a href = "user_profile.html" class = "btn">User Profile</a>
-    <a href = "signup.html" class = "btn btn-">Sign-Up</a>
-    <a href = "login.html" class = "btn">Log-In</a>
-</section>
-
-<section class = "left-panel">
-    <div class = "information-block">
-        <h1> BOOKING INFORMATION </h1>
-        <p> Date </p> <!-- get element by ID reserve_date -->
-        <p> Time In </p> <!-- get element by ID reserve_time -->
-        <p> Time Out </p> <!-- get element by ID reserve_time + 30 -->
-        <p> Building Code </p>
-        <p> Room Number </p>
-        <p> Seat </p>
-        <div class = "r_button">
-            <button class = "reserve-btn">RESERVE</button>
+    <section class="left-panel">
+      <div class="information-block">
+        <h1>BOOKING INFORMATION</h1>
+        <p>Date</p>
+        <!-- get element by ID reserve_date -->
+        <p>Time In</p>
+        <!-- get element by ID reserve_time -->
+        <p>Time Out</p>
+        <!-- get element by ID reserve_time + 30 -->
+        <p>Building Code</p>
+        <p>Room Number</p>
+        <p>Seat</p>
+        <div class="r_button">
+          <button class="reserve-btn">RESERVE</button>
         </div>
-    </div>
+      </div>
 
-    <strong> REMINDERS </strong>
-    <ul class = "reminder-list">
-        <li> Each lab slot is<b> 30 minutes </b>long </li>
-        <li> If you require additional time, you may reserve <b>multiple consecutive slots</b> in a single booking, provided they are available. </li>
-        <li> Only <b>unreserved slots</b> can be booked.</li>
-        <li> All selected slots will be grouped under <b>one reservation.</b></li>
-    </ul>
-</section>
+      <strong> REMINDERS </strong>
+      <ul class="reminder-list">
+        <li>Each lab slot is<b> 30 minutes </b>long</li>
+        <li>
+          If you require additional time, you may reserve
+          <b>multiple consecutive slots</b> in a single booking, provided they
+          are available.
+        </li>
+        <li>Only <b>unreserved slots</b> can be booked.</li>
+        <li>
+          All selected slots will be grouped under <b>one reservation.</b>
+        </li>
+      </ul>
+    </section>
 
-<section class = "right-panel">
-    <div class = "selection">
-        <section class = "r_box">
-            <label for = "reserve_date"> Date </label>
-            <input type = "date" id = "reserve_date" class = "form-control">
+    <section class="right-panel">
+      <div class="selection">
+        <section class="r_box">
+          <label for="reserve_date"> Date </label>
+          <input type="date" id="reserve_date" class="form-control" />
         </section>
-        <section class = "r_box">
-            <label for = "reserve_time" class = "form-label"> Time In </label>
-            <select id = "reserve_time" class = "form-control">
-                <option value = "7:30"> 7:30 </option>
-                <option value = "8:00"> 8:00 </option>
-                <option value = "8:30"> 8:30 </option>
-                <option value = "9:00"> 9:00 </option>
-                <option value = "9:30"> 9:30 </option>
-                <option value = "10:00"> 10:00 </option>
-                <option value = "10:30"> 10:30 </option>
-                <option value = "11:00"> 11:00 </option>
-                <option value = "11:30"> 11:30 </option>
-                <option value = "12:00"> 12:00 </option>
-                <option value = "12:30"> 12:30 </option>
-                <option value = "13:00"> 13:00 </option>
-                <option value = "13:30"> 13:30 </option>
-                <option value = "14:00"> 14:00 </option>
-                <option value = "14:30"> 14:30 </option>
-                <option value = "15:00"> 15:00 </option>
-                <option value = "15:30"> 15:30 </option>
-                <option value = "16:00"> 16:00 </option>
-                <option value = "16:30"> 16:30 </option>
-                <option value = "17:00"> 17:00 </option>
-                <option value = "17:30"> 17:30 </option>
-                <option value = "18:00"> 18:00 </option>
-                <option value = "18:30"> 18:30 </option>
-                <option value = "19:00"> 19:00 </option>
-                <option value = "19:30"> 19:30 </option>
-                <option value = "20:00"> 20:00 </option>
-            </select>
+        <section class="r_box">
+          <label for="reserve_time" class="form-label"> Time In </label>
+          <select id="reserve_time" class="form-control">
+            <option value="7:30">7:30</option>
+            <option value="8:00">8:00</option>
+            <option value="8:30">8:30</option>
+            <option value="9:00">9:00</option>
+            <option value="9:30">9:30</option>
+            <option value="10:00">10:00</option>
+            <option value="10:30">10:30</option>
+            <option value="11:00">11:00</option>
+            <option value="11:30">11:30</option>
+            <option value="12:00">12:00</option>
+            <option value="12:30">12:30</option>
+            <option value="13:00">13:00</option>
+            <option value="13:30">13:30</option>
+            <option value="14:00">14:00</option>
+            <option value="14:30">14:30</option>
+            <option value="15:00">15:00</option>
+            <option value="15:30">15:30</option>
+            <option value="16:00">16:00</option>
+            <option value="16:30">16:30</option>
+            <option value="17:00">17:00</option>
+            <option value="17:30">17:30</option>
+            <option value="18:00">18:00</option>
+            <option value="18:30">18:30</option>
+            <option value="19:00">19:00</option>
+            <option value="19:30">19:30</option>
+            <option value="20:00">20:00</option>
+          </select>
         </section>
-        <section class = "r_box">
-            <label for = "room_num" class = "form-label"> Room </label>
-            <select id = "room_num" class = "form-control">
-                <option value = "A1706"> A1706 </option>
-                <option value = "A1904"> A1904 </option>
-                <option value = "C314"> C314 </option>
-                <option value = "G210"> G210 </option>
-                <option value = "G211"> G211 </option>
-                <option value = "G302A"> G302A </option>
-                <option value = "G302B"> G302B </option>
-                <option value = "G304B"> G304B </option>
-                <option value = "G306A"> G306A </option>
-                <option value = "G404A"> G404A </option>
-                <option value = "G404B"> G404B </option>
-                <option value = "G405"> G405 </option>
-                <option value = "G407"> G407 </option>
-                <option value = "J212"> J212 </option>
-                <option value = "L212"> L212 </option>
-                <option value = "L229"> L229 </option>
-                <option value = "L320"> L320 </option>
-                <option value = "L335"> L335 </option>
-                <option value = "M201"> M201 </option>
-                <option value = "M217"> M217 </option>
-                <option value = "V205"> V205 </option>
-                <option value = "V206"> V206 </option>
-                <option value = "V208A"> V208A </option>
-                <option value = "V208B"> V208B </option>
-                <option value = "V301"> V301 </option>
-                <option value = "V310"> V310 </option>
-                <option value = "Y602"> Y602 </option>
-            </select>
+        <section class="r_box">
+          <label for="room_num" class="form-label"> Room </label>
+          <select id="room_num" class="form-control">
+            <option value="A1706">A1706</option>
+            <option value="A1904">A1904</option>
+            <option value="C314">C314</option>
+            <option value="G210">G210</option>
+            <option value="G211">G211</option>
+            <option value="G302A">G302A</option>
+            <option value="G302B">G302B</option>
+            <option value="G304B">G304B</option>
+            <option value="G306A">G306A</option>
+            <option value="G404A">G404A</option>
+            <option value="G404B">G404B</option>
+            <option value="G405">G405</option>
+            <option value="G407">G407</option>
+            <option value="J212">J212</option>
+            <option value="L212">L212</option>
+            <option value="L229">L229</option>
+            <option value="L320">L320</option>
+            <option value="L335">L335</option>
+            <option value="M201">M201</option>
+            <option value="M217">M217</option>
+            <option value="V205">V205</option>
+            <option value="V206">V206</option>
+            <option value="V208A">V208A</option>
+            <option value="V208B">V208B</option>
+            <option value="V301">V301</option>
+            <option value="V310">V310</option>
+            <option value="Y602">Y602</option>
+          </select>
         </section>
-    </div>
+      </div>
 
-    <div class = "room">
-        <div class = "seat-card">
-            <h4 class = "board-title"> BOARD </h4>
+      <div class="room">
+        <div class="seat-card">
+          <h4 class="board-title">BOARD</h4>
         </div>
-        <div class = "seat_map" id="seat_map"> </div>
-    </div>
+        <div class="seat_map" id="seat_map"></div>
+      </div>
 
-    <div class = "legend">
-        <span class = "legend-box occupied"> </span> <span class = "text-black"> Occupied </span>
-        <span class = "legend-box repair"> </span> <span class = "text-black"> Under Repair </span>
-        <span class = "legend-box available"> </span> <span class = "text-black"> Available </span>
-        <span class = "legend-box selected"> </span> <span class = "text-black"> Selected </span>
-    </div>
+      <div class="legend">
+        <span class="legend-box occupied"> </span>
+        <span class="text-black"> Occupied </span>
+        <span class="legend-box repair"> </span>
+        <span class="text-black"> Under Repair </span>
+        <span class="legend-box available"> </span>
+        <span class="text-black"> Available </span>
+        <span class="legend-box selected"> </span>
+        <span class="text-black"> Selected </span>
+      </div>
+    </section>
 
-</section>
+    <script src="../js/auth.js"></script>
+    <script>
+      if (!checkUserLogin()) {
+        alert('Please log in first!');
+        window.location.href = 'login.html';
+      }
+    </script>
 
-</body>
+  </body>
 </html>

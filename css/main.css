@@ -1,5 +1,5 @@
 * {
-    font-family: Poppins;
+    font-family: Inter;
     box-sizing: border-box;
 }
 
@@ -98,4 +98,9 @@ p, li, ul, span, label {
 .text-black {
     color: black;
     margin-right: 10px;
+}
+
+#errorMsg {
+    color: red;
+    display: none;
 }

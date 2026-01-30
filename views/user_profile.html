@@ -1,13 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8">
     <title>User Profile</title>
-    <link rel="stylesheet" href="../css/main.css">
-</head>
+    <link rel="stylesheet" href="../css/main.css" />
+  </head>
 
-<body>
-    <a href = "reservation.html" class = "btn">Return to Main Page</a>
+  <body>
+    <h1>User Profile</h1>
+    <div id="userInfo"></div>
+    <a href="reservation.html" class="btn">Return to Main Page</a>
+    <button onclick="logout(); window.location.href='landing.html';">Logout</button>
 
-</body>
+    <script src="../js/auth.js"></script>
+    <script>
+      if (!checkUserLogin()) {
+        alert('Please log in first!');
+        window.location.href = 'login.html';
+      } else {
+        const user = getCurrentUser();
+        document.getElementById('userInfo').innerHtml = `
+        <p><strong>Name:</strong> ${user.firstName} ${user.lastName}</p>
+        <p><strong>Username:</strong> ${user.username}</p>
+        <p><strong>ID Number:</strong> ${user.idNumber}</p>
+        `;
+      }
+    </script>
+  </body>
 </html>
