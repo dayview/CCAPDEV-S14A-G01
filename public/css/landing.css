@@ -12,10 +12,19 @@ body {
     min-height: 85vh;
 }
 
+.page {
+    display: grid;
+    grid-template-columns: 400px 1fr;
+    gap: 0;
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 20px;
+    min-height: 85vh;
+}
 .left-panel {
     background-color: #C5EAA0;
     grid-area: left;
-    padding: 10px;
+    padding: 14px;
 }
 
 .left-panel h1 {
@@ -43,16 +52,49 @@ body {
     align-items: stretch;
 }
 
-.selection .r_time, .selection .r_location, .selection .r_date {
+.r_box {
     background-color: #669D31;
+    padding: 14px;
+    border-radius: 14px;
+}
 
+.r_box label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #1B1B1B;
+}
+
+.r_box input, .r_box select {
+    width: 100%;
+    border-radius: 10px;
+    border: 1px solid #CFCFCF;
+    outline: none;
+}
+
+.r_button {
+    width: 100%
+}
+
+.reserve-btn {
+    width: 100%;
+    margin-top: 1rem;
+    padding: 0.6rem 1rem;
+    background-color: #669D31;
+    color: white;
+    border: none;
+    border-radius: 0.25rem;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.board-title {
+    color: white;
+    align-items: center;
 }
 
 .legend {
-
-}
-
-.footer {
-    grid-area: footer;
-    grid-column: 1/-1;
+display: flex;
 }
