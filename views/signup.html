@@ -6,9 +6,9 @@
     <link rel="stylesheet" href="../css/main.css">
     <link rel="stylesheet" href="../css/signup.css">
 </head>
-
+<script src="../js/signup.js"></script>
 <body>
-<form>
+<form id="signup">
     <div class="signup_block">
     <h2 class="signup">SIGN-UP</h2>
 
@@ -19,27 +19,27 @@
 
     <div class="id">
         <label>ID Number *</label>
-        <input type="text" required>
+        <input type="text" id="idnumber" required>
     </div>
 
     <div class="username">
         <label>Username *</label>
-        <input type="text" required>
+        <input type="text" id="user" required>
     </div>
 
     <div class="password">
         <label>Password *</label>
-        <input type="password" required>
+        <input type="password" id="password" required>
     </div>
 
     <div class="email">
         <label>Email *</label>
-        <input type="email" required>
+        <input type="email" id="email" required>
     </div>
 
     <div class="buttons">
-        <button class="google-btn">Sign-up with Google</button>
-        <button class="submit-btn">Sign-Up</button>
+        <button type="button" class="google-btn">Sign-up with Google</button>
+        <button type="submit" class="submit-btn">Sign-Up</button>
     </div>
 
     <a href="login.html" class="login-link">Already have an account</a>
