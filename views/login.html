@@ -9,27 +9,29 @@
 <body>
 <div class = "main">
     <section class = "header">
-        <h1><b>DLSU </b> Lab Reservation</h1>
+        <h1><b>Animo </b> Lab Reservation</h1>
     </section>
 
     <form>
         <div class = "login_block">
+            <h2 class = "login_header"> User Sign-In </h2>
             <div class = "username">
-                <input type="text" placeholder="Username" id="username" name="username">
+                <input type="text" placeholder="Username" id="username" name="username" required>
             </div>
             <div class = "password">
-                <input type = "password" placeholder="Password" id = "password" name = "password">
+                <input type = "password" placeholder="Password" id = "password" name = "password" required>
             </div>
-            <div class = "login">
-                <button type = "submit"> LOG-IN </button>
+            <div class = "remember">
+                <label> <input type = "checkbox" id = "remember"> Remember Me </label>
             </div>
-        </div>
-
-        <div class = "login_action">
-            <a href = "signup.html" class = "btn">Sign-Up</a>
-            <a href = "reservation.html" class = "btn">Return to Main Page</a>
+            <div class = "login_action">
+                <button type = "submit" id = "login_btn"> LOG-IN </button>
+                <a href = "signup.html" class = "btn">Sign-Up</a>
+                <a href = "reservation.html" class = "btn">Return to Main Page</a>
+            </div>
         </div>
     </form>
 </div>
+<script src="../js/login.js"></script>
 </body>
 </html>
