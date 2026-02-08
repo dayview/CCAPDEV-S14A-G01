@@ -11,14 +11,27 @@ document.addEventListener("DOMContentLoaded", function () {
     form.addEventListener("submit", function (e) {
         e.preventDefault();
 
-        const userData = {
-            idNumber: document.getElementById("idnumber").value,
-            username: document.getElementById("user").value,
-            password: document.getElementById("password").value,
-            email: document.getElementById("email").value
+    
+        const idNumber: document.getElementById("idnumber").value.trim();
+        const username: document.getElementById("user").value.trim();
+        const password: document.getElementById("password").value;
+        const email: document.getElementById("email").value.trim();
+
+        let users = JSON.parse(localStorage.getItem("userAccounts")) || [];
+
+        const duplicate = users.find(user => user.idNumber === idNumber || user.username === username || user.email === email);
+        
+        if(duplicate){
+            alert("ID, User, or Email already exist. Please try again.");
+            return;
+        }
+
+        const newUser = {
+            idNumber, username, password, email
         };
 
-        localStorage.setItem("userAccount", JSON.stringify(userData));
+        users.push(newUser);
+        localStorage.setItem("userAccounts", JSON.stringify(users));
 
         alert("Sign-up successful!");
 
