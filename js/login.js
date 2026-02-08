@@ -1,20 +1,27 @@
+document.addEventListener('DOMContentLoaded', function(){
+    const form = document.querySelector('form');
 
-loginBtn = document.querySelector('.login-btn');
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
 
-loginBtn.addEventListener('click', () => {
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
-    const users = JSON.parse(localStorage.getItem('users')) || [];
-    const foundUser = users.find(
-        (user) => user.username === username && user.password === password
-    );
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
 
-    if (!foundUser) {
-        alert("Username/Password is incorrect. Please try again.");
-        return;
-    }
+        const user = JSON.parse(localStorage.getItem("userAccount"));
 
-    localStorage.setItem("isLoggedIn", "true");
-    localStorage.setItem("currentUser", JSON.stringify(foundUser));
-    window.location.href = "reservation.html";
-})
+        if (!user) {
+            alert("No account found.");
+            return;
+        }
+
+        if (username !== user.username && password !== user.password) {
+            alert("Username or password is incorrect.");
+            return;
+        }
+
+        localStorage.setItem("isLoggedIn", "true");
+        localStorage.setItem("currentUser", JSON.stringify(user));
+
+        window.location.href = "reservation.html";
+    });
+});
