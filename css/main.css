@@ -1,5 +1,5 @@
 * {
-    font-family: Poppins;
+    font-family: Inter;
     box-sizing: border-box;
 }
 
@@ -8,12 +8,10 @@ body {
     background-image: url("https://www.dlsu.edu.ph/wp-content/uploads/2017/12/1DLSU-at-duskE.jpg");
     background-repeat: no-repeat;
     background-size: cover;
-    background-attachment: fixed;
+    background-attachment: scroll;
     background-position: center;
     padding-top: 64px;
-    font-weight: 200;
 }
-
 
 body::before {
     content: "";
@@ -98,4 +96,47 @@ p, li, ul, span, label {
 .text-black {
     color: black;
     margin-right: 10px;
+}
+
+.page {
+    display: grid;
+    grid-template-columns: 400px 1fr;
+    gap: 0;
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 20px;
+    min-height: 85vh;
+}
+
+.page::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(60, 90, 20, 0.75);
+    z-index: 0;
+}
+
+.page > * {
+    position: relative;
+    z-index: 1;
+}
+
+.left-panel {
+    background-color: #C5EAA0;
+    grid-area: left;
+    padding: 14px;
+}
+
+.left-panel h1 {
+    font-size: 25px;
+    text-decoration: underline;
+    text-align: center;
+}
+
+.right-panel {
+    background-color: #3C5A14;
+    grid-area: right;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
 }

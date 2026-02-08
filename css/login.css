@@ -1,70 +1,129 @@
-.main {
-    margin: 0;
-    min-height: 100vh;
-    background: #3F5A18;
-    display: flex;
-    flex-direction: column;
+form {
+    display:flex;
     align-items: center;
-    padding-top: 100px;
-    font-family: Poppins, Arial, sans-serif;
+    justify-content: center;
+
+
 }
 
-.login_block {
-    width: 100%;
+.login_header {
+    text-align: center;
+    font-size: 29px;
+    margin-bottom: 20px;
+    letter-spacing: 1px;
+    text-decoration: underline;
+
+}
+
+.login_block{
+    background: rgba(67, 94, 31, 0.90);;
+    color: white;
+    padding: 40px 50px;
+    width: 520px;
+    border-radius: 18px;
+    box-shadow: 0px 25px 50px;
     max-width: 520px;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 15px;
     align-items: center;
     margin-top: 40px;
 }
 
-.username, .password {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-}
-
-.login_block input {
-    width: 100%;
-    padding: 18px 26px;
-    border-radius: 999px;
-    background-color: #C8D6B9;
-    font-size: 22px;
-    font-weight: 600;
-    color: white;
-    text-align: center;
-    outline: none;
-}
-
-.login_block input::placeholder {
-    color: rgba(255, 255, 255, 0.85);
-    font-weight: 600;
-}
-
-.login button {
-    padding: 12px 26px;
+.signup_block input {
+    height: 35px;
     border-radius: 10px;
-    background: #4F6F2F;
-    font-size: 16px;
-    font-weight: 700;
-    cursor: pointer;
-    outline: none;
+    padding: 0 12px;
+    font-size: 15px;
 }
 
-.login_action {
-    margin-top: 20px;
-    display: flex;
-    gap: 50px;
+.buform {
+    display:flex;
+    align-items: center;
     justify-content: center;
-    flex-wrap: wrap;
+
+
+}
+
+.login_header {
+    text-align: center;
+    font-size: 29px;
+    margin-bottom: 20px;
+    letter-spacing: 1px;
+    text-decoration: underline;
+
+}
+
+.login_block{
+    background: rgba(67, 94, 31, 0.90);;
+    color: white;
+    padding: 40px 50px;
+    width: 520px;
+    border-radius: 18px;
+    box-shadow: 0px 25px 50px;
+    max-width: 520px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+    margin-top: 40px;
+}
+
+.signup_block input {
+    height: 35px;
+    border-radius: 10px;
+    padding: 0 12px;
+    font-size: 15px;
+}
+
+.login_btn {
+    background: #1f3a04;
 }
 
 .login_action .btn {
-    text-decoration: none;
-    font-size: 20px;
-    font-weight: 700;
-    background: #4F6F2F;
-    border-radius: 10px;
-    color: white;
+    background-color: #1f3a04;
+    display: flex;
+    margin-top: 20px;
 }
+
+.id,.username,.password,.email{
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    align-items: center;
+}
+
+.google-btn{
+    background:white;
+    border-radius: 20px;
+    font-size: 16px;
+    padding: 10px 28px;
+    font-weight: 100;
+    cursor: pointer;
+
+}
+
+.submit-btn{
+    background:#1f3a04;
+    color: white;
+    border-radius: 20px;
+    border: none;
+    font-size: 18px;
+    padding: 10px 50px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+
+.login-link{
+    color: white;
+    align-self: flex-end;
+    text-align: right;
+    font-size: 16px;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+
+
+
+
