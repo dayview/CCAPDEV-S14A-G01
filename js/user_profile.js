@@ -23,14 +23,15 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.removeItem("rememberUntil");
         sessionStorage.removeItem("isLoggedIn");
     }
-        const logoutUser = document.getElementById("logout_btn");
+    
+    const logoutUser = document.getElementById("logout_btn");
 
-        if (!logoutUser) return;
-
+    if (logoutUser) {
         logoutUser.addEventListener("click", (e) => {
             e.preventDefault();
             logout();
             window.location.replace("landing.html");
-    });
+        });
+    }
 })
 
