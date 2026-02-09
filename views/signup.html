@@ -4,41 +4,48 @@
     <meta charset="UTF-8">
     <title>Sign-Up Sheet</title>
     <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/signup.css">
 </head>
-
+<script src="../js/signup.js"></script>
 <body>
-<h1> SIGN UP </h1>
-<form>
-    <div class = "signup_block">
-        <div class = "first_name">
-            <label for="first_name">FIRST NAME</label>
-            <input type="text" id="first_name" name="first_name">
-        </div>
-        <div class = "last_name">
-            <label for="last_name">LAST NAME</label>
-            <input type="text" id="last_name" name="last_name">
-        </div>
-        <div class = "username">
-            <label for="username">USERNAME</label>
-            <input type="text" id="username" name="username">
-        </div>
-        <div class = "email">
-            <label for="email_add">PHONE NUMBER</label>
-            <input type="email" id="email_add" name="email_add">
-        </div>
-        <div class = "id_num">
-            <label for="id_num">ID NUMBER</label>
-            <input type="number" id="id_num" name="id_num">
-        </div>
-        <div class = "submit">
-            <button type="submit"> Create Account </button>
-        </div>
+<form id="signup">
+    <div class="signup_block">
+    <h2 class="signup">SIGN-UP</h2>
 
+    <div class="profile">
+        <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="Profile Picture">
+        <p class="avatar"> Change Avatar </p>
     </div>
+
+    <div class="id">
+        <label>ID Number *</label>
+        <input type="text" id="idnumber" required>
+    </div>
+
+    <div class="username">
+        <label>Username *</label>
+        <input type="text" id="user" required>
+    </div>
+
+    <div class="password">
+        <label>Password *</label>
+        <input type="password" id="password" required>
+    </div>
+
+    <div class="email">
+        <label>Email *</label>
+        <input type="email" id="email" required>
+    </div>
+
+    <div class="buttons">
+        <button type="button" class="google-btn">Sign-up with Google</button>
+        <button type="submit" class="submit-btn">Sign-Up</button>
+    </div>
+
+    <a href="login.html" class="login-link">Already have an account</a>
+</div>
 </form>
-<p> Already have an account? </p>
-<a href="login.html" class="btn">Log-In Here</a>
-<a href="landing.html" class="btn">Return to Main Page</a>
+
 
 </body>
 </html>
