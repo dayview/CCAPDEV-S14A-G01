@@ -1,4 +1,3 @@
-document.addEventListener('DOMContentLoaded', () => {
     const rememberUntil = Number(localStorage.getItem("rememberUntil"));
     const sessionLogin = sessionStorage.getItem("isLoggedIn");
     const currentUser = JSON.parse(localStorage.getItem("currentUser"));
@@ -23,7 +22,8 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.removeItem("rememberUntil");
         sessionStorage.removeItem("isLoggedIn");
     }
-    
+
+document.addEventListener('DOMContentLoaded', () => {
     const logoutUser = document.getElementById("logout_btn");
 
     if (logoutUser) {
@@ -32,6 +32,5 @@ document.addEventListener('DOMContentLoaded', () => {
             logout();
             window.location.replace("landing.html");
         });
-    }
-})
+});
 
