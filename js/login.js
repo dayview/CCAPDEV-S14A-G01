@@ -1,27 +1,29 @@
 document.addEventListener('DOMContentLoaded', function(){
     const form = document.querySelector('form');
-
+    const remember = document.getElementById('remember');
     form.addEventListener('submit', function(e) {
         e.preventDefault();
 
         const username = document.getElementById("username").value;
         const password = document.getElementById("password").value;
+        const users = JSON.parse(localStorage.getItem("userAccounts")) || [];
 
-        const user = JSON.parse(localStorage.getItem("userAccount"));
+        const foundUser = users.find(user => user.username === username && user.password === password);
 
-        if (!user) {
-            alert("No account found.");
+        if (!foundUser) {
+            alert("Error with account information.");
             return;
         }
 
-        if (username !== user.username && password !== user.password) {
-            alert("Username or password is incorrect.");
-            return;
+        localStorage.setItem("currentUser", JSON.stringify(foundUser));
+
+        if (remember.checked) {
+            const expiry = Date.now() + (1000 * 60 * 60 * 24 * 21);
+            localStorage.setItem("rememberUntil", JSON.stringify(expiry));
         }
-
-        localStorage.setItem("isLoggedIn", "true");
-        localStorage.setItem("currentUser", JSON.stringify(user));
-
+        else {
+            sessionStorage.setItem("isLoggedIn", "true");
+        }
         window.location.href = "reservation.html";
     });
 });

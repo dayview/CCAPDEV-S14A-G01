@@ -1,10 +1,20 @@
 
-if(localStorage.getItem("isLoggedIn") !== "true") window.location.href = "login.html";
-
+const rememberUntil = Number(localStorage.getItem("rememberUntil"));
+const sessionLogin = sessionStorage.getItem("isLoggedIn");
 const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
-if(!currentUser) {
-    alert("You need to sign in!");
+let authenticated = false;
+
+if (rememberUntil && Date.now() <= rememberUntil) {
+    authenticated = true;
+} else if (sessionLogin) {
+    authenticated = true;
+}
+
+if (!authenticated || !currentUser) {
+    localStorage.removeItem("rememberUntil");
+    localStorage.removeItem("currentUser");
+    sessionStorage.removeItem("isLoggedIn");
     window.location.href = "login.html";
 }
 
