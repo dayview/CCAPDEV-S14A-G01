@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Animo Lab Reservation</title>
+    <link rel="stylesheet" href="../css/main.css">
+</head>
+
+<body>
+<script src="../js/deletereservation.js" defer></script>
+
+<section class = "header">
+    <div class = "logo">
+        <h1><b>DLSU </b> Lab Reservation</h1>
+    </div>
+
+    <div class = "header-actions">
+        <a href = "user_profile.html" class = "btn">User Profile</a>
+    </div>
+</section>
+
+<section class="table-page">
+    <h2 class="table-title">Delete Reservation</h2>
+
+    <div id="noreservation" class="no-reservation" style="display:none;">
+        You have no reservation/s.
+    </div>
+
+    <div class="table-content">
+        <table id="reservationtable" class="reservation-table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Time In</th>
+                    <th>Time Out</th>
+                    <th>Room</th>
+                    <th>Seat</th>
+                    <th>Anonymous</th>
+                    <th>Status</th>
+                    <th class="deletebtn"></th>
+                </tr>
+            </thead>
+            <tbody id="reservationbody"></tbody>
+        </table>
+    </div>
+
+</section>
+
+
+    
+</body>
