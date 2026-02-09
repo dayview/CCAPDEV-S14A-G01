@@ -39,6 +39,21 @@ function saveReservations(reservations){
     localStorage.setItem("reservations", JSON.stringify(reservations));
 }
 
+function formatDate(date){
+    return date.toISOString().split("T")[0];
+}
+
+function formatTime(time){
+    return(time.getHours().toString().padStart(2,"0") + ":" + time.getMinutes().toString().padStart(2,"0"));
+}
+
+const today = new Date();
+const maxDate = new Date();
+maxDate.setDate(today.getDate() + 6);
+
+inputDate.min = formatDate(today);
+inputDate.max = formatDate(maxDate);
+
 
 let selectedSeat = null;
 let userReservationIndex = -1;
@@ -59,29 +74,57 @@ if(userReservationIndex == -1){
 
 const userReservation = reservations[userReservationIndex];
 
-// not touching the date, time and room
 
 inputDate.value = userReservation.date;
 inputRoom.value = userReservation.room;
 inputTime.value = userReservation.timeIn;
 
-inputDate.disabled = true;
-inputRoom.disabled = true;
-inputTime.disabled = true;
+infoDate.textContent = inputDate.value;
+infoRoom.textContent = inputRoom.value;
+infoSeat.textContent = userReservation.seat || "--";
 
-infoDate.textContent = userReservation.date;
-infoTimeIn.textContent = userReservation.timeIn;
-infoTimeOut.textContent = userReservation.timeOut;
-infoRoom.textContent = userReservation.room;
-infoSeat.textContent = userReservation.seat;
+(function initTimeinfo(){
+    if(!inputTime.value){
+        infoTimeIn.textContent = "--";
+        infoTimeOut.textContent = "--";
+        return;
+    }
+    
+    const [hours, minutes] = inputTime.value.split(":").map(Number);
+    const timeIn = new Date();
+    timeIn.setHours(hours);
+    timeIn.setMinutes(minutes);
+    
+    const timeOut = new Date(timeIn);
+    timeOut.setMinutes(timeOut.getMinutes() + 30);
+
+    infoTimeIn.textContent = formatTime(timeIn);
+    infoTimeOut.textContent = formatTime(timeOut);
+})();
 
 
 function renderSeats(){
+    reservations = getReservations();
     seatMap.innerHTML = "";
     reserveBtn.disabled = true;
-    selectedSeat = null;    
+    
 
-const reservedSeats = reservations.filter(same => same.room === userReservation.room && same.date === userReservation.date && same.timeIn === userReservation.timeIn);
+    const date = inputDate.value;
+    const time = inputTime.value;
+    const room = inputRoom.value;
+
+    const slot = date === userReservation.date && time === userReservation.timeIn && room === userReservation.room;
+
+    if(!slot){
+        selectedSeat = null;
+        infoSeat.textContent = "--";
+    }else {
+        selectedSeat = userReservation.seat;
+        infoSeat.textContent = selectedSeat || "--";
+        if(selectedSeat) reserveBtn.disabled = false;
+    }
+
+const reservedSeats = reservations.filter((same, idx) => idx !== userReservationIndex && same.room === room && same.date === date && same.timeIn === time);
 
 lab_layout.forEach(seatId => {
     const btn = document.createElement("button");
@@ -90,7 +133,7 @@ lab_layout.forEach(seatId => {
     const seatTaken = reservedSeats.find(same => same.seat === seatId);
 
     //other person that booked it
-    if(seatTaken && seatTaken.userId != currentUser.idNumber){
+    if(seatTaken){
         btn.classList.add("reserved");
         btn.disabled = true;
         seatMap.appendChild(btn);
@@ -98,7 +141,7 @@ lab_layout.forEach(seatId => {
     }
 
     //current users seat
-    if (seatId === userReservation.seat) {
+    if (slot && seatId === userReservation.seat) {
         btn.classList.add("selected");
         selectedSeat = seatId;
         reserveBtn.disabled = false;
@@ -119,14 +162,70 @@ lab_layout.forEach(seatId => {
 
 renderSeats();
 
+inputDate.addEventListener("input", () => {
+    infoDate.textContent = inputDate.value;
+});
 
-//saving the new reservation
+inputDate.addEventListener("change", () => {
+    infoDate.textContent = inputDate.value;
+    renderSeats();
+});
+
+inputRoom.addEventListener("change",() => {
+    infoRoom.textContent = inputRoom.value;
+    renderSeats();
+});
+
+inputTime.addEventListener("change",() =>{
+    const [hours, minutes] = inputTime.value.split(":").map(Number);
+    const timeIn = new Date();
+    timeIn.setHours(hours);
+    timeIn.setMinutes(minutes);
+
+    const timeOut = new Date(timeIn);
+    timeOut.setMinutes(timeOut.getMinutes() + 30);
+    
+    infoTimeIn.textContent = formatTime(timeIn);
+    infoTimeOut.textContent = formatTime(timeOut);
+
+    renderSeats();
+})
+
+
+//save reservation
+
 reserveBtn.addEventListener("click", () => {
-    if(!selectedSeat) return;
+    reservations = getReservations();
+
+    if(!selectedSeat){
+        alert("Please select a seat before editing");
+        return;
+    }
+
+    //checker of conflict
+    const conflict = reservations.some((same,idx) => idx !== userReservationIndex && same.room === inputRoom.value && same.date === inputDate.value && same.timeIn === inputTime.value && same.seat === selectedSeat);
+
+    if(conflict){
+        alert("Seat already booked");
+        return;
+    }
+
+    reservations[userReservationIndex].date = inputDate.value;
+    reservations[userReservationIndex].timeIn = inputTime.value;
+    reservations[userReservationIndex].timeOut = infoTimeOut.textContent;
+    reservations[userReservationIndex].room = inputRoom.value;
     reservations[userReservationIndex].seat = selectedSeat;
+
+
+    userReservation.date = inputDate.value;
+    userReservation.timeIn = inputTime.value;
+    userReservation.timeOut = infoTimeOut.textContent;
+    userReservation.room = inputRoom.value;
+    userReservation.seat = selectedSeat;
+    
     saveReservations(reservations);
 
-    alert("Reservation is now updated!");
+    alert("Reservation is updated! Please check your booking");
     window.location.href = "user_profile.html";
-});
+})
 
