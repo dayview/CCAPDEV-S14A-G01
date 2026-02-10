@@ -1,100 +1,11 @@
-body {
-    display: grid;
-    grid-template-areas:
-    "left right right "
-    "footer footer footer ";
-    grid-template-columns: 400px 2fr;
-    grid-template-rows: 1fr auto;
-    gap: 0;
-    max-width: 1200px;
-    margin: 40px auto;
-    padding: 20px;
-    min-height: 85vh;
-}
-
-.page {
-    display: grid;
-    grid-template-columns: 400px 1fr;
-    gap: 0;
-    max-width: 1200px;
-    margin: 40px auto;
-    padding: 20px;
-    min-height: 85vh;
-}
-.left-panel {
-    background-color: #C5EAA0;
-    grid-area: left;
-    padding: 14px;
-}
-
-.left-panel h1 {
-    font-size: 25px;
-    text-decoration: underline;
-    text-align: center;
-}
-
-.right-panel {
-    background-color: #3C5A14;
-    grid-area: right;
-    padding: 16px;
+.landing-header {
     display: flex;
-    flex-direction: column;
-}
-
-.right-panel .room {
-    margin-top: auto;
-}
-
-.selection {
-    display: grid;
-    grid-template-columns: 1.5fr 1fr 1fr;
-    gap: 10px;
-    align-items: stretch;
-}
-
-.r_box {
-    background-color: #669D31;
-    padding: 14px;
-    border-radius: 14px;
-}
-
-.r_box label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 600;
-    color: #1B1B1B;
-}
-
-.r_box input, .r_box select {
-    width: 100%;
-    border-radius: 10px;
-    border: 1px solid #CFCFCF;
-    outline: none;
-}
-
-.r_button {
-    width: 100%
-}
-
-.reserve-btn {
-    width: 100%;
-    margin-top: 1rem;
-    padding: 0.6rem 1rem;
-    background-color: #669D31;
-    color: white;
-    border: none;
-    border-radius: 0.25rem;
-    font-size: 1rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-}
-
-.board-title {
-    color: white;
+    justify-content: center;
     align-items: center;
 }
 
-.legend {
-display: flex;
+.landing-options {
+    display: flex;
+    justify-content: center;
+
 }
