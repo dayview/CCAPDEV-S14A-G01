@@ -88,10 +88,9 @@ p, li, ul, span, label {
     border-radius: 2px;
 }
 
-.occupied { background-color: red; border: 1px solid black;}
-.repair {background-color: blue; border: 1px solid black;}
-.available {background-color: white; border: 1px solid black;}
-.selected {background-color: yellow; border: 1px solid black;}
+.occupied { background-color: #CFCFCF; border: 1px solid black;}
+.available {background-color: #EAF4DE; border: 1px solid black;}
+.selected {background-color: #669D31; border: 1px solid black;}
 
 .text-black {
     color: black;
@@ -99,6 +98,7 @@ p, li, ul, span, label {
 }
 
 .page {
+    position: relative;
     display: grid;
     grid-template-columns: 400px 1fr;
     gap: 0;
