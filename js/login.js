@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function(){
+    document.addEventListener('DOMContentLoaded', function(){
     const form = document.querySelector('form');
     const remember = document.getElementById('remember');
     form.addEventListener('submit', function(e) {
@@ -27,3 +27,4 @@ document.addEventListener('DOMContentLoaded', function(){
         window.location.href = "reservation.html";
     });
 });
+
