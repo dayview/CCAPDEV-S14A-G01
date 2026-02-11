@@ -1,75 +1,59 @@
-.main {
-    margin: 0;
-    min-height: 100vh;
-    background: #3F5A18;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-top: 100px;
-    font-family: Poppins, Arial, sans-serif;
+* {
+    font-family: Inter;
 }
 
-.login_block {
-    width: 100%;
-    max-width: 520px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+form {
+    display:flex;
     align-items: center;
-    margin-top: 40px;
-}
-
-.username, .password {
-    width: 100%;
-    display: flex;
     justify-content: center;
 }
 
-.login_block input {
-    width: 100%;
-    padding: 18px 26px;
-    border-radius: 999px;
-    background-color: #C8D6B9;
-    font-size: 22px;
-    font-weight: 600;
-    color: white;
+.login_header {
     text-align: center;
-    outline: none;
+    font-size: 29px;
+    margin-bottom: 20px;
+    letter-spacing: 1px;
+    text-decoration: underline;
+
 }
 
-.login_block input::placeholder {
-    color: rgba(255, 255, 255, 0.85);
-    font-weight: 600;
-}
-
-.login button {
-    padding: 12px 26px;
+.login_block input[type="text"], .login_block input[type="password"] {
+    height: 38px;
     border-radius: 10px;
-    background: #4F6F2F;
-    font-size: 16px;
-    font-weight: 700;
-    cursor: pointer;
-    outline: none;
+    padding: 0 12px;
+    font-size: 15px;
+    border: none;
+}
+
+.remember {
+    font-size: 14px;
 }
 
 .login_action {
-    margin-top: 20px;
-    display: flex;
-    gap: 50px;
-    justify-content: center;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
 }
 
-.login_action .btn {
-    text-decoration: none;
-    font-size: 20px;
-    font-weight: 700;
-    background: #4F6F2F;
-    border-radius: 10px;
+#login_button {
+    grid-column: 1/-1;
+    background: #1f3a04;
     color: white;
+    border-radius: 20px;
+    border: none;
 }
 
-#errorMsg {
-    color: red;
-    display: none;
+login_action .btn {
+    display: inline-block;
+    text-align: center;
+    background: white;
+    color: black;
+    border-radius: 20px;
+    padding: 10px 18px;
+    font-size: 14px;
 }
+
+
+
+
+

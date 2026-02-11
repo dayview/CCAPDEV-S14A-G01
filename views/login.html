@@ -3,68 +3,45 @@
   <head>
     <meta charset="UTF-8" />
     <title>AnimoLabs Log-In</title>
-    <link rel="stylesheet" href="../css/main.css" />
-    <link rel="stylesheet" href="../css/login.css" />
-    <script src="../js/auth.js"></script>
-  </head>
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/login.css">
+</head>
 
-  <body>
-    <div class="main">
-      <section class="header">
-        <h1><b>DLSU </b> Lab Reservation</h1>
-      </section>
+<body>
 
-      <form id="loginForm">
-        <div class="login_block">
-          <div id="errorMsg"></div>
+<div class = "main">
+    <section class = "header">
+        <h1><b>Animo </b> Lab Reservation</h1>
+    </section>
 
-          <div class="username">
-            <input
-              type="text"
-              placeholder="Username"
-              id="username"
-              name="username"
-              required
-            />
-          </div>
-          <div class="password">
-            <input
-              type="password"
-              placeholder="Password"
-              id="password"
-              name="password"
-              required
-            />
-          </div>
-          <div class="login">
-            <button type="submit">LOG-IN</button>
-          </div>
+    <form>
+        <div class = "login_block">
+            <h2 class = "login_header"> User Sign-In </h2>
+            <div class = "username">
+                <input type="text" placeholder="Username" id="username" name="username" required>
+            </div>
+
+            <div class = "password">
+                <input type = "password" placeholder="Password" id = "password" name = "password" required>
+            </div>
+
+            <div class = "remember">
+                <label> <input type = "checkbox" id = "remember"> Remember Me </label>
+            </div>
+
+            <div class = "login_action">
+                <button type = "submit" id = "login_btn"> LOG-IN </button>
+                <a href = "signup.html" class = "btn">Sign-Up</a>
+                <a href = "landing.html" class = "btn">Return to Main Page</a>
+            </div>
         </div>
 
-        <div class="login_action">
-          <a href="signup.html" class="btn">Sign-Up</a>
-          <a href="landing.html" class="btn">Return to Main Page</a>
-        </div>
-      </form>
-    </div>
-    <script src="js/auth.js"></script>
-    <script>
-      document
-        .getElementById("loginForm")
-        .addEventListener("submit", function (e) {
-          e.preventDefault();
+    </form>
 
-          const username = document.getElementById("username").value;
-          const password = document.getElementById("password").value;
-          const errorMsg = document.getElementById("errorMsg");
+</div>
 
-          if (login(username, password)) {
-            window.location.href = "reservation.html";
-          } else {
-            errorMsg.textContent = "Invalid username or password";
-            errorMsg.style.display = "block";
-          }
-        });
-    </script>
-  </body>
+<script src="../js/login.js"></script>
+
+</body>
+
 </html>

@@ -3,14 +3,26 @@
   <head>
     <meta charset="UTF-8">
     <title>User Profile</title>
-    <link rel="stylesheet" href="../css/main.css" />
-  </head>
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/user_profile.css">
+</head>
 
-  <body>
-    <h1>User Profile</h1>
-    <div id="userInfo"></div>
-    <a href="reservation.html" class="btn">Return to Main Page</a>
-    <button onclick="logout(); window.location.href='landing.html';">Logout</button>
+<body>
+
+<script src="../js/user_profile.js"></script>
+
+<section class = "header">
+    <h1><b>DLSU </b> Lab Reservation</h1>
+    <a href = "reservation.html" class = "btn"> Return to Home </a>
+</section>
+
+<section class = "page">
+        <a href = "edit_profile.html"> User Information </a>
+        <p> Notifications </p>
+        <a href = "editreservation.html"> Edit Reservation </a>
+        <button id = "logout_btn"> Logout </button>
+</section>
+
 
     <script src="../js/auth.js"></script>
     <script>
