@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Animo Lab Reservation</title>
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/editreservation.css">
+    
+
+</head>
+
+<body>
+<script src="../js/editreservation.js" defer></script>
+<section class = "header">
+    <div class = "logo">
+        <h1><b>DLSU </b> Lab Reservation</h1>
+    </div>
+
+    <div class = "header-actions">
+        <a href = "user_profile.html" class = "btn">User Profile</a>
+    </div>
+</section>
+
+<section class = "left-panel">
+    <div class = "information-block">
+        <h1> BOOKING INFORMATION </h1>
+        <p> Date: <span id = "infoDate"> </span> </p> <!-- display reserve_date -->
+        <p> Time In: <span id = "infoTimeIn"> </span> </p> <!-- display reserve_time -->
+        <p> Time Out: <span id = "infoTimeOut"> </span> </p> <!-- get element by ID reserve_time + 30 -->
+        <p> Room: <span id = "infoRoom"> </span> </p>
+        <p> Seat: <span id = "infoSeat"> </span> </p>
+        <div class = "r_button">
+            <button class = "reserve-btn" disabled>EDIT RESERVE</button>
+        </div>
+    </div>
+
+    <strong class = "Edit-label"> Edit Reservation </strong>
+    <ul class = "Edit-list">
+        <li> You can only edit your seat on your reservation </li>
+        <li> Please delete your reservation and book another <br>reservation if you are planning to book in another <br>room, date or time</li>
+        <li> If you have multiple reservation, the latest one will be <br>the one to be changed</li>
+
+    </ul>
+</section>
+
+<section class = "right-panel">
+    <div class = "selection">
+        <section class = "r_box">
+            <label for = "reserve_date"> Date </label>
+            <input type = "date" id = "reserve_date" class = "form-control">
+        </section>
+        <section class = "r_box">
+            <label for = "reserve_time" class = "form-label"> Time In </label>
+            <select id = "reserve_time" class = "form-control">
+                <option value = "07:30"> 07:30 </option>
+                <option value = "08:00"> 08:00 </option>
+                <option value = "08:30"> 08:30 </option>
+                <option value = "09:00"> 09:00 </option>
+                <option value = "09:30"> 09:30 </option>
+                <option value = "10:00"> 10:00 </option>
+                <option value = "10:30"> 10:30 </option>
+                <option value = "11:00"> 11:00 </option>
+                <option value = "11:30"> 11:30 </option>
+                <option value = "12:00"> 12:00 </option>
+                <option value = "12:30"> 12:30 </option>
+                <option value = "13:00"> 13:00 </option>
+                <option value = "13:30"> 13:30 </option>
+                <option value = "14:00"> 14:00 </option>
+                <option value = "14:30"> 14:30 </option>
+                <option value = "15:00"> 15:00 </option>
+                <option value = "15:30"> 15:30 </option>
+                <option value = "16:00"> 16:00 </option>
+                <option value = "16:30"> 16:30 </option>
+                <option value = "17:00"> 17:00 </option>
+                <option value = "17:30"> 17:30 </option>
+                <option value = "18:00"> 18:00 </option>
+                <option value = "18:30"> 18:30 </option>
+                <option value = "19:00"> 19:00 </option>
+                <option value = "19:30"> 19:30 </option>
+                <option value = "20:00"> 20:00 </option>
+            </select>
+        </section>
+        <section class = "r_box">
+            <label for = "room_num" class = "form-label"> Room </label>
+            <select id = "room_num" class = "form-control">
+                <option value = "G302A"> G302A </option>
+                <option value = "G302B"> G302B </option>
+                <option value = "G304B"> G304B </option>
+                <option value = "G306A"> G306A </option>
+                <option value = "G404A"> G404A </option>
+                <option value = "G404B"> G404B </option>
+                <option value = "G405"> G405 </option>
+                <option value = "G407"> G407 </option>
+            </select>
+        </section>
+    </div>
+
+    <div class = "room">
+        <div class = "seat-card">
+            <h4 class = "board-title"> BOARD </h4>
+        </div>
+        <div id="seat_map"> </div>
+    </div>
+
+    <div class = "legend">
+        <span class = "legend-box occupied"> </span> <span class = "text-black"> Occupied </span>
+        <span class = "legend-box repair"> </span> <span class = "text-black"> Under Repair </span>
+        <span class = "legend-box available"> </span> <span class = "text-black"> Available </span>
+        <span class = "legend-box selected"> </span> <span class = "text-black"> Selected </span>
+    </div>
+
+</section>
+
+</body>
+</html>

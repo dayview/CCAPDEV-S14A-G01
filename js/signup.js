@@ -1,6 +1,4 @@
-console.log("signup.js loaded");
-
-document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function () {
     const form = document.getElementById("signup");
 
     if (!form) {
