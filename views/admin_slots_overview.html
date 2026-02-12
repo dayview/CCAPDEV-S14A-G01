@@ -10,7 +10,7 @@
   <body>
     <header class="top_bar">
       <div class="top_left_content">
-        <div class="logo_box"><img src="monitor.png"></div>
+        <div class="logo_box"><img src="../images/monitor.png"></div>
         <span class="title"><b>DLSU</b> LAB RESERVATION</span>
       </div>
       
@@ -27,7 +27,7 @@
         <section class="panel left_panel">
           <div class="user_box">
             <div class="user_top_row">
-              <div class="avatar"><img src="profile.png"></div>
+              <div class="avatar"><img src="../images/profile.png"></div>
               <h2>Welcome ADMIN<br>(Username)!</h2>
             </div>
             <button class="edit_button">EDIT PROFILE</button>   <!--Add edit profile button functionality-->
@@ -42,54 +42,100 @@
         </section>
 
         <section class="panel right_panel">
-          <div class="column">
-            <!--Left column content-->
-            <label class="input_label">Date:</label>
-            <input type="date" class="info_input">
+          <div class="inputs_row">
+            <div class="input_col">
+              <label class="input_label">Date:</label>
+              <input type="date" class="info_input" id="dateInput">
+            </div>
             
-            <label class="input_label">Room:</label>
-            <select class="info_input">
-                <option value="">Select a room</option>
-                <option value="A1706">A1706</option>
-                <option value="A1904">A1904</option>
-                <option value="C314">C314</option>
-                <option value="G210">G210</option>
-                <option value="G211">G211</option>
-                <option value="G302A">G302A</option>
-                <option value="G302B">G302B</option>
-                <option value="G304B">G304B</option>
-                <option value="G306A">G306A</option>
-                <option value="G404A">G404A</option>
-                <option value="G404B">G404B</option>
-                <option value="G405">G405</option>
-                <option value="G407">G407</option>
-                <option value="J212">J212</option>
-                <option value="L212">L212</option>
-                <option value="L229">L229</option>
-                <option value="L320">L320</option>
-                <option value="L335">L335</option>
-                <option value="M201">M201</option>
-                <option value="M217">M217</option>
-                <option value="V205">V205</option>
-                <option value="V206">V206</option>
-                <option value="V208A">V208A</option>
-                <option value="V208B">V208B</option>
-                <option value="V301">V301</option>
-                <option value="V310">V310</option>
-                <option value="Y602">Y602</option>
-            </select>
-          </div>
+            <div class="input_col">
+              <label class="input_label">Room:</label>
+              <select class="info_input" id="roomSelect">
+                  <option value="">Select a room</option>
+                  <option value="A1706">A1706</option>
+                  <option value="V301">V301</option>
+                  <option value="V310">V310</option>
+              </select>
+            </div>
   
-          <div class="column">
-            <!--Right column content-->
-            <label class="input_label">Booking Overview:</label>
-            <div class="booking_box">
-              <!-- Right column content box -->
+            <div class="input_col">
+              <label class="input_label">Booking Overview:</label>
+              <div class="booking_box">
+                <div class="booking_stat">
+                  <span class="booking_label">SEATS AVAILABLE:</span>
+                  <span class="booking_value" id="seatsAvailable">36/36</span>
+                </div>
+                <div class="booking_stat">
+                  <span class="booking_label">SEATS FOR REPAIR:</span>
+                  <span class="booking_value" id="seatsRepair">0</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Chart Section -->
+          <div class="chart_section">
+            <div class="chart_container">
+              <table class="schedule_table" id="scheduleTable">
+                <thead>
+                  <tr>
+                    <th class="time_header">TIME</th>
+                    <th>7:30<br>AM</th>
+                    <th>8:00<br>AM</th>
+                    <th>8:30<br>AM</th>
+                    <th>9:00<br>AM</th>
+                    <th>9:30<br>AM</th>
+                    <th>10:00<br>AM</th>
+                    <th>10:30<br>AM</th>
+                    <th>11:00<br>AM</th>
+                    <th>11:30<br>AM</th>
+                    <th>12:00<br>PM</th>
+                    <th>12:30<br>PM</th>
+                    <th>1:00<br>PM</th>
+                    <th>1:30<br>PM</th>
+                    <th>2:00<br>PM</th>
+                    <th>2:30<br>PM</th>
+                    <th>3:00<br>PM</th>
+                    <th>3:30<br>PM</th>
+                    <th>4:00<br>PM</th>
+                    <th>4:30<br>PM</th>
+                    <th>5:00<br>PM</th>
+                    <th>5:30<br>PM</th>
+                    <th>6:00<br>PM</th>
+                  </tr>
+                </thead>
+                <tbody id="scheduleBody">
+                  <tr>
+                    <td colspan="23" class="empty_message">Please select a room to view availability</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Legend -->
+            <div class="legend_container">
+              <div class="legend_item">
+                <div class="legend_box legend_available"></div>
+                <span>AVAILABLE</span>
+              </div>
+              <div class="legend_item">
+                <div class="legend_box legend_class"></div>
+                <span>CLASS OCCUPIED</span>
+              </div>
+              <div class="legend_item">
+                <div class="legend_box legend_full"></div>
+                <span>FULL</span>
+              </div>
+              <div class="legend_item">
+                <div class="legend_box legend_unavailable"></div>
+                <span>UNAVAILABLE</span>
+              </div>
             </div>
           </div>
         </section>
       </div>
 
     </main>
+    <script src="../js/admin_slots_overview.js"></script>
 </body>
 </html>
