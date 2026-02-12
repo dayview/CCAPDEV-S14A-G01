@@ -1,6 +1,8 @@
 * {
     font-family: 'Inter', sans-serif;
     box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 body {
@@ -54,19 +56,6 @@ p, li, ul, span, label {
 .header .actions {
     display: flex;
     gap: 12px;
-}
-
-.btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 8px 14px;
-    border-radius: 14px;
-    text-decoration: none;
-    font-size: 14px;
-    font-weight: 600;
-    border: 2px solid transparent;
-    cursor: pointer;
 }
 
 .left-panel, .right-panel {
