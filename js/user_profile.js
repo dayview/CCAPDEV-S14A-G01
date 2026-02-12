@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
     logoutUser.addEventListener("click", (e) => {
         e.preventDefault();
         logout();
-        window.location.replace("landing.html");
+        window.location.replace("index.html");
     });
 });
 
