@@ -1,5 +1,5 @@
 * {
-    font-family: 'Inter', sans-serif;
+    font-family: Inter;
     box-sizing: border-box;
 }
 
@@ -22,12 +22,10 @@ body::before {
 }
 
 h1, h2, h3, h4, h5, h6 {
-    font-family: 'Atkinson Hyperlegible', sans-serif;
-    font-weight: 700;
+    font-weight: 600;
 }
 
 p, li, ul, span, label {
-    font-family: 'Inter', sans-serif;
     font-weight: 400;
 }
 
@@ -73,48 +71,6 @@ p, li, ul, span, label {
     margin-top: 20px;
 }
 
-.information-block {
-    padding: 10px;
-    margin-bottom: 24px;
-}
-
-.information-block h1 {
-    margin: 0 0 16px 0;
-}
-
-.information-block input[type="checkbox"] {
-    width: auto;
-    margin-top: 12px;
-    margin-right: 8px;
-}
-
-.information-block label {
-    display: inline;
-}
-
-.information-block p {
-    margin: 8px 0;
-}
-
-.reminders-label {
-    display: block;
-    font-weight: 700;
-    font-size: 20px;
-    margin-bottom: 12px;
-}
-
-.reminder-list {
-    list-style: disc;
-    padding-left: 20px;
-    margin: 0;
-}
-
-.reminder-list li {
-    margin-bottom: 12px;
-    line-height: 1.5;
-    font-size: 14px;
-}
-
 .legend {
     background-color: white;
     display: flex;
@@ -136,8 +92,8 @@ p, li, ul, span, label {
 .available {background-color: #EAF4DE; border: 1px solid black;}
 .selected {background-color: #669D31; border: 1px solid black;}
 
-.text-white {
-    color: white;
+.text-black {
+    color: black;
     margin-right: 10px;
 }
 
