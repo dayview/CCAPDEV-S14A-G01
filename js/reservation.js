@@ -7,7 +7,7 @@ let authenticated = false;
 
 if (rememberUntil && Date.now() <= rememberUntil) {
     authenticated = true;
-} else if (sessionLogin) {
+} else if (sessionLogin === "true") {
     authenticated = true;
 }
 
@@ -15,7 +15,7 @@ if (!authenticated || !currentUser) {
     localStorage.removeItem("rememberUntil");
     localStorage.removeItem("currentUser");
     sessionStorage.removeItem("isLoggedIn");
-    window.location.href = "login.html";
+    authenticated = false;
 }
 
 const infoDate = document.getElementById("infoDate");
@@ -149,7 +149,19 @@ function saveReservations(list) {
 }
 
 reserveBtn.addEventListener("click", () => {
+    if (!authenticated || !currentUser) {
+        alert("Please log in to reserve a seat.");
+        window.location.href = "login.html";
+        return;
+    }
+
+    if (!selectedSeat) {
+        alert("Please select seat.");
+        return;
+    }
+
     if (!inputDate.value || !inputTime.value) {
+        alert("No date/time selected.");
         return;
     }
 
@@ -173,7 +185,7 @@ reserveBtn.addEventListener("click", () => {
         r.seat === reservation.seat
     );
 
-    if(conflict) {
+    if (conflict) {
         alert("Seat already reserved.");
         return;
     }
