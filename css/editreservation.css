@@ -1,113 +1,230 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
 body {
-    display: grid;
-    grid-template-areas:
-    "left right right ";
-    grid-template-columns: 400px 2fr;
-    grid-template-rows: 1fr auto;
-    gap: 0;
-    max-width: 1200px;
-    margin: 40px auto;
-    padding: 20px;
-    min-height: 85vh;
+  display: grid;
+  grid-template-areas: "left right right";
+  grid-template-columns: 400px 1fr;
+  gap: 28px;
+
+  max-width: 1300px;
+  margin: 40px auto;
+  padding: 20px;
+  min-height: 85vh;
+
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.55)),
+    url("https://www.dlsu.edu.ph/wp-content/uploads/2017/12/1DLSU-at-duskE.jpg");
+
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
 }
 
-.right-panel .room {
-    margin-top: 20px;
+.left-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
 }
 
-.selection {
-    display: grid;
-    grid-template-columns: 1.5fr 1fr 1fr;
-    gap: 10px;
-    align-items: stretch;
+.information-block,
+.room {
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  padding: 22px;
+  border-radius: 18px;
 }
 
-.r_box {
-    background-color: #669D31;
-    padding: 14px;
-    border-radius: 14px;
+.information-block p {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #e8e8e8;
 }
 
-.r_box label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 600;
-    color: #1B1B1B;
+.information-block p:last-child {
+  border-bottom: none;
 }
 
-.r_box input, .r_box select {
-    width: 100%;
-    border-radius: 10px;
-    border: 1px solid #CFCFCF;
-    outline: none;
-}
-
-.r_button {
-    width: 100%
-}
-
-.reserve-btn {
-    width: 100%;
-    margin-top: 1rem;
-    padding: 0.6rem 1rem;
-    background-color: #669D31;
-    color: white;
-    border: none;
-    border-radius: 0.25rem;
-    font-size: 1rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-}
-
-.board-title {
-    color: white;
-    align-items: center;
+.Edit-label {
+  margin-top: 10px;
+  font-weight: 700;
 }
 
 .Edit-list {
-    position: absolute;
-    font-weight: bold;
+  padding-left: 18px;
+  line-height: 1.6;
+}
+
+.right-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.selection {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr;
+  gap: 16px;
+}
+
+.r_box {
+  background: linear-gradient(135deg, #6fa93c, #5c8e2e);
+  padding: 16px;
+  border-radius: 16px;
+  transition: transform 0.15s ease;
+}
+
+.r_box:hover {
+  transform: translateY(-3px);
+}
+
+.r_box label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: white;
+}
+
+.r_box input,
+.r_box select {
+  width: 100%;
+  border-radius: 10px;
+  border: none;
+  padding: 10px;
+  font-size: 0.95rem;
+}
+
+.seat-card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding-bottom: 16px;
+  margin-bottom: 18px;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.06);
+}
+
+.board-title {
+  background: #2e2e2e;
+  color: white;
+
+  padding: 6px 22px;
+  border-radius: 8px;
+
+  letter-spacing: 2px;
+  font-size: 0.85rem;
+  font-weight: 700;
 }
 
 #seat_map {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 12px;
-    padding: 20px;
-    background-color: #F4F7F1;
-    border-radius: 16px;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 18px;
+
+  padding: 26px;
+
+  background: rgba(246, 248, 243, 0.9);
+  border-radius: 16px;
 }
 
 .seat {
-    height: 48px;
-    border-radius: 10px;
-    border: 2px solid #669D31;
-    background-color: #EAF4DE;
-    color: #1B1B1B;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.2s ease, transform 0.1s ease;
+  height: 64px;
+  border-radius: 14px;
+
+  border: none;
+  background: #eaf4de;
+  color: #1b1b1b;
+
+  font-weight: 700;
+  font-size: 0.95rem;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.12s ease,
+    background-color 0.2s ease;
+}
+
+.seat:hover:not(:disabled):not(.reserved):not(.repair) {
+  transform: translateY(-4px);
 }
 
 .seat.selected {
-    background-color: #669D31;
-    color: white;
-    border-color: #4F7C26;
+  background: #669d31;
+  color: white;
 }
 
-.seat.reserved, .seat:disabled {
-    background-color: #CFCFCF;
-    border-color: #B0B0B0;
-    color: #6F6F6F;
-    cursor: not-allowed;
-    opacity: 0.7;
+.seat.reserved,
+.seat:disabled {
+  background: #dcdcdc;
+  color: #7a7a7a;
+  cursor: not-allowed;
 }
 
 .seat.repair {
-    background-color: #F6C344;
-    border-color: #D9A520;
-    color: #1B1B1B;
-    cursor: not-allowed;
+  background: #f6c344;
+  color: #1b1b1b;
+  cursor: not-allowed;
 }
 
+.reserve-btn {
+  width: 100%;
+  margin-top: 1rem;
+  padding: 0.9rem;
+
+  background: linear-gradient(135deg, #6fa93c, #5c8e2e);
+
+  border: none;
+  border-radius: 12px;
+
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: white;
+
+  transition: transform 0.12s ease;
+}
+
+.reserve-btn:hover {
+  transform: translateY(-2px);
+}
+
+.legend {
+  display: flex;
+  justify-content: center;
+  gap: 26px;
+  align-items: center;
+
+  padding: 10px 18px;
+  border-radius: 12px;
+  background: transparent;
+}
+
+.legend-box {
+  width: 18px;
+  height: 18px;
+  border-radius: 5px;
+  display: inline-block;
+}
+
+.legend-box.occupied {
+  background: #dcdcdc;
+}
+
+.legend-box.repair {
+  background: #f6c344;
+}
+
+.legend-box.available {
+  background: #eaf4de;
+  border: 2px solid #669d31;
+}
+
+.legend-box.selected {
+  background: #669d31;
+}
