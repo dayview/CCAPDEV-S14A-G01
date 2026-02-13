@@ -24,21 +24,6 @@ form{
     text-decoration: underline;
 }
 
-.profile img{
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    object-fit: cover;
-}
-
-.avatar{
-    font-size: 15px;
-    text-decoration: underline;
-    cursor: pointer;
-}
-
-
-
 .signup_block{
     background: rgba(67, 94, 31, 0.90);;
     color: white;
@@ -92,6 +77,7 @@ form{
     text-decoration: underline;
     cursor: pointer;
 }
+
 
 
 
