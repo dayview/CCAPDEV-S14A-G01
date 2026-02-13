@@ -9,7 +9,16 @@ body {
     margin: 40px auto;
     padding: 20px;
     min-height: 85vh;
+    margin: 0;
+    background-image: url("https://www.dlsu.edu.ph/wp-content/uploads/2017/12/1DLSU-at-duskE.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
+    padding-top: 64px;
+    min-height: 100vh;
 }
+
 
 .right-panel .room {
     margin-top: 20px;
