@@ -48,7 +48,6 @@ function renderReservations(){
         tr.innerHTML = `
         <td> ${info(r.date)} </td>
         <td> ${info(r.timeIn)} </td>
-        <td> ${info(r.timeOut)} </td>
         <td> ${info(r.room)} </td>
         <td> ${info(r.seat)} </td>
         <td> ${info(r.anonymous ? "Yes" : "No")} </td>
@@ -68,7 +67,7 @@ reservationbody.addEventListener("click", (e) => {
     if(!btn) return;
 
     const index = Number(btn.dataset.index); //read and write the data
-    if(Number.isNaN(index)) return;
+    if(Number.isNaN(index)) return; //NaN not a number
 
     const reservations = getReservations();
     const chosen = reservations[index];
@@ -78,7 +77,7 @@ reservationbody.addEventListener("click", (e) => {
         return;
     }
 
-    const final = confirm(`Delete this reservation?\n\nDate: ${chosen.date}\nTime: ${chosen.timeIn} - ${chosen.timeOut}\nRoom: ${chosen.room}\nSeat: ${chosen.seat}`);
+    const final = confirm(`Delete this reservation?\n\nDate: ${chosen.date}\nTime: ${chosen.timeIn}\nRoom: ${chosen.room}\nSeat: ${chosen.seat}`);
     if(!final) return;
     
     reservations.splice(index,1);
@@ -87,3 +86,4 @@ reservationbody.addEventListener("click", (e) => {
 });
 
 renderReservations();
+
