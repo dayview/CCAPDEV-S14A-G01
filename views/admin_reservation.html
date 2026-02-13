@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
   <head>
     <meta charset="UTF-8">
     <title>animo.labs Reservation</title>
@@ -13,39 +14,34 @@
   <body>
     <section class="header">
       <img src="../images/dlsu-logo-white.png" alt="DLSU Logo" height="30">
-
       <div class="top_right">
         <a href="admin_homepage.html">Admin Homepage</a>
-        <a href="#">Reservation History</a>                   <!--Add href going to reservation history-->
-        <button class="logout_button">LOG OUT</button>        <!--Add log out functionality-->
+        <a href="#">Reservation History</a>
+        <button class="logout_button">LOG OUT</button>
       </div>
       </section>
 
-    <section class="history-page">
-      <div class="history-container">
+    <section class="history_page">
+      <div class="history_container">
         <h1 class="page_title">STUDENT RESERVATION HISTORY</h1>
         
-        <!-- Search Section -->
         <div class="search_section">
           <label class="input_label">STUDENT USER ID</label>
           <div class="search_row">
-            <input type="text" class="student_input" id="student-id-input" placeholder="Enter 8-digit Student ID" maxlength="8">
-            <button class="search_button" id="search-btn">SEARCH</button>
+            <input type="text" class="student_input" id="student_id_input" placeholder="Enter 8-digit Student ID" maxlength="8">
+            <button class="search_button" id="search_btn">SEARCH</button>
           </div>
         </div>
 
-        <!-- Student Info Display (hidden initially) -->
-        <div class="student-info" id="student-info" style="display: none;">
+        <div class="student_info" id="student_info" style="display: none;">
           <p><strong>Student ID:</strong> <span id="displayStudentId"></span></p>
         </div>
 
-        <!-- Error Message -->
-        <div class="error-message" id="error-message" style="display: none;">
-          <p>⚠️ Student ID not registered in the system.</p>
+        <div class="error_message" id="error_message" style="display: none;">
+          <p>Error: Student ID not registered in the system.</p>
         </div>
 
-        <!-- Filter Section (hidden initially) -->
-        <div class="filter-section" id="filter-section" style="display: none;">
+        <div class="filter_section" id="filter_section" style="display: none;">
           <label for="filterStatus">Filter by:</label>
           <select id="filterStatus">
             <option value="all">All Reservations</option>
@@ -54,8 +50,7 @@
           </select>
         </div>
 
-        <!-- Table Container -->
-        <div class="table_container" id="table-container" style="display: none;">
+        <div class="table_container" id="table_container" style="display: none;">
           <table class="history_table">
             <thead>
               <tr>
@@ -68,14 +63,12 @@
                 <th>Anonymous</th>
               </tr>
             </thead>
-            <tbody id="history-body">
-              <!-- Table rows will be populated by JavaScript -->
+            <tbody id="history_body">
             </tbody>
           </table>
         </div>
 
-        <!-- No Reservations Message -->
-        <div id="noReservations" class="no-reservations" style="display: none;">
+        <div id="noReservations" class="no_reservations" style="display: none;">
           <p>This student has no reservations.</p>
         </div>
       </div>

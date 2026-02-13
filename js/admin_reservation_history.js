@@ -1,21 +1,30 @@
-// Admin Reservation History JavaScript
-// Authentication temporarily disabled for troubleshooting
+const rememberUntil = Number(localStorage.getItem("adminRememberUntil"));
+const sessionLogin = sessionStorage.getItem("isAdminLoggedIn");
+const currentAdmin = JSON.parse(localStorage.getItem("currentAdmin"));
 
-console.log("Admin Reservation History loaded");
+let authenticated = false;
 
-// Get reservations from localStorage
+if (rememberUntil && Date.now() <= rememberUntil) authenticated = true;
+else if (sessionLogin === "true") authenticated = true;
+
+if (!authenticated || !currentAdmin) {
+  alert("Authentication failed. Please log in as an administrator.");
+  localStorage.removeItem("adminRememberUntil");
+  localStorage.removeItem("currentAdmin");
+  sessionStorage.removeItem("isAdminLoggedIn");
+  window.location.href = "index.html";
+}
+
 function getReservations() {
   const raw = localStorage.getItem("reservations");
   return raw ? JSON.parse(raw) : [];
 }
 
-// Check if student exists in userAccounts
 function validateStudentId(studentId) {
   const users = JSON.parse(localStorage.getItem("userAccounts")) || [];
   return users.find(user => user.idNumber === studentId);
 }
 
-// Categorize reservations as upcoming or past
 function categorizeReservations(reservations) {
   const now = new Date();
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -35,14 +44,12 @@ function categorizeReservations(reservations) {
   return { upcoming, past };
 }
 
-// Current student being viewed
 let currentStudentId = null;
 let currentStudentReservations = [];
 
-// Render reservations based on filter
 function renderReservations(filter = 'all') {
-  const historyBody = document.getElementById('history-body');
-  const tableContainer = document.getElementById('table-container');
+  const historyBody = document.getElementById('history_body');
+  const tableContainer = document.getElementById('table_container');
   const noReservations = document.getElementById('noReservations');
   
   if (!currentStudentReservations || currentStudentReservations.length === 0) {
@@ -101,24 +108,22 @@ function renderReservations(filter = 'all') {
   });
 }
 
-// Search functionality
-const searchButton = document.getElementById('search-btn');
-const studentIdInput = document.getElementById('student-id-input');
-const studentInfo = document.getElementById('student-info');
+const searchButton = document.getElementById('search_btn');
+const studentIdInput = document.getElementById('student_id_input');
+const studentInfo = document.getElementById('student_info');
 const displayStudentId = document.getElementById('displayStudentId');
-const errorMessage = document.getElementById('error-message');
-const filterSection = document.getElementById('filter-section');
+const errorMessage = document.getElementById('error_message');
+const filterSection = document.getElementById('filter_section');
 const filterStatus = document.getElementById('filterStatus');
 
 if (searchButton && studentIdInput) {
   searchButton.addEventListener('click', function() {
     const studentId = studentIdInput.value.trim();
     
-    // Reset displays
     studentInfo.style.display = 'none';
     errorMessage.style.display = 'none';
     filterSection.style.display = 'none';
-    document.getElementById('table-container').style.display = 'none';
+    document.getElementById('table_container').style.display = 'none';
     document.getElementById('noReservations').style.display = 'none';
     
     if (!studentId) {
@@ -131,31 +136,25 @@ if (searchButton && studentIdInput) {
       return;
     }
     
-    // Validate student exists
     const studentExists = validateStudentId(studentId);
     if (!studentExists) {
       errorMessage.style.display = 'block';
       return;
     }
     
-    // Get all reservations and filter by student
     const allReservations = getReservations();
     const studentReservations = allReservations.filter(res => res.userId === studentId);
     
-    // Store current student data
     currentStudentId = studentId;
     currentStudentReservations = studentReservations;
     
-    // Display student info
     displayStudentId.textContent = studentId;
     studentInfo.style.display = 'block';
     filterSection.style.display = 'flex';
     
-    // Render reservations
     renderReservations('all');
   });
   
-  // Allow Enter key to search
   studentIdInput.addEventListener('keypress', function(e) {
     if (e.key === 'Enter') {
       searchButton.click();
@@ -163,7 +162,6 @@ if (searchButton && studentIdInput) {
   });
 }
 
-// Filter functionality
 if (filterStatus) {
   filterStatus.addEventListener('change', function() {
     renderReservations(this.value);

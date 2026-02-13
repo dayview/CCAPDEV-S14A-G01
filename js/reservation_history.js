@@ -1,28 +1,35 @@
-// Reservation History JavaScript
-// Authentication temporarily disabled for troubleshooting
+const rememberUntil = Number(localStorage.getItem("rememberUntil"));
+const sessionLogin = sessionStorage.getItem("isLoggedIn");
+const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
-// Get current user from localStorage
-const currentUser = JSON.parse(localStorage.getItem("currentUser")) || { idNumber: "12345678", username: "Guest" };
+let authenticated = false;
 
-// Display user ID
+if (rememberUntil && Date.now() <= rememberUntil) authenticated = true;
+else if (sessionLogin === "true") authenticated = true;
+
+if (!authenticated || !currentUser) {
+  alert("You must be logged in to view this page.");
+  localStorage.removeItem("rememberUntil");
+  localStorage.removeItem("currentUser");
+  sessionStorage.removeItem("isLoggedIn");
+  window.location.href = "login.html";
+}
+
 const userIdDisplay = document.getElementById('userIdDisplay');
 if (userIdDisplay && currentUser) {
   userIdDisplay.textContent = currentUser.idNumber || 'N/A';
 }
 
-// Get reservations from localStorage
 function getReservations() {
   const raw = localStorage.getItem("reservations");
   return raw ? JSON.parse(raw) : [];
 }
 
-// Filter reservations by user
 function getUserReservations() {
   const allReservations = getReservations();
   return allReservations.filter(res => res.userId === currentUser.idNumber);
 }
 
-// Determine if reservation is past or upcoming
 function getReservationStatus(reservation) {
   const now = new Date();
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -35,7 +42,6 @@ function getReservationStatus(reservation) {
   }
 }
 
-// Categorize reservations as upcoming or past
 function categorizeReservations(reservations) {
   const now = new Date();
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -55,10 +61,9 @@ function categorizeReservations(reservations) {
   return { upcoming, past };
 }
 
-// Render reservations
 function renderReservations(filter = 'all') {
-  const tbody = document.getElementById('history-body');
-  const emptyState = document.querySelector('.empty-state');
+  const tbody = document.getElementById('history_body');
+  const noReservationsEl = document.getElementById('noReservations');
   const historyTable = document.querySelector('.history_table');
   
   const userReservations = getUserReservations();
@@ -76,22 +81,20 @@ function renderReservations(filter = 'all') {
   
   if (reservationsToShow.length === 0) {
     if (historyTable) historyTable.style.display = 'none';
-    if (emptyState) emptyState.style.display = 'block';
+    if (noReservationsEl) noReservationsEl.style.display = 'block';
     return;
   }
   
   if (historyTable) historyTable.style.display = 'table';
-  if (emptyState) emptyState.style.display = 'none';
+  if (noReservationsEl) noReservationsEl.style.display = 'none';
   
   tbody.innerHTML = '';
   
   reservationsToShow.forEach(res => {
     const row = document.createElement('tr');
     
-    // Determine status based on date
     const status = getReservationStatus(res);
     
-    // Anonymous is always a boolean, true if reservation.anonymous is true
     const anonymous = res.anonymous ? 'Yes' : 'No';
     
     row.innerHTML = `
@@ -108,7 +111,6 @@ function renderReservations(filter = 'all') {
   });
 }
 
-// Filter functionality
 const filterStatus = document.getElementById('filterStatus');
 if (filterStatus) {
   filterStatus.addEventListener('change', function() {
@@ -116,5 +118,4 @@ if (filterStatus) {
   });
 }
 
-// Initial render
 renderReservations('all');

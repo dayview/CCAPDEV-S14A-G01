@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
   <head>
     <meta charset="UTF-8">
     <title>animo.labs Reservation</title>
@@ -13,25 +14,22 @@
   <body>
     <section class="header">
       <img src="../images/dlsu-logo-white.png" alt="DLSU Logo" height="30">
-
       <div class="top_right">
-        <a href="#">Reservation History</a>                   <!--Add href going to reservation history-->
-        <a href="user_profile.html">View Profile</a>                          <!--Add href going to view profile-->
-        <button class="logout_button">LOG OUT</button>        <!--Add log out functionality-->
+        <a href="#">Reservation History</a>
+        <a href="user_profile.html">View Profile</a>
+        <button class="logout_button">LOG OUT</button>
       </div>
     </section>
 
-    <section class="history-page">
-      <div class="history-container">
+    <section class="history_page">
+      <div class="history_container">
         <h1 class="page_title">MY RESERVATION HISTORY</h1>
 
-        <!-- User Info Display -->
-        <div class="user-info">
+        <div class="user_info">
           <p><strong>Student ID:</strong> <span id="userIdDisplay"></span></p>
         </div>
 
-        <!-- Filter Section -->
-        <div class="filter-section">
+        <div class="filter_section">
           <label for="filterStatus">Filter by:</label>
           <select id="filterStatus">
             <option value="all">All Reservations</option>
@@ -40,7 +38,6 @@
           </select>
         </div>
 
-        <!-- Table Container -->
         <div class="table_container">
           <table class="history_table">
             <thead>
@@ -54,14 +51,12 @@
                 <th>Anonymous</th>
               </tr>
             </thead>
-            <tbody id="history-body">
-              <!-- Table rows will be populated by JavaScript -->
+            <tbody id="history_body">
             </tbody>
           </table>
         </div>
 
-        <!-- No Reservations Message -->
-        <div id="noReservations" class="no-reservations" style="display: none;">
+        <div id="noReservations" class="no_reservations" style="display: none;">
           <p>You have no reservations yet.</p>
           <a href="reservation.html" class="btn">Make a Reservation</a>
         </div>

@@ -1,5 +1,3 @@
-/* Admin Reservation History Page Styles */
-
 .header {
     position: fixed;
     top: 0;
@@ -36,7 +34,7 @@
   cursor: pointer;
 }
 
-.history-page {
+.history_page {
     max-width: 1200px;
     margin: 80px auto 40px auto;
     padding: 20px;
@@ -44,7 +42,7 @@
     min-height: 85vh;
 }
 
-.history-page::before {
+.history_page::before {
     content: "";
     position: absolute;
     inset: 0;
@@ -53,7 +51,7 @@
     border-radius: 12px;
 }
 
-.history-container {
+.history_container {
     position: relative;
     z-index: 1;
     background: #C5EAA0;
@@ -69,7 +67,6 @@
     text-decoration: underline;
 }
 
-/* Search Section */
 .search_section {
     background: white;
     padding: 20px;
@@ -135,8 +132,7 @@
     transform: translateY(0);
 }
 
-/* Student Info Display */
-.student-info {
+.student_info {
     background: white;
     padding: 12px 20px;
     border-radius: 8px;
@@ -145,18 +141,17 @@
     width: fit-content;
 }
 
-.student-info p {
+.student_info p {
     margin: 0;
     font-size: 16px;
     color: #333;
 }
 
-.student-info strong {
+.student_info strong {
     color: #3C5A14;
 }
 
-/* Error Message */
-.error-message {
+.error_message {
     background: #ffebee;
     padding: 15px 20px;
     border-radius: 8px;
@@ -164,28 +159,27 @@
     border-left: 4px solid #d32f2f;
 }
 
-.error-message p {
+.error_message p {
     margin: 0;
     font-size: 16px;
     color: #d32f2f;
     font-weight: 600;
 }
 
-/* Filter Section */
-.filter-section {
+.filter_section {
     display: flex;
     align-items: center;
     gap: 10px;
     margin-bottom: 20px;
 }
 
-.filter-section label {
+.filter_section label {
     font-weight: 600;
     color: #3C5A14;
     font-size: 16px;
 }
 
-.filter-section select {
+.filter_section select {
     padding: 8px 12px;
     border: 2px solid #3C5A14;
     border-radius: 8px;
@@ -195,12 +189,11 @@
     font-family: Inter;
 }
 
-.filter-section select:focus {
+.filter_section select:focus {
     outline: none;
     border-color: #669D31;
 }
 
-/* Table Styles */
 .table_container {
     background: white;
     border-radius: 10px;
@@ -247,13 +240,12 @@
     font-size: 14px;
 }
 
-.history_table tr.past-reservation {
+.history_table tr.past_reservation {
     opacity: 0.6;
     background-color: #f9f9f9;
 }
 
-/* Status Badge */
-.status-badge {
+.status_badge {
     display: inline-block;
     padding: 4px 12px;
     border-radius: 15px;
@@ -262,41 +254,38 @@
     text-transform: uppercase;
 }
 
-.status-upcoming {
+.status_upcoming {
     background: #669D31;
     color: white;
 }
 
-.status-past {
+.status_past {
     background: #888;
     color: white;
 }
 
-/* Anonymous Badge */
-.anonymous-yes {
+.anonymous_yes {
     color: #FF9800;
     font-weight: 600;
 }
 
-.anonymous-no {
+.anonymous_no {
     color: #666;
 }
 
-/* Empty State */
-.no-reservations {
+.no_reservations {
     text-align: center;
     padding: 40px 20px;
     background: white;
     border-radius: 10px;
 }
 
-.no-reservations p {
+.no_reservations p {
     font-size: 18px;
     color: #666;
     margin: 0;
 }
 
-/* Logout Button */
 .logout_button {
     padding: 8px 18px;
     border: none;
@@ -311,7 +300,6 @@
     background: #b71c1c;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
     .search_row {
         flex-direction: column;

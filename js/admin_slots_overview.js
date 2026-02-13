@@ -1,27 +1,37 @@
-// Admin Slots Overview JavaScript
-// Authentication temporarily disabled for troubleshooting
+const rememberUntil = Number(localStorage.getItem("adminRememberUntil"));
+const sessionLogin = sessionStorage.getItem("isAdminLoggedIn");
+const currentAdmin = JSON.parse(localStorage.getItem("currentAdmin"));
 
-// Room seat counts (20 seats per room)
+let authenticated = false;
+
+if (rememberUntil && Date.now() <= rememberUntil) authenticated = true;
+else if (sessionLogin === "true") authenticated = true;
+
+if (!authenticated || !currentAdmin) {
+  alert("Authentication failed. Please log in as an administrator.");
+  localStorage.removeItem("adminRememberUntil");
+  localStorage.removeItem("currentAdmin");
+  sessionStorage.removeItem("isAdminLoggedIn");
+  window.location.href = "index.html";
+}
+
 const ROOM_SEATS = {
   'G302A': 20,
   'G302B': 20,
   'G304B': 20
 };
 
-// Time slots (7:30 AM to 6:00 PM in 30-minute increments = 22 slots)
 const TIME_SLOTS = [
   '07:30', '08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00',
   '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00',
   '15:30', '16:00', '16:30', '17:00', '17:30', '18:00'
 ];
 
-// Get reservations from localStorage
 function getReservations() {
   const raw = localStorage.getItem("reservations");
   return raw ? JSON.parse(raw) : [];
 }
 
-// Get occupied seats count for a specific date, room, and time
 function getOccupiedSeatsCount(date, room, timeIn) {
   const reservations = getReservations();
   
@@ -34,34 +44,29 @@ function getOccupiedSeatsCount(date, room, timeIn) {
   return occupied.length;
 }
 
-// Calculate status for a time slot
-// Returns: 0 = available, 1 = class occupied (placeholder), 2 = full, 3 = unavailable (placeholder)
 function calculateSlotStatus(date, room, timeIn) {
   const totalSeats = ROOM_SEATS[room] || 20;
   const occupiedCount = getOccupiedSeatsCount(date, room, timeIn);
   
   if (occupiedCount === 0) {
-    return 0; // Available (green)
+    return 0;
   } else if (occupiedCount < totalSeats) {
-    return 0; // Still available (some seats left) - green
+    return 0;
   } else if (occupiedCount >= totalSeats) {
-    return 2; // Full (red)
+    return 2;
   }
   
-  return 0; // Default to available
+  return 0;
 }
 
-// Get DOM elements
 const roomSelect = document.getElementById('roomSelect');
 const dateInput = document.getElementById('dateInput');
 const scheduleBody = document.getElementById('scheduleBody');
 const seatsAvailableEl = document.getElementById('seatsAvailable');
 const seatsRepairEl = document.getElementById('seatsRepair');
 
-// Set today's date as default
 dateInput.valueAsDate = new Date();
 
-// Status class mapping
 const statusClasses = {
   0: 'status_available',
   1: 'status_class',
@@ -69,10 +74,8 @@ const statusClasses = {
   3: 'status_unavailable'
 };
 
-// Currently selected cell for highlighting
 let selectedCell = null;
 
-// Function to generate schedule table for a single room
 function generateScheduleTable(room, date) {
   scheduleBody.innerHTML = '';
   
@@ -84,7 +87,6 @@ function generateScheduleTable(room, date) {
 
   const row = document.createElement('tr');
   
-  // First cell shows "SLOTS" label
   const labelCell = document.createElement('td');
   labelCell.textContent = 'SLOTS';
   labelCell.style.background = '#2f4f1f';
@@ -93,7 +95,6 @@ function generateScheduleTable(room, date) {
   labelCell.style.fontSize = '13px';
   row.appendChild(labelCell);
   
-  // Time slot cells (22 slots from 7:30 AM to 6:00 PM)
   TIME_SLOTS.forEach((timeSlot, index) => {
     const cell = document.createElement('td');
     const status = calculateSlotStatus(date, room, timeSlot);
@@ -103,21 +104,15 @@ function generateScheduleTable(room, date) {
     cell.dataset.time = timeSlot;
     cell.dataset.status = status;
     
-    // Add click event to update booking overview
     cell.addEventListener('click', function() {
-      // Remove previous selection highlight
       if (selectedCell) {
         selectedCell.classList.remove('selected_slot');
       }
       
-      // Highlight current selection
       this.classList.add('selected_slot');
       selectedCell = this;
       
-      // Update booking overview for this specific time slot
       updateBookingOverview(room, date, timeSlot);
-      
-      console.log(`Selected: ${room} on ${date} at ${timeSlot}`);
     });
     
     row.appendChild(cell);
@@ -125,14 +120,11 @@ function generateScheduleTable(room, date) {
   
   scheduleBody.appendChild(row);
   
-  // Clear selection when regenerating table
   selectedCell = null;
 }
 
-// Function to update booking overview
 function updateBookingOverview(room, date, timeSlot) {
   if (!room || !date || !timeSlot) {
-    // No specific time slot selected - show overall room capacity
     if (room) {
       const totalSeats = ROOM_SEATS[room] || 20;
       seatsAvailableEl.textContent = `${totalSeats}/${totalSeats}`;
@@ -144,28 +136,24 @@ function updateBookingOverview(room, date, timeSlot) {
     return;
   }
   
-  // Calculate availability for the specific time slot
   const totalSeats = ROOM_SEATS[room] || 20;
   const occupiedCount = getOccupiedSeatsCount(date, room, timeSlot);
   const availableCount = totalSeats - occupiedCount;
   
   seatsAvailableEl.textContent = `${availableCount}/${totalSeats}`;
-  seatsRepairEl.textContent = '0'; // No repair seats for now
+  seatsRepairEl.textContent = '0';
 }
 
-// Event listener for room selection
 roomSelect.addEventListener('change', function() {
   const selectedRoom = this.value;
   const selectedDate = dateInput.value;
   generateScheduleTable(selectedRoom, selectedDate);
 });
 
-// Event listener for date change
 dateInput.addEventListener('change', function() {
   const selectedRoom = roomSelect.value;
   const selectedDate = this.value;
   generateScheduleTable(selectedRoom, selectedDate);
 });
 
-// Initialize with empty state
 generateScheduleTable(null, null);

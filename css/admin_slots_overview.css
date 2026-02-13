@@ -38,47 +38,6 @@ body::before {
     z-index: -1;
 }
 
-.top_bar {
-  position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 64px;
-    background-color: rgb(196, 234, 159, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 24px;
-    z-index: 1000;
-}
-
-.top_left_content {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-.logo_box {
-  width: 42px;
-  height: 42px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
-
-.logo_box img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain
-}
-
-.title {
-  font-size: 20px;
-  font-weight: bold;
-  color: #2f4f1f;
-}
-
 .top_right {
   display: flex;
   align-items: center;
@@ -169,17 +128,6 @@ body::before {
   margin: 0;
 }
 
-.edit_button {
-  width: fit-content;
-  padding: 8px 16px;
-  border-radius: 20px;
-  border: none;
-  background: #2f5e1e;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-}
-
 .menu_link {
   text-decoration: none;
   color: inherit;
@@ -226,7 +174,6 @@ body::before {
   background-color: #e0e0e0;
 }
 
-/* RIGHT PANEL - UPDATED */
 .right_panel {
   background: #5f7f2f;
   display: flex;
@@ -290,7 +237,6 @@ body::before {
   color: #2f5e1e;
 }
 
-/* Chart Section */
 .chart_section {
   background: #cdebb1;
   padding: 15px;
@@ -330,11 +276,11 @@ body::before {
   min-width: 60px;
 }
 
-.schedule_table th:first-child {
+.schedule_table th:first_child {
   border-radius: 8px 0 0 0;
 }
 
-.schedule_table th:last-child {
+.schedule_table th:last_child {
   border-radius: 0 8px 0 0;
 }
 
@@ -362,12 +308,11 @@ body::before {
   color: #666;
 }
 
-.schedule_table td:hover:not(:first-child):not(.empty_message) {
+.schedule_table td:hover:not(:first_child):not(.empty_message) {
   opacity: 0.8;
   transform: scale(1.05);
 }
 
-/* Status colors */
 .status_available {
   background: #4CAF50;
 }
@@ -384,7 +329,6 @@ body::before {
   background: #FFA726;
 }
 
-/* Legend */
 .legend_container {
   display: flex;
   justify-content: center;
@@ -428,7 +372,7 @@ body::before {
 .legend_unavailable {
   background: #FFA726;
 }
-/* Highlight for selected time slot */
+
 .schedule_table td.selected_slot {
   box-shadow: inset 0 0 0 3px #FFD700;
   transform: scale(1.05);

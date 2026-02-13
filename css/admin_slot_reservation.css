@@ -38,47 +38,6 @@ body::before {
     z-index: -1;
 }
 
-.top_bar {
-  position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 64px;
-    background-color: rgb(196, 234, 159, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 24px;
-    z-index: 1000;
-}
-
-.top_left_content {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-.logo_box {
-  width: 42px;
-  height: 42px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
-
-.logo_box img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain
-}
-
-.title {
-  font-size: 20px;
-  font-weight: bold;
-  color: #2f4f1f;
-}
-
 .top_right {
   display: flex;
   align-items: center;
@@ -107,7 +66,6 @@ body::before {
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }
-
 
 .main_container {
   display: flex;
@@ -171,18 +129,6 @@ body::before {
   margin: 0;
 }
 
-.edit_button {
-  width: fit-content;
-  padding: 8px 16px;
-  border-radius: 20px;
-  border: none;
-  background: #2f5e1e;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-/* Reservation Form Styles */
 .reservation_form {
   display: flex;
   flex-direction: column;
@@ -233,7 +179,6 @@ body::before {
   color: #999;
 }
 
-/* Action Buttons */
 .action_button {
   width: 100%;
   padding: 12px 20px;
@@ -389,7 +334,6 @@ body::before {
   color: #2f5e1e;
 }
 
-/* Right Panel Restructure */
 .right_panel {
   display: flex;
   flex-direction: column;
@@ -404,7 +348,6 @@ body::before {
   background: #5f7f2f;
 }
 
-/* Seating Section */
 .seating_section {
   background: #cdebb1;
   padding: 30px;
@@ -439,7 +382,6 @@ body::before {
   margin-top: 40px;
 }
 
-/* Supervisor Seat */
 .supervisor_seat {
   display: flex;
   flex-direction: column;
@@ -469,7 +411,6 @@ body::before {
   margin-top: 5px;
 }
 
-/* Seat Styling */
 .seat {
   width: 50px;
   height: 50px;
@@ -511,7 +452,6 @@ body::before {
   color: #000;
 }
 
-/* Format 1: Groups of 4 seats (2x2) */
 .format1 {
   flex-direction: row;
 }
@@ -533,7 +473,6 @@ body::before {
   gap: 10px;
 }
 
-/* Format 2: 4 columns of 9 seats */
 .format2 {
   flex-direction: row;
 }
@@ -554,7 +493,6 @@ body::before {
   width: 40px;
 }
 
-/* Format 3: 6 rows x 6 columns */
 .format3 {
   flex-direction: row;
 }
@@ -570,7 +508,6 @@ body::before {
   gap: 10px;
 }
 
-/* Legend */
 .legend_container {
   display: flex;
   justify-content: center;
@@ -613,11 +550,10 @@ body::before {
   background: #FFD700;
 }
 
-/* Row spacer for Format 3 */
 .row_spacer {
   height: 30px;
 }
-/* Simplified 5-column grid seating layout (matching reservation.html) */
+
 .seat_map {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
@@ -691,7 +627,7 @@ body::before {
   gap: 20px;
 }
 
-/* Update legend to match */
+
 .legend_container {
   display: flex;
   justify-content: center;
