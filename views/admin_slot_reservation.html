@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <title>animo.labs Reservation</title>
+    <link rel="stylesheet" href="../css/admin_slot_reservation.css">
+  </head>
+
+  <body>
+
+    <section class="header">
+      <img src="../images/dlsu-logo-white.png" alt="DLSU Logo" height="30">
+      <div class="top_right">
+        <a href="admin_homepage.html">Admin Homepage</a>
+        <a href="#">Reservation History</a>
+        <button class="logout_button">LOG OUT</button>
+      </div>
+    </section>
+
+    <main class="main_container">
+
+      <div class="dashboard">
+        <section class="panel left_panel">
+          <div class="user_box">
+            <div class="user_top_row">
+              <div class="avatar"><img src="../images/profile.png"></div>
+              <h2>Welcome ADMIN<br>(Username)!</h2>
+            </div>
+          </div>
+
+          <div class="reservation_form">
+            <h3 class="form_title">Select seats to reserve</h3>
+            
+            <div class="form_group">
+              <label class="form_label">STUDENT ID</label>
+              <input type="text" class="form_input" id="studentId" placeholder="12345678">
+            </div>
+
+            <div class="form_group">
+              <label class="form_label">DATE</label>
+              <input type="date" class="form_input" id="reservationDate">
+            </div>
+
+            <div class="form_group">
+              <label class="form_label">TIME IN</label>
+              <select class="form_input" id="timeIn">
+                <option value="">Select time</option>
+                <option value="07:30">7:30 AM</option>
+                <option value="08:00">8:00 AM</option>
+                <option value="08:30">8:30 AM</option>
+                <option value="09:00">9:00 AM</option>
+                <option value="09:30">9:30 AM</option>
+                <option value="10:00">10:00 AM</option>
+                <option value="10:30">10:30 AM</option>
+                <option value="11:00">11:00 AM</option>
+                <option value="11:30">11:30 AM</option>
+                <option value="12:00">12:00 PM</option>
+                <option value="12:30">12:30 PM</option>
+                <option value="13:00">1:00 PM</option>
+                <option value="13:30">1:30 PM</option>
+                <option value="14:00">2:00 PM</option>
+                <option value="14:30">2:30 PM</option>
+                <option value="15:00">3:00 PM</option>
+                <option value="15:30">3:30 PM</option>
+                <option value="16:00">4:00 PM</option>
+                <option value="16:30">4:30 PM</option>
+                <option value="17:00">5:00 PM</option>
+                <option value="17:30">5:30 PM</option>
+                <option value="18:00">6:00 PM</option>
+              </select>
+            </div>
+
+            <div class="form_group">
+              <label class="form_label">TIME OUT</label>
+              <select class="form_input" id="timeOut">
+                <option value="">Select time</option>
+                <option value="07:30">7:30 AM</option>
+                <option value="08:00">8:00 AM</option>
+                <option value="08:30">8:30 AM</option>
+                <option value="09:00">9:00 AM</option>
+                <option value="09:30">9:30 AM</option>
+                <option value="10:00">10:00 AM</option>
+                <option value="10:30">10:30 AM</option>
+                <option value="11:00">11:00 AM</option>
+                <option value="11:30">11:30 AM</option>
+                <option value="12:00">12:00 PM</option>
+                <option value="12:30">12:30 PM</option>
+                <option value="13:00">1:00 PM</option>
+                <option value="13:30">1:30 PM</option>
+                <option value="14:00">2:00 PM</option>
+                <option value="14:30">2:30 PM</option>
+                <option value="15:00">3:00 PM</option>
+                <option value="15:30">3:30 PM</option>
+                <option value="16:00">4:00 PM</option>
+                <option value="16:30">4:30 PM</option>
+                <option value="17:00">5:00 PM</option>
+                <option value="17:30">5:30 PM</option>
+                <option value="18:00">6:00 PM</option>
+              </select>
+            </div>
+
+            <div class="form_group">
+              <label class="form_label">ROOM</label>
+              <select class="form_input" id="roomNumber">
+                <option value="">Select a room</option>
+                <option value="G302A">G302A</option>
+                <option value="G302B">G302B</option>
+                <option value="G304B">G304B</option>
+              </select>
+            </div>
+          </div>
+
+          <button class="action_button reserve_button">RESERVE SLOT</button>
+          <button class="action_button remove_button">REMOVE SLOT</button>
+        </section>
+
+        <section class="panel right_panel">
+          <div class="top_section">
+            <div class="column">
+              <label class="input_label">Date:</label>
+              <input type="date" class="info_input" id="dateInput">
+              
+              <label class="input_label">Room:</label>
+              <select class="info_input" id="roomSelect">
+                  <option value="">Select a room</option>
+                  <option value="G302A">G302A</option>
+                  <option value="G302B">G302B</option>
+                  <option value="G304B">G304B</option>
+              </select>
+            </div>
+    
+            <div class="column">
+              <label class="input_label">Booking Overview:</label>
+              <div class="booking_box">
+                <div class="booking_stat">
+                  <span class="booking_label">SEATS AVAILABLE:</span>
+                  <span class="booking_value" id="seatsAvailable">20/20</span>
+                </div>
+                <div class="booking_stat">
+                  <span class="booking_label">SEATS FOR REPAIR:</span>
+                  <span class="booking_value" id="seatsRepair">0</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="seating_section">
+            <div class="board_label">BOARD</div>
+            
+            <div class="seat_map" id="seat_map">
+            </div>
+
+            <div class="legend_container">
+              <div class="legend_item">
+                <div class="legend_box legend_occupied"></div>
+                <span>Occupied</span>
+              </div>
+              <div class="legend_item">
+                <div class="legend_box legend_repair"></div>
+                <span>Under Repair</span>
+              </div>
+              <div class="legend_item">
+                <div class="legend_box legend_available"></div>
+                <span>Available</span>
+              </div>
+              <div class="legend_item">
+                <div class="legend_box legend_selected"></div>
+                <span>Selected</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+    </main>
+    
+    <script src="../js/header_navigation.js"></script>
+    <script src="../js/admin_slot_reservation.js"></script>
+</body>
+</html>
