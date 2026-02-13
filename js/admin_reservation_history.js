@@ -29,6 +29,7 @@ function getUserAccounts() {
 
 // Validate if Student ID exists in the system
 function validateStudentId(studentId) {
+    // Only check localStorage userAccounts
     const users = getUserAccounts();
     return users.find(user => user.idNumber === studentId);
 }
@@ -160,6 +161,8 @@ document.getElementById("search-btn").addEventListener("click", function() {
     const studentIdInput = document.getElementById("student-id-input");
     const studentId = studentIdInput.value.trim();
     
+    console.log('Searching for Student ID:', studentId);
+    
     // Hide all result sections
     document.getElementById("student-info").style.display = "none";
     document.getElementById("error-message").style.display = "none";
@@ -182,6 +185,7 @@ document.getElementById("search-btn").addEventListener("click", function() {
     
     // Validate if Student ID exists
     const student = validateStudentId(studentId);
+    console.log('Student found:', student);
     
     if (!student) {
         document.getElementById("error-message").style.display = "block";
@@ -190,10 +194,17 @@ document.getElementById("search-btn").addEventListener("click", function() {
         return;
     }
     
+    // Check reservations
+    const allReservations = getReservations();
+    console.log('All reservations in system:', allReservations);
+    
+    const studentReservations = getStudentReservations(studentId);
+    console.log('Reservations for this student:', studentReservations);
+    
     // Student ID is valid - display student info
     currentSearchedStudentId = studentId;
     document.getElementById("student-info").style.display = "block";
-    document.getElementById("displayStudentId").textContent = student.idNumber;
+    document.getElementById("displayStudentId").textContent = student.idNumber || studentId;
     
     // Render reservations
     renderReservations(studentId, 'all');
