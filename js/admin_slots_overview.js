@@ -1,3 +1,20 @@
+const rememberUntil = Number(localStorage.getItem("adminRememberUntil"));
+const sessionLogin = sessionStorage.getItem("isAdminLoggedIn");
+const currentAdmin = JSON.parse(localStorage.getItem("currentAdmin"));
+
+let authenticated = false;
+
+if (rememberUntil && Date.now() <= rememberUntil) authenticated = true;
+else if (sessionLogin === "true") authenticated = true;
+
+if (!authenticated || !currentAdmin) {
+  alert("You are not logged in or your session has expired. Please log in again.");
+  localStorage.removeItem("adminRememberUntil");
+  localStorage.removeItem("currentAdmin");
+  sessionStorage.removeItem("isAdminLoggedIn");
+  window.location.href = "index.html";
+}
+
 // Sample data for demonstration - in production, this would come from your backend
 // Status: 0 = available, 1 = class occupied, 2 = full, 3 = unavailable
 // Now with 22 slots (7:30 AM to 6:00 PM in 30-minute increments)

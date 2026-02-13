@@ -1,99 +1,154 @@
-/* ---------- HARD-CODED DATA ---------- */
+// Authentication check
+const rememberUntil = Number(localStorage.getItem("rememberUntil"));
+const sessionLogin = sessionStorage.getItem("isLoggedIn");
+const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
-const reservationHistory = [
-  {
-    lab: "Lab G301",
-    seat: "PC-12",
-    dateReserved: "2026-01-15 09:10",
-    slot: "Jan 20, 10:00–11:00",
-    anonymous: false
-  },
-  {
-    lab: "Lab G304",
-    seat: "PC-03",
-    dateReserved: "2026-01-10 14:32",
-    slot: "Jan 22, 13:00–13:30",
-    anonymous: true
-  }
-];
+let authenticated = false;
 
-/* ---------- RESERVATION HISTORY ---------- */
-
-function loadHistory(data = reservationHistory) {
-  const tbody = document.getElementById("history-body");
-  if (!tbody) return;
-
-  // Clear existing rows
-  tbody.innerHTML = "";
-
-  // If no data, show empty message
-  if (data.length === 0) {
-    const emptyRow = document.createElement("tr");
-    emptyRow.innerHTML = `
-      <td colspan="5" class="empty_message">No reservations found.</td>
-    `;
-    tbody.appendChild(emptyRow);
-    return;
-  }
-
-  // Populate table with reservation data
-  data.forEach(r => {
-    const row = document.createElement("tr");
-
-    row.innerHTML = `
-      <td>${r.lab}</td>
-      <td>${r.seat}</td>
-      <td>${r.slot}</td>
-      <td>${r.dateReserved}</td>
-      <td>${r.anonymous ? "Yes" : "No"}</td>
-    `;
-
-    tbody.appendChild(row);
-  });
+if (rememberUntil && Date.now() <= rememberUntil) {
+    authenticated = true;
+} else if (sessionLogin === "true") {
+    authenticated = true;
 }
 
-/* ---------- SEARCH FUNCTIONALITY (Admin Only) ---------- */
-
-function searchStudentHistory() {
-  const input = document.getElementById("student-id-input");
-  if (!input) return;
-
-  const studentId = input.value.trim();
-
-  // Validate 8-digit student ID
-  if (studentId.length !== 8 || !/^\d{8}$/.test(studentId)) {
-    alert("Please enter a valid 8-digit Student ID.");
-    return;
-  }
-
-  // TODO: Replace with actual API call to fetch student's reservation history
-  // For now, using hard-coded data as placeholder
-  console.log("Searching for student ID:", studentId);
-  
-  // Simulate loading student's history
-  loadHistory(reservationHistory);
+if (!authenticated || !currentUser) {
+    localStorage.removeItem("rememberUntil");
+    localStorage.removeItem("currentUser");
+    sessionStorage.removeItem("isLoggedIn");
+    alert("Please log in to view reservation history.");
+    window.location.href = "login.html";
 }
 
-/* ---------- INIT ---------- */
-document.addEventListener("DOMContentLoaded", () => {
-  // Check if search button exists (admin page)
-  const searchButton = document.querySelector(".search_button");
-  
-  if (searchButton) {
-    // Admin page: Don't load history automatically, wait for search
-    searchButton.addEventListener("click", searchStudentHistory);
+// Display user information
+document.getElementById("userIdDisplay").textContent = currentUser.idNumber;
+
+// Get all reservations from localStorage
+function getReservations() {
+    const raw = localStorage.getItem("reservations");
+    return raw ? JSON.parse(raw) : [];
+}
+
+// Filter reservations by current user's student ID
+function getUserReservations() {
+    const allReservations = getReservations();
     
-    // Allow Enter key to trigger search
-    const input = document.getElementById("student-id-input");
-    if (input) {
-      input.addEventListener("keypress", (e) => {
-        if (e.key === "Enter") {
-          searchStudentHistory();
-        }
-      });
+    // Filter reservations where userId matches current user's idNumber
+    return allReservations.filter(reservation => 
+        reservation.userId === currentUser.idNumber
+    );
+}
+
+// Check if reservation is in the past
+function isPastReservation(reservation) {
+    const reservationDateTime = new Date(`${reservation.date}T${reservation.timeIn}`);
+    const now = new Date();
+    return reservationDateTime < now;
+}
+
+// Format date for display
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return date.toLocaleDateString('en-US', options);
+}
+
+// Format time for display (convert 24h to 12h format)
+function formatTime(timeString) {
+    const [hours, minutes] = timeString.split(':');
+    const hour = parseInt(hours);
+    const ampm = hour >= 12 ? 'PM' : 'AM';
+    const displayHour = hour % 12 || 12;
+    return `${displayHour}:${minutes} ${ampm}`;
+}
+
+// Render reservations in table format
+function renderReservations(filter = 'all') {
+    const userReservations = getUserReservations();
+    const tableBody = document.getElementById("history-body");
+    const noReservations = document.getElementById("noReservations");
+    const tableContainer = document.querySelector(".table_container");
+
+    // Clear previous content
+    tableBody.innerHTML = "";
+
+    if (userReservations.length === 0) {
+        noReservations.style.display = "block";
+        tableContainer.style.display = "none";
+        return;
     }
-  } else {
-    // Student page: Load history automatically on page load
-    loadHistory();
-  }
+
+    // Filter based on selection
+    let filteredReservations = userReservations;
+    if (filter === 'upcoming') {
+        filteredReservations = userReservations.filter(r => !isPastReservation(r));
+    } else if (filter === 'past') {
+        filteredReservations = userReservations.filter(r => isPastReservation(r));
+    }
+
+    if (filteredReservations.length === 0) {
+        noReservations.style.display = "block";
+        tableContainer.style.display = "none";
+        
+        const noResMsg = noReservations.querySelector("p");
+        const noResBtn = noReservations.querySelector(".btn");
+        
+        if (filter === 'upcoming') {
+            noResMsg.textContent = "You have no upcoming reservations.";
+            noResBtn.style.display = "inline-block";
+        } else if (filter === 'past') {
+            noResMsg.textContent = "You have no past reservations.";
+            noResBtn.style.display = "none";  // Hide button for past filter
+        } else {
+            noResMsg.textContent = "You have no reservations yet.";
+            noResBtn.style.display = "inline-block";
+        }
+        
+        return;
+    }
+
+    noReservations.style.display = "none";
+    tableContainer.style.display = "block";
+
+    // Sort reservations by date and time (most recent first)
+    filteredReservations.sort((a, b) => {
+        const dateA = new Date(`${a.date}T${a.timeIn}`);
+        const dateB = new Date(`${b.date}T${b.timeIn}`);
+        return dateB - dateA;
+    });
+
+    // Create table rows
+    filteredReservations.forEach(reservation => {
+        const isPast = isPastReservation(reservation);
+        
+        const row = document.createElement("tr");
+        row.className = isPast ? 'past-reservation' : '';
+        
+        row.innerHTML = `
+            <td><strong>${reservation.room}</strong></td>
+            <td>${reservation.seat}</td>
+            <td>${formatDate(reservation.date)}</td>
+            <td>${formatTime(reservation.timeIn)}</td>
+            <td>${formatTime(reservation.timeOut)}</td>
+            <td>
+                <span class="status-badge ${isPast ? 'status-past' : 'status-upcoming'}">
+                    ${isPast ? 'Past' : 'Upcoming'}
+                </span>
+            </td>
+            <td>
+                <span class="${reservation.anonymous ? 'anonymous-yes' : 'anonymous-no'}">
+                    ${reservation.anonymous ? '🔒 Yes' : 'No'}
+                </span>
+            </td>
+        `;
+        
+        tableBody.appendChild(row);
+    });
+}
+
+// Filter event listener
+document.getElementById("filterStatus").addEventListener("change", function() {
+    renderReservations(this.value);
 });
+
+// Initial render
+renderReservations();

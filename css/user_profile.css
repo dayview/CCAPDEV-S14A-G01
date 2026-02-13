@@ -1,11 +1,51 @@
-body {
+.page {
+    max-width: 520px;
+    margin: 110px auto 40px;
+    padding: 28px 26px;
+    border-radius: 18px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 0;
-    max-width: 1200px;
-    margin: 40px auto;
-    padding: 20px;
-    min-height: 85vh;
+    gap: 12px;
+    position: relative;
+    background: rgba(67, 94, 31, 0.90);
+    color: white;
+}
+
+.page a, .page button, .page p {
+    width: 100%;
+    border-radius: 14px;
+    padding: 12px 14px;
+    font-size: 16px;
+}
+
+.page a {
+    display: block;
+    text-decoration: none;
+    background: rgba(255, 255, 255, 0.92);
+    color: #1F3A04;
+    font-weight: 700;
+}
+
+.page p {
+    margin: 0;
+    background: rgba(255, 255, 255, 0.14);
+    color: rgba(255, 255, 255, 0.92);
+    font-weight: 600;
+}
+
+#logout_btn {
+    background: #1F3A04;
+    color: white;
+    border: none;
+    font-weight: 800;
+}
+
+.header .btn {
+    background: white;
+    color: #1F3A04;
+    text-decoration: none;
+    padding: 10px 16px;
+    border-radius: 18px;
+    font-weight: 800;
+    font-size: 14px;
 }

@@ -1,0 +1,328 @@
+/* Admin Reservation History Page Styles */
+
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 64px;
+    background-color: #3c5a14;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    z-index: 1000;
+}
+
+.top_right {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+
+.top_right a {
+  color: white;
+  text-decoration: underline;
+  font-weight: 600;
+}
+
+.logout_button {
+  padding: 8px 18px;
+  border: none;
+  border-radius: 20px;
+  background: #2f5e1e;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.history-page {
+    max-width: 1200px;
+    margin: 80px auto 40px auto;
+    padding: 20px;
+    position: relative;
+    min-height: 85vh;
+}
+
+.history-page::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(60, 90, 20, 0.75);
+    z-index: 0;
+    border-radius: 12px;
+}
+
+.history-container {
+    position: relative;
+    z-index: 1;
+    background: #C5EAA0;
+    padding: 30px;
+    border-radius: 12px;
+}
+
+.page_title {
+    font-size: 28px;
+    color: #3C5A14;
+    text-align: center;
+    margin-bottom: 25px;
+    text-decoration: underline;
+}
+
+/* Search Section */
+.search_section {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.input_label {
+    display: block;
+    font-size: 14px;
+    font-weight: 700;
+    color: #3C5A14;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.search_row {
+    display: flex;
+    gap: 10px;
+}
+
+.student_input {
+    flex: 1;
+    padding: 12px 15px;
+    border: 2px solid #3C5A14;
+    border-radius: 8px;
+    font-size: 16px;
+    font-family: Inter;
+}
+
+.student_input:focus {
+    outline: none;
+    border-color: #669D31;
+    box-shadow: 0 0 0 3px rgba(102, 157, 49, 0.1);
+}
+
+.student_input::placeholder {
+    color: #999;
+}
+
+.search_button {
+    padding: 12px 30px;
+    background: #3C5A14;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.search_button:hover {
+    background: #669D31;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(60, 90, 20, 0.3);
+}
+
+.search_button:active {
+    transform: translateY(0);
+}
+
+/* Student Info Display */
+.student-info {
+    background: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border-left: 4px solid #669D31;
+    width: fit-content;
+}
+
+.student-info p {
+    margin: 0;
+    font-size: 16px;
+    color: #333;
+}
+
+.student-info strong {
+    color: #3C5A14;
+}
+
+/* Error Message */
+.error-message {
+    background: #ffebee;
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border-left: 4px solid #d32f2f;
+}
+
+.error-message p {
+    margin: 0;
+    font-size: 16px;
+    color: #d32f2f;
+    font-weight: 600;
+}
+
+/* Filter Section */
+.filter-section {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.filter-section label {
+    font-weight: 600;
+    color: #3C5A14;
+    font-size: 16px;
+}
+
+.filter-section select {
+    padding: 8px 12px;
+    border: 2px solid #3C5A14;
+    border-radius: 8px;
+    background: white;
+    font-size: 14px;
+    cursor: pointer;
+    font-family: Inter;
+}
+
+.filter-section select:focus {
+    outline: none;
+    border-color: #669D31;
+}
+
+/* Table Styles */
+.table_container {
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.history_table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.history_table thead {
+    background: #3C5A14;
+    color: white;
+}
+
+.history_table th {
+    padding: 15px 12px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.history_table tbody tr {
+    border-bottom: 1px solid #e0e0e0;
+    transition: background-color 0.2s ease;
+}
+
+.history_table tbody tr:hover {
+    background-color: #f5f5f5;
+}
+
+.history_table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.history_table td {
+    padding: 15px 12px;
+    color: #333;
+    font-size: 14px;
+}
+
+.history_table tr.past-reservation {
+    opacity: 0.6;
+    background-color: #f9f9f9;
+}
+
+/* Status Badge */
+.status-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.status-upcoming {
+    background: #669D31;
+    color: white;
+}
+
+.status-past {
+    background: #888;
+    color: white;
+}
+
+/* Anonymous Badge */
+.anonymous-yes {
+    color: #FF9800;
+    font-weight: 600;
+}
+
+.anonymous-no {
+    color: #666;
+}
+
+/* Empty State */
+.no-reservations {
+    text-align: center;
+    padding: 40px 20px;
+    background: white;
+    border-radius: 10px;
+}
+
+.no-reservations p {
+    font-size: 18px;
+    color: #666;
+    margin: 0;
+}
+
+/* Logout Button */
+.logout_button {
+    padding: 8px 18px;
+    border: none;
+    border-radius: 20px;
+    background: #d32f2f;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.logout_button:hover {
+    background: #b71c1c;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .search_row {
+        flex-direction: column;
+    }
+    
+    .history_table {
+        font-size: 12px;
+    }
+    
+    .history_table th,
+    .history_table td {
+        padding: 10px 8px;
+    }
+}

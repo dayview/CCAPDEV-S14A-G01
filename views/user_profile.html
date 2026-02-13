@@ -1,42 +1,120 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8">
-    <title>User Profile</title>
+    <title>Animo Lab Reservation</title>
     <link rel="stylesheet" href="../css/main.css">
-    <link rel="stylesheet" href="../css/user_profile.css">
+    <link rel="stylesheet" href="../css/reservation.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
 </head>
 
 <body>
-
-<script src="../js/user_profile.js"></script>
-
+<script src="../js/reservation.js" defer> </script>
 <section class = "header">
-    <h1><b>animo.labs</b> Reservation</h1>
-    <a href = "reservation.html" class = "btn"> Return to Home </a>
+    <div class = "logo">
+        <h1><b>DLSU </b> Lab Reservation</h1>
+    </div>
+
+    <div class = "header-actions">
+        <a href = "student_reservation.html" class = "btn">Reservation History</a>
+        <a href = "user_profile.html" class = "btn">User Profile</a>
+    </div>
 </section>
 
-<section class = "page">
-        <a href = "edit_profile.html"> User Information </a>
-        <p> Notifications </p>
-        <a href = "editreservation.html"> Edit Reservation </a>
-        <button id = "logout_btn"> Logout </button>
+<section class = "left-panel">
+    <div class = "information-block">
+        <h1> BOOKING INFORMATION </h1>
+        <p> Date: <span id = "infoDate"> </span> </p> <!-- display reserve_date -->
+        <p> Time In: <span id = "infoTimeIn"> </span> </p> <!-- display reserve_time -->
+        <p> Time Out: <span id = "infoTimeOut"> </span> </p> <!-- get element by ID reserve_time + 30 -->
+        <p> Room: <span id = "infoRoom"> </span> </p>
+        <p> Seat: <span id = "infoSeat"> </span> </p>
+        <input type = "checkbox" name = "anonymous" id = "anonymous">
+        <label> Anonymous Reservation</label>
+        <div class = "r_button">
+            <button class = "reserve-btn" disabled>RESERVE</button>
+        </div>
+    </div>
+
+    <h2 class = "reminders-label"> REMINDERS </h2>
+    <ul class = "reminder-list">
+        <li> Each lab slot is<b> 30 minutes </b>long </li>
+        <li> If you require additional time, you may reserve <b>multiple consecutive slots</b> in a single booking, provided they are available. </li>
+        <li> Only <b>unreserved slots</b> can be booked.</li>
+        <li> All selected slots will be grouped under <b>one reservation.</b></li>
+    </ul>
+
 </section>
 
+<section class = "right-panel">
+    <div class = "selection">
+        <section class = "r_box">
+            <label for = "reserve_date"> Date </label>
+            <input type = "date" id = "reserve_date" class = "form-control">
+        </section>
+        <section class = "r_box">
+            <label for = "reserve_time" class = "form-label"> Time In </label>
+            <select id = "reserve_time" class = "form-control">
+                <option value = "07:30"> 07:30 </option>
+                <option value = "08:00"> 08:00 </option>
+                <option value = "08:30"> 08:30 </option>
+                <option value = "09:00"> 09:00 </option>
+                <option value = "09:30"> 09:30 </option>
+                <option value = "10:00"> 10:00 </option>
+                <option value = "10:30"> 10:30 </option>
+                <option value = "11:00"> 11:00 </option>
+                <option value = "11:30"> 11:30 </option>
+                <option value = "12:00"> 12:00 </option>
+                <option value = "12:30"> 12:30 </option>
+                <option value = "13:00"> 13:00 </option>
+                <option value = "13:30"> 13:30 </option>
+                <option value = "14:00"> 14:00 </option>
+                <option value = "14:30"> 14:30 </option>
+                <option value = "15:00"> 15:00 </option>
+                <option value = "15:30"> 15:30 </option>
+                <option value = "16:00"> 16:00 </option>
+                <option value = "16:30"> 16:30 </option>
+                <option value = "17:00"> 17:00 </option>
+                <option value = "17:30"> 17:30 </option>
+                <option value = "18:00"> 18:00 </option>
+                <option value = "18:30"> 18:30 </option>
+                <option value = "19:00"> 19:00 </option>
+                <option value = "19:30"> 19:30 </option>
+                <option value = "20:00"> 20:00 </option>
+            </select>
+        </section>
+        <section class = "r_box">
+            <label for = "room_num" class = "form-label"> Room </label>
+            <select id = "room_num" class = "form-control">
+                <option value = "G302A"> G302A </option>
+                <option value = "G302B"> G302B </option>
+                <option value = "G304B"> G304B </option>
+                <option value = "G306A"> G306A </option>
+                <option value = "G404A"> G404A </option>
+                <option value = "G404B"> G404B </option>
+                <option value = "G405"> G405 </option>
+                <option value = "G407"> G407 </option>
+            </select>
+        </section>
+    </div>
 
-    <script src="../js/auth.js"></script>
-    <script>
-      if (!checkUserLogin()) {
-        alert('Please log in first!');
-        window.location.href = 'login.html';
-      } else {
-        const user = getCurrentUser();
-        document.getElementById('userInfo').innerHtml = `
-        <p><strong>Name:</strong> ${user.firstName} ${user.lastName}</p>
-        <p><strong>Username:</strong> ${user.username}</p>
-        <p><strong>ID Number:</strong> ${user.idNumber}</p>
-        `;
-      }
-    </script>
-  </body>
+    <div class = "room">
+        <div class = "seat-card">
+            <h4 class = "board-title"> BOARD </h4>
+        </div>
+        <div class = "seat_map" id="seat_map"> </div>
+    </div>
+
+    <div class = "legend">
+        <span class = "legend-box occupied"> </span> <span class = "text-white"> Occupied </span>
+        <span class = "legend-box repair"> </span> <span class = "text-white"> Under Repair </span>
+        <span class = "legend-box available"> </span> <span class = "text-white"> Available </span>
+        <span class = "legend-box selected"> </span> <span class = "text-white"> Selected </span>
+    </div>
+
+</section>
+
+</body>
 </html>

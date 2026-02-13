@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -9,11 +9,6 @@
 <script src="../js/signup.js"></script>
 <body>
 <form id="signup">
-
-    <section class="header">
-      <img src="../images/dlsu-logo-white.png" alt="DLSU Logo" height="30">
-    </section>
-    
     <div class="signup_block">
     <h2 class="signup">SIGN-UP</h2>
 
@@ -43,7 +38,6 @@
     </div>
 
     <div class="buttons">
-        <button type="button" class="google-btn">Sign-up with Google</button>
         <button type="submit" class="submit-btn">Sign-Up</button>
     </div>
 
@@ -52,29 +46,5 @@
 </form>
 
 
-      <script src="../js/auth.js"></script>
-        <script>
-            document.getElementById('signupForm').addEventListener('submit', function (e) {
-                e.preventDefault();
-
-                const userData = {
-                    firstName: document.getElementById('first_name').value,
-                    lastName: document.getElementById('last_name').value,
-                    username: document.getElementById('username').value,
-                    password: document.getElementById('password').value,
-                    idNumber: document.getElementById('id_num').value,
-                };
-
-                const errorMsg = document.getElementById('errorMsg');
-
-                if (signup(userData)) {
-                    alert('Account created successfully!');
-                    window.location.href = 'reservation.html';
-                } else {
-                    errorMsg.textContent = 'Username already exists';
-                    errorMsg.style.display = 'block';
-                }
-            });
-        </script>
-  </body>
+</body>
 </html>

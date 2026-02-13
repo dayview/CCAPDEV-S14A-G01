@@ -2,58 +2,87 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8">
-    <title>Animo Lab Reservation</title>
-    <link rel="stylesheet" href="../css/reservation_history.css">
+    <title>Admin - Student Reservations</title>
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/admin_reservation_history.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
   </head>
+  
   <body>
-    <header class="top_bar">
-      <div class="top_left_content">
-      <div class="logo_box"><img src="../images/monitor.png"></div>
-      <span class="title"><b>DLSU</b> LAB RESERVATION</span>
-      </div>
-      
+    <section class="header">
+      <img src="../images/dlsu-logo-white.png" alt="DLSU Logo" height="30">
+
       <div class="top_right">
+        <a href="admin_homepage.html">Admin Homepage</a>
         <a href="#">Reservation History</a>                   <!--Add href going to reservation history-->
         <a href="#">View Profile</a>                          <!--Add href going to view profile-->
         <button class="logout_button">LOG OUT</button>        <!--Add log out functionality-->
       </div>
-    </header>
+      </section>
 
-    <main class="main_container">
-      <div class="dashboard_single">
-
-        <section class="panel center_panel">
-          <h1 class="page_title">Reservation History</h1>
-          
-          <div class="search_section">
-            <label class="input_label">STUDENT USER ID</label>
-            <div class="search_row">
-              <input type="text" class="student_input" id="student-id-input" placeholder="Enter 8-digit Student ID">
-              <button class="search_button">SEARCH</button>
-            </div>
+    <section class="history-page">
+      <div class="history-container">
+        <h1 class="page_title">STUDENT RESERVATION HISTORY</h1>
+        
+        <!-- Search Section -->
+        <div class="search_section">
+          <label class="input_label">STUDENT USER ID</label>
+          <div class="search_row">
+            <input type="text" class="student_input" id="student-id-input" placeholder="Enter 8-digit Student ID" maxlength="8">
+            <button class="search_button" id="search-btn">SEARCH</button>
           </div>
+        </div>
 
-          <div class="table_container">
-            <table class="history_table">
-              <thead>
-                <tr>
-                  <th>Laboratory</th>
-                  <th>Seat</th>
-                  <th>Reservation Slot</th>
-                  <th>Date Requested</th>
-                  <th>Anonymous</th>
-                </tr>
-              </thead>
-              <tbody id="history-body">
-                <!-- Table rows will be populated by JavaScript -->
-              </tbody>
-            </table>
-          </div>
-        </section>
+        <!-- Student Info Display (hidden initially) -->
+        <div class="student-info" id="student-info" style="display: none;">
+          <p><strong>Student ID:</strong> <span id="displayStudentId"></span></p>
+        </div>
 
+        <!-- Error Message -->
+        <div class="error-message" id="error-message" style="display: none;">
+          <p>⚠️ Student ID not registered in the system.</p>
+        </div>
+
+        <!-- Filter Section (hidden initially) -->
+        <div class="filter-section" id="filter-section" style="display: none;">
+          <label for="filterStatus">Filter by:</label>
+          <select id="filterStatus">
+            <option value="all">All Reservations</option>
+            <option value="upcoming">Upcoming</option>
+            <option value="past">Past</option>
+          </select>
+        </div>
+
+        <!-- Table Container -->
+        <div class="table_container" id="table-container" style="display: none;">
+          <table class="history_table">
+            <thead>
+              <tr>
+                <th>Laboratory</th>
+                <th>Seat</th>
+                <th>Date</th>
+                <th>Time In</th>
+                <th>Time Out</th>
+                <th>Status</th>
+                <th>Anonymous</th>
+              </tr>
+            </thead>
+            <tbody id="history-body">
+              <!-- Table rows will be populated by JavaScript -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- No Reservations Message -->
+        <div id="noReservations" class="no-reservations" style="display: none;">
+          <p>This student has no reservations.</p>
+        </div>
       </div>
-    </main>
+    </section>
 
-    <script src="../js/reservation_history.js"></script>
+    <script src="../js/header_navigation.js"></script>
+    <script src="../js/admin_reservation_history.js"></script>
   </body>
 </html>

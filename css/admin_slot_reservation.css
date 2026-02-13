@@ -2,7 +2,21 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: Poppins;
+  font-family: 'Inter', sans-serif;
+}
+
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 64px;
+    background-color: #3c5a14;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    z-index: 1000;
 }
 
 body {
@@ -68,7 +82,7 @@ body::before {
 .top_right {
   display: flex;
   align-items: center;
-  gap: 100px;
+  gap: 40px;
 }
 
 .top_right a {
@@ -110,7 +124,9 @@ body::before {
   background: #cdebb1;
   display: flex;
   flex-direction: column;
-  gap: 25px;
+  gap: 15px;
+  overflow-y: auto;
+  max-height: calc(100vh - 140px);
 }
 
 .user_box {
@@ -156,6 +172,92 @@ body::before {
   color: white;
   font-weight: bold;
   cursor: pointer;
+}
+
+/* Reservation Form Styles */
+.reservation_form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.form_title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #2f4f1f;
+  text-align: center;
+  margin: 0;
+  padding: 10px 0;
+}
+
+.form_group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.form_label {
+  font-size: 12px;
+  font-weight: bold;
+  color: #1a1a1a;
+  text-transform: uppercase;
+}
+
+.form_input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  background: white;
+  font-family: Poppins;
+}
+
+.form_input:focus {
+  outline: none;
+  border-color: #2f5e1e;
+  box-shadow: 0 0 0 2px rgba(47, 94, 30, 0.1);
+}
+
+.form_input::placeholder {
+  color: #999;
+}
+
+/* Action Buttons */
+.action_button {
+  width: 100%;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 25px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+}
+
+.reserve_button {
+  background: #4caf50;
+  color: white;
+}
+
+.reserve_button:hover {
+  background: #45a049;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+}
+
+.remove_button {
+  background: #f44336;
+  color: white;
+}
+
+.remove_button:hover {
+  background: #da190b;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(244, 67, 54, 0.3);
 }
 
 .menu_link {
@@ -243,7 +345,7 @@ body::before {
   background: #cdebb1;
   border-radius: 12px;
   padding: 20px;
-  height: 20%;
+  min-height: 120px;
   display: flex;
   flex-direction: column;
   gap: 15px;

@@ -8,36 +8,113 @@
   </head>
 
   <body>
-    <header class="top_bar">
-      <div class="top_left_content">
-        <div class="logo_box"><img src="../images/monitor.png"></div>
-        <span class="title"><b>DLSU</b> LAB RESERVATION</span>
-      </div>
-      
+    <section class="header">
+      <img src="../images/dlsu-logo-white.png" alt="DLSU Logo" height="30">
+
       <div class="top_right">
+        <a href="admin_homepage.html">Admin Homepage</a>
         <a href="#">Reservation History</a>                   <!--Add href going to reservation history-->
         <a href="#">View Profile</a>                          <!--Add href going to view profile-->
         <button class="logout_button">LOG OUT</button>        <!--Add log out functionality-->
       </div>
-    </header>
+    </section>
 
     <main class="main_container">
 
       <div class="dashboard">
         <section class="panel left_panel">
           <div class="user_box">
-          <div class="user_top_row">
-          <div class="avatar"><img src="../images/profile.png"></div>
-          <h2>Welcome ADMIN<br>(Username)!</h2>
+            <div class="user_top_row">
+              <div class="avatar"><img src="../images/profile.png"></div>
+              <h2>Welcome ADMIN<br>(Username)!</h2>
+            </div>
+            <button class="edit_button">EDIT PROFILE</button>
           </div>
-          <button class="edit_button">EDIT PROFILE</button>   <!--Add edit profile button functionality-->
+
+          <div class="reservation_form">
+            <h3 class="form_title">Select seats to reserve</h3>
+            
+            <div class="form_group">
+              <label class="form_label">STUDENT ID</label>
+              <input type="text" class="form_input" id="studentId" placeholder="12345678">
+            </div>
+
+            <div class="form_group">
+              <label class="form_label">DATE</label>
+              <input type="date" class="form_input" id="reservationDate">
+            </div>
+
+            <div class="form_group">
+              <label class="form_label">TIME IN</label>
+              <select class="form_input" id="timeIn">
+                <option value="">Select time</option>
+                <option value="07:30">7:30 AM</option>
+                <option value="08:00">8:00 AM</option>
+                <option value="08:30">8:30 AM</option>
+                <option value="09:00">9:00 AM</option>
+                <option value="09:30">9:30 AM</option>
+                <option value="10:00">10:00 AM</option>
+                <option value="10:30">10:30 AM</option>
+                <option value="11:00">11:00 AM</option>
+                <option value="11:30">11:30 AM</option>
+                <option value="12:00">12:00 PM</option>
+                <option value="12:30">12:30 PM</option>
+                <option value="13:00">1:00 PM</option>
+                <option value="13:30">1:30 PM</option>
+                <option value="14:00">2:00 PM</option>
+                <option value="14:30">2:30 PM</option>
+                <option value="15:00">3:00 PM</option>
+                <option value="15:30">3:30 PM</option>
+                <option value="16:00">4:00 PM</option>
+                <option value="16:30">4:30 PM</option>
+                <option value="17:00">5:00 PM</option>
+                <option value="17:30">5:30 PM</option>
+                <option value="18:00">6:00 PM</option>
+              </select>
+            </div>
+
+            <div class="form_group">
+              <label class="form_label">TIME OUT</label>
+              <select class="form_input" id="timeOut">
+                <option value="">Select time</option>
+                <option value="07:30">7:30 AM</option>
+                <option value="08:00">8:00 AM</option>
+                <option value="08:30">8:30 AM</option>
+                <option value="09:00">9:00 AM</option>
+                <option value="09:30">9:30 AM</option>
+                <option value="10:00">10:00 AM</option>
+                <option value="10:30">10:30 AM</option>
+                <option value="11:00">11:00 AM</option>
+                <option value="11:30">11:30 AM</option>
+                <option value="12:00">12:00 PM</option>
+                <option value="12:30">12:30 PM</option>
+                <option value="13:00">1:00 PM</option>
+                <option value="13:30">1:30 PM</option>
+                <option value="14:00">2:00 PM</option>
+                <option value="14:30">2:30 PM</option>
+                <option value="15:00">3:00 PM</option>
+                <option value="15:30">3:30 PM</option>
+                <option value="16:00">4:00 PM</option>
+                <option value="16:30">4:30 PM</option>
+                <option value="17:00">5:00 PM</option>
+                <option value="17:30">5:30 PM</option>
+                <option value="18:00">6:00 PM</option>
+              </select>
+            </div>
+
+            <div class="form_group">
+              <label class="form_label">ROOM</label>
+              <select class="form_input" id="roomNumber">
+                <option value="">Select a room</option>
+                <option value="A1706">A1706</option>
+                <option value="V301">V301</option>
+                <option value="V310">V310</option>
+              </select>
+            </div>
           </div>
-          <div class="menu_box green">
-            <a href="#" class="menu_link">RESERVE SLOT/S</a>
-          </div>
-          <div class="menu_box red">
-            <a href="#" class="menu_link">REMOVE SLOT/S</a>
-          </div>
+
+          <button class="action_button reserve_button">RESERVE SLOT/S</button>
+          <button class="action_button remove_button">REMOVE SLOT/S</button>
         </section>
 
         <section class="panel right_panel">
@@ -366,6 +443,8 @@
 
     </main>
     
+    <script src="../js/header_navigation.js"></script>
     <script src="../js/admin_slot_reservation.js"></script>
 </body>
+
 </html>
