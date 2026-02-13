@@ -1,8 +1,8 @@
-.page {
-    max-width: 520px;
-    margin: 110px auto 40px;
-    padding: 28px 26px;
-    border-radius: 18px;
+* {
+    font-family: 'Inter', sans-serif;
+}
+
+body {
     display: flex;
     flex-direction: column;
     gap: 12px;
