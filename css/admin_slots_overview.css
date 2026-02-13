@@ -276,11 +276,11 @@ body::before {
   min-width: 60px;
 }
 
-.schedule_table th:first_child {
+.schedule_table th:first-child {
   border-radius: 8px 0 0 0;
 }
 
-.schedule_table th:last_child {
+.schedule_table th:last-child {
   border-radius: 0 8px 0 0;
 }
 
@@ -308,7 +308,7 @@ body::before {
   color: #666;
 }
 
-.schedule_table td:hover:not(:first_child):not(.empty_message) {
+.schedule_table td:hover:not(:first-child):not(.empty_message) {
   opacity: 0.8;
   transform: scale(1.05);
 }
