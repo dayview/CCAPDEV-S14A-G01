@@ -57,7 +57,11 @@ function showavailableseats(){
 
     const available = lab_layout.filter(seat => !reservedSeats.has(seat));
 
-    resultstext.textContent = `Room:${room}|||${date}|||${timeIn}|||Available: ${available.length}/${lab_layout.length}`;
+    resultstext.textContent = 
+    `Room: ${room} 
+     Date: ${date} 
+     Time: ${timeIn}
+     Available: ${available.length}/${lab_layout.length}`;
 
     seattext.textContent = available.length ? available.join(", ") : "No available seats for that schedule.";
 }
