@@ -1,0 +1,381 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+}
+
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 64px;
+    background-color: #3c5a14;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    z-index: 1000;
+}
+
+body {
+    margin: 0;
+    background-image: url("https://www.dlsu.edu.ph/wp-content/uploads/2017/12/1DLSU-at-duskE.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
+    padding-top: 64px;
+    min-height: 100vh;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.5); 
+    z-index: -1;
+}
+
+.top_right {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+
+.top_right a {
+  color: white;
+  text-decoration: underline;
+  font-weight: 600;
+}
+
+.logout_button {
+  padding: 8px 18px;
+  border: 2px solid white;
+  border-radius: 20px;
+  background: white;
+  color: #2f4f1f;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.logout_button:hover {
+  background: #f0f0f0;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+
+.main_container {
+  display: flex;
+  justify-content: center;
+  padding: 40px;
+}
+
+.dashboard {
+  width: 100%;
+  max-width: 1200px;
+  min-height: 750px;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  border-radius: 12px;
+}
+
+.panel {
+  padding: 30px;
+}
+
+.left_panel {
+  background: #cdebb1;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.user_box {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.user_top_row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 15px;
+}
+
+.avatar {
+  width: 70px;
+  height: 70px;
+  background: #9bcf78;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 50%;
+}
+
+.user_box h2 {
+  font-size: 20px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.menu_link {
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+}
+
+.menu_box {
+  position: relative;
+  background: #f6f6f6;
+  border-radius: 12px;
+  height: 150px;
+  padding: 25px;
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.menu_box:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  transform: translateY(-4px);
+  background-color: #f0f0f0;
+}
+
+.menu_box.active {
+  background-color: #e0e0e0;
+  box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.2);
+  transform: translateY(2px);
+}
+
+.menu_box.active:hover {
+  transform: translateY(2px);
+  background-color: #e0e0e0;
+}
+
+.right_panel {
+  background: #5f7f2f;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 25px;
+  overflow: hidden;
+}
+
+.inputs_row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+}
+
+.input_col {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.input_label {
+  font-size: 18px;
+  font-weight: bold;
+  color: white;
+}
+
+.info_input {
+  height: 38px;
+  border-radius: 10px;
+  border: none;
+  padding: 0 12px;
+  font-size: 14px;
+}
+
+.booking_box {
+  background: white;
+  border-radius: 10px;
+  padding: 12px;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.booking_stat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+}
+
+.booking_label {
+  font-weight: 600;
+  color: #333;
+}
+
+.booking_value {
+  font-weight: bold;
+  font-size: 14px;
+  color: #2f5e1e;
+}
+
+.chart_section {
+  background: #cdebb1;
+  padding: 15px;
+  border-radius: 12px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.chart_container {
+  background: #cdebb1;
+  border-radius: 8px;
+  padding: 10px;
+  overflow: auto;
+  flex: 1;
+  min-height: 0;
+}
+
+.schedule_table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: #cdebb1;
+  font-size: 14px;
+}
+
+.schedule_table th {
+  background: #2f4f1f;
+  color: white;
+  padding: 12px 8px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  border: 1px solid #2f4f1f;
+  min-width: 60px;
+}
+
+.schedule_table th:first-child {
+  border-radius: 8px 0 0 0;
+}
+
+.schedule_table th:last-child {
+  border-radius: 0 8px 0 0;
+}
+
+.time_header {
+  width: 80px;
+  background: #2f4f1f !important;
+  font-size: 13px !important;
+}
+
+.schedule_table td {
+  border: 2px solid #2f4f1f;
+  padding: 0;
+  height: 50px;
+  min-width: 60px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.empty_message {
+  background: white;
+  padding: 20px !important;
+  text-align: center;
+  font-size: 14px;
+  color: #666;
+}
+
+.schedule_table td:hover:not(:first-child):not(.empty_message) {
+  opacity: 0.8;
+  transform: scale(1.05);
+}
+
+.status_available {
+  background: #4CAF50;
+}
+
+.status_class {
+  background: #4169E1;
+}
+
+.status_full {
+  background: #DC143C;
+}
+
+.status_unavailable {
+  background: #FFA726;
+}
+
+.legend_container {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+}
+
+.legend_item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: white;
+  border-radius: 15px;
+  font-weight: 600;
+  font-size: 11px;
+}
+
+.legend_box {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  border: 2px solid #2f4f1f;
+  flex-shrink: 0;
+}
+
+.legend_available {
+  background: #4CAF50;
+}
+
+.legend_class {
+  background: #4169E1;
+}
+
+.legend_full {
+  background: #DC143C;
+}
+
+.legend_unavailable {
+  background: #FFA726;
+}
+
+.schedule_table td.selected_slot {
+  box-shadow: inset 0 0 0 3px #FFD700;
+  transform: scale(1.05);
+  z-index: 10;
+  position: relative;
+}
