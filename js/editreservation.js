@@ -1,10 +1,19 @@
-if(localStorage.getItem("isLoggedIn") !== "true"){
-    window.location.href = "login.html";
+const rememberUntil = Number(localStorage.getItem("rememberUntil"));
+const sessionLogin = sessionStorage.getItem("isLoggedIn");
+const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+
+let authenticated = false;
+
+if(rememberUntil && Date.now() <= rememberUntil) {
+    authenticated = true;
+} else if (sessionLogin) {
+    authenticated = true;
 }
 
-const currentUser = JSON.parse(localStorage.getItem("currentUser"));
-if (!currentUser){
-    alert("Please sign in before booking");
+if (!authenticated || !currentUser){
+   localStorage.removeItem("rememberUntil");
+    localStorage.removeItem("currentUser");
+    sessionStorage.removeItem("isLoggedIn");
     window.location.href = "login.html";
 }
 
@@ -129,4 +138,5 @@ reserveBtn.addEventListener("click", () => {
     alert("Reservation is now updated!");
     window.location.href = "user_profile.html";
 });
+
 
