@@ -3,7 +3,7 @@
 
   <head>
     <meta charset="UTF-8">
-    <title>Animo Lab Reservation</title>
+    <title>animo.labs Reservation</title>
     <link rel="stylesheet" href="../css/admin_slots_overview.css">
   </head>
 
@@ -14,7 +14,6 @@
       <div class="top_right">
         <a href="admin_homepage.html">Admin Homepage</a>
         <a href="#">Reservation History</a>                   <!--Add href going to reservation history-->
-        <a href="#">View Profile</a>                          <!--Add href going to view profile-->
         <button class="logout_button">LOG OUT</button>        <!--Add log out functionality-->
       </div>
     </section>
@@ -28,12 +27,8 @@
               <div class="avatar"><img src="../images/profile.png"></div>
               <h2>Welcome ADMIN<br>(Username)!</h2>
             </div>
-            <button class="edit_button">EDIT PROFILE</button>   <!--Add edit profile button functionality-->
           </div>
           <div class="menu_box active">SLOTS OVERVIEW</div>
-          <div class="menu_box">
-            <a href="admin_student_reservation.html" class="menu_link">STUDENT<br>RESERVATIONS</a>
-          </div>
           <div class="menu_box">
             <a href="admin_slot_reservation.html" class="menu_link">VIEW ROOM<br>RESERVATIONS</a>
           </div>
@@ -50,9 +45,9 @@
               <label class="input_label">Room:</label>
               <select class="info_input" id="roomSelect">
                   <option value="">Select a room</option>
-                  <option value="A1706">A1706</option>
-                  <option value="V301">V301</option>
-                  <option value="V310">V310</option>
+                  <option value="G302A">G302A</option>
+                  <option value="G302B">G302B</option>
+                  <option value="G304B">G304B</option>
               </select>
             </div>
   
@@ -61,7 +56,7 @@
               <div class="booking_box">
                 <div class="booking_stat">
                   <span class="booking_label">SEATS AVAILABLE:</span>
-                  <span class="booking_value" id="seatsAvailable">36/36</span>
+                  <span class="booking_value" id="seatsAvailable">20/20</span>
                 </div>
                 <div class="booking_stat">
                   <span class="booking_label">SEATS FOR REPAIR:</span>
@@ -114,19 +109,11 @@
             <div class="legend_container">
               <div class="legend_item">
                 <div class="legend_box legend_available"></div>
-                <span>AVAILABLE</span>
-              </div>
-              <div class="legend_item">
-                <div class="legend_box legend_class"></div>
-                <span>CLASS OCCUPIED</span>
+                <span>AVAILABLE (Seats Open)</span>
               </div>
               <div class="legend_item">
                 <div class="legend_box legend_full"></div>
-                <span>FULL</span>
-              </div>
-              <div class="legend_item">
-                <div class="legend_box legend_unavailable"></div>
-                <span>UNAVAILABLE</span>
+                <span>FULL (All Seats Reserved)</span>
               </div>
             </div>
           </div>

@@ -1,16 +1,4 @@
-const rememberUntil = Number(localStorage.getItem("adminRememberUntil"));
-const sessionLogin = sessionStorage.getItem("isAdminLoggedIn");
-const currentAdmin = JSON.parse(localStorage.getItem("currentAdmin"));
+// Admin Homepage JavaScript
+// Authentication temporarily disabled for troubleshooting
 
-let authenticated = false;
-
-if (rememberUntil && Date.now() <= rememberUntil) authenticated = true;
-else if (sessionLogin === "true") authenticated = true;
-
-if (!authenticated || !currentAdmin) {
-  alert("You are not logged in or your session has expired. Please log in again.");
-  localStorage.removeItem("adminRememberUntil");
-  localStorage.removeItem("currentAdmin");
-  sessionStorage.removeItem("isAdminLoggedIn");
-  window.location.href = "index.html";
-}
+console.log("Admin Homepage loaded");

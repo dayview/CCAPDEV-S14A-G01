@@ -1,28 +1,55 @@
-const rememberUntil = Number(localStorage.getItem("adminRememberUntil"));
-const sessionLogin = sessionStorage.getItem("isAdminLoggedIn");
-const currentAdmin = JSON.parse(localStorage.getItem("currentAdmin"));
+// Admin Slots Overview JavaScript
+// Authentication temporarily disabled for troubleshooting
 
-let authenticated = false;
+// Room seat counts (20 seats per room)
+const ROOM_SEATS = {
+  'G302A': 20,
+  'G302B': 20,
+  'G304B': 20
+};
 
-if (rememberUntil && Date.now() <= rememberUntil) authenticated = true;
-else if (sessionLogin === "true") authenticated = true;
+// Time slots (7:30 AM to 6:00 PM in 30-minute increments = 22 slots)
+const TIME_SLOTS = [
+  '07:30', '08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00',
+  '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00',
+  '15:30', '16:00', '16:30', '17:00', '17:30', '18:00'
+];
 
-if (!authenticated || !currentAdmin) {
-  alert("You are not logged in or your session has expired. Please log in again.");
-  localStorage.removeItem("adminRememberUntil");
-  localStorage.removeItem("currentAdmin");
-  sessionStorage.removeItem("isAdminLoggedIn");
-  window.location.href = "index.html";
+// Get reservations from localStorage
+function getReservations() {
+  const raw = localStorage.getItem("reservations");
+  return raw ? JSON.parse(raw) : [];
 }
 
-// Sample data for demonstration - in production, this would come from your backend
-// Status: 0 = available, 1 = class occupied, 2 = full, 3 = unavailable
-// Now with 22 slots (7:30 AM to 6:00 PM in 30-minute increments)
-const sampleScheduleData = {
-  'A1706': [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0],
-  'V301': [0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  'V310': [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]
-};
+// Get occupied seats count for a specific date, room, and time
+function getOccupiedSeatsCount(date, room, timeIn) {
+  const reservations = getReservations();
+  
+  const occupied = reservations.filter(res => 
+    res.date === date && 
+    res.room === room && 
+    res.timeIn === timeIn
+  );
+  
+  return occupied.length;
+}
+
+// Calculate status for a time slot
+// Returns: 0 = available, 1 = class occupied (placeholder), 2 = full, 3 = unavailable (placeholder)
+function calculateSlotStatus(date, room, timeIn) {
+  const totalSeats = ROOM_SEATS[room] || 20;
+  const occupiedCount = getOccupiedSeatsCount(date, room, timeIn);
+  
+  if (occupiedCount === 0) {
+    return 0; // Available (green)
+  } else if (occupiedCount < totalSeats) {
+    return 0; // Still available (some seats left) - green
+  } else if (occupiedCount >= totalSeats) {
+    return 2; // Full (red)
+  }
+  
+  return 0; // Default to available
+}
 
 // Get DOM elements
 const roomSelect = document.getElementById('roomSelect');
@@ -42,19 +69,22 @@ const statusClasses = {
   3: 'status_unavailable'
 };
 
+// Currently selected cell for highlighting
+let selectedCell = null;
+
 // Function to generate schedule table for a single room
-function generateScheduleTable(room) {
+function generateScheduleTable(room, date) {
   scheduleBody.innerHTML = '';
   
-  if (!room) {
-    scheduleBody.innerHTML = '<tr><td colspan="23" class="empty_message">Please select a room to view availability</td></tr>';
+  if (!room || !date) {
+    scheduleBody.innerHTML = '<tr><td colspan="23" class="empty_message">Please select a room and date to view availability</td></tr>';
+    updateBookingOverview(null, null, null);
     return;
   }
 
-  const scheduleData = sampleScheduleData[room] || Array(22).fill(0); // Default to available if no data
   const row = document.createElement('tr');
   
-  // First cell shows "AVAILABLE SLOTS" or similar label
+  // First cell shows "SLOTS" label
   const labelCell = document.createElement('td');
   labelCell.textContent = 'SLOTS';
   labelCell.style.background = '#2f4f1f';
@@ -63,63 +93,79 @@ function generateScheduleTable(room) {
   labelCell.style.fontSize = '13px';
   row.appendChild(labelCell);
   
-  // Time slot cells (22 slots from 7:30 AM to 6:00 PM in 30-minute increments)
-  for (let i = 0; i < 22; i++) {
+  // Time slot cells (22 slots from 7:30 AM to 6:00 PM)
+  TIME_SLOTS.forEach((timeSlot, index) => {
     const cell = document.createElement('td');
-    const status = scheduleData[i];
+    const status = calculateSlotStatus(date, room, timeSlot);
+    
     cell.className = statusClasses[status];
     cell.dataset.room = room;
-    
-    // Calculate time slot (7:30 AM = 7.5, increments of 0.5)
-    const hourDecimal = 7.5 + (i * 0.5);
-    const hour = Math.floor(hourDecimal);
-    const minutes = (hourDecimal % 1) === 0 ? '00' : '30';
-    cell.dataset.time = `${hour}:${minutes}`;
+    cell.dataset.time = timeSlot;
     cell.dataset.status = status;
     
-    // Add click event (for future reservation functionality)
+    // Add click event to update booking overview
     cell.addEventListener('click', function() {
-      if (this.dataset.status === '0') { // Only clickable if available
-        console.log(`Clicked: ${room} at ${this.dataset.time}`);
-        // Add your reservation logic here
+      // Remove previous selection highlight
+      if (selectedCell) {
+        selectedCell.classList.remove('selected_slot');
       }
+      
+      // Highlight current selection
+      this.classList.add('selected_slot');
+      selectedCell = this;
+      
+      // Update booking overview for this specific time slot
+      updateBookingOverview(room, date, timeSlot);
+      
+      console.log(`Selected: ${room} on ${date} at ${timeSlot}`);
     });
     
     row.appendChild(cell);
-  }
+  });
   
   scheduleBody.appendChild(row);
+  
+  // Clear selection when regenerating table
+  selectedCell = null;
 }
 
 // Function to update booking overview
-function updateBookingOverview(room) {
-  // For now, assuming 36 seats per room and 0 for repair
-  // In production, this would be fetched from your backend
-  if (room) {
-    seatsAvailableEl.textContent = '36/36';
-    seatsRepairEl.textContent = '0';
-  } else {
-    seatsAvailableEl.textContent = '0/0';
-    seatsRepairEl.textContent = '0';
+function updateBookingOverview(room, date, timeSlot) {
+  if (!room || !date || !timeSlot) {
+    // No specific time slot selected - show overall room capacity
+    if (room) {
+      const totalSeats = ROOM_SEATS[room] || 20;
+      seatsAvailableEl.textContent = `${totalSeats}/${totalSeats}`;
+      seatsRepairEl.textContent = '0';
+    } else {
+      seatsAvailableEl.textContent = '0/0';
+      seatsRepairEl.textContent = '0';
+    }
+    return;
   }
+  
+  // Calculate availability for the specific time slot
+  const totalSeats = ROOM_SEATS[room] || 20;
+  const occupiedCount = getOccupiedSeatsCount(date, room, timeSlot);
+  const availableCount = totalSeats - occupiedCount;
+  
+  seatsAvailableEl.textContent = `${availableCount}/${totalSeats}`;
+  seatsRepairEl.textContent = '0'; // No repair seats for now
 }
 
 // Event listener for room selection
 roomSelect.addEventListener('change', function() {
   const selectedRoom = this.value;
-  generateScheduleTable(selectedRoom);
-  updateBookingOverview(selectedRoom);
+  const selectedDate = dateInput.value;
+  generateScheduleTable(selectedRoom, selectedDate);
 });
 
 // Event listener for date change
 dateInput.addEventListener('change', function() {
   const selectedRoom = roomSelect.value;
-  if (selectedRoom) {
-    // In production, fetch new data for the selected date
-    generateScheduleTable(selectedRoom);
-    updateBookingOverview(selectedRoom);
-  }
+  const selectedDate = this.value;
+  generateScheduleTable(selectedRoom, selectedDate);
 });
 
 // Initialize with empty state
-generateScheduleTable(null);
+generateScheduleTable(null, null);

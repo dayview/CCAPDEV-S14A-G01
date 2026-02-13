@@ -30,8 +30,8 @@
   padding: 8px 18px;
   border: none;
   border-radius: 20px;
-  background: #2f5e1e;
-  color: white;
+  background: white;
+  color: #2f5e1e;
   font-weight: bold;
   cursor: pointer;
 }

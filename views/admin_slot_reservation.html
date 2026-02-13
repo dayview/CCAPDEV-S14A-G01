@@ -3,7 +3,7 @@
 
   <head>
     <meta charset="UTF-8">
-    <title>Animo Lab Reservation</title>
+    <title>animo.labs Reservation</title>
     <link rel="stylesheet" href="../css/admin_slot_reservation.css">
   </head>
 
@@ -13,9 +13,8 @@
 
       <div class="top_right">
         <a href="admin_homepage.html">Admin Homepage</a>
-        <a href="#">Reservation History</a>                   <!--Add href going to reservation history-->
-        <a href="#">View Profile</a>                          <!--Add href going to view profile-->
-        <button class="logout_button">LOG OUT</button>        <!--Add log out functionality-->
+        <a href="#">Reservation History</a>
+        <button class="logout_button">LOG OUT</button>
       </div>
     </section>
 
@@ -28,7 +27,6 @@
               <div class="avatar"><img src="../images/profile.png"></div>
               <h2>Welcome ADMIN<br>(Username)!</h2>
             </div>
-            <button class="edit_button">EDIT PROFILE</button>
           </div>
 
           <div class="reservation_form">
@@ -106,9 +104,9 @@
               <label class="form_label">ROOM</label>
               <select class="form_input" id="roomNumber">
                 <option value="">Select a room</option>
-                <option value="A1706">A1706</option>
-                <option value="V301">V301</option>
-                <option value="V310">V310</option>
+                <option value="G302A">G302A</option>
+                <option value="G302B">G302B</option>
+                <option value="G304B">G304B</option>
               </select>
             </div>
           </div>
@@ -120,26 +118,24 @@
         <section class="panel right_panel">
           <div class="top_section">
             <div class="column">
-              <!-- Left Column Content -->
               <label class="input_label">Date:</label>
               <input type="date" class="info_input" id="dateInput">
               
               <label class="input_label">Room:</label>
               <select class="info_input" id="roomSelect">
                   <option value="">Select a room</option>
-                  <option value="A1706">A1706</option>
-                  <option value="V301">V301</option>
-                  <option value="V310">V310</option>
+                  <option value="G302A">G302A</option>
+                  <option value="G302B">G302B</option>
+                  <option value="G304B">G304B</option>
               </select>
             </div>
     
             <div class="column">
-              <!-- Right Column Content -->
               <label class="input_label">Booking Overview:</label>
               <div class="booking_box">
                 <div class="booking_stat">
                   <span class="booking_label">SEATS AVAILABLE:</span>
-                  <span class="booking_value" id="seatsAvailable">36/36</span>
+                  <span class="booking_value" id="seatsAvailable">20/20</span>
                 </div>
                 <div class="booking_stat">
                   <span class="booking_label">SEATS FOR REPAIR:</span>
@@ -149,275 +145,13 @@
             </div>
           </div>
 
-          <!-- Seating Chart Section -->
           <div class="seating_section">
-            <!-- Format 1: A1706 - As shown in picture (groups of 4 seats, 2x2 grid) -->
-            <div class="seating_chart" id="chart_A1706" style="display: none;">
-              <div class="board_label">BOARD</div>
-              <div class="seating_grid format1">
-                <div class="supervisor_seat">
-                  <div class="seat supervisor">
-                    <span>LAB SUPERVISOR</span>
-                    <span class="seat_note">(Cannot be reserved)</span>
-                  </div>
-                </div>
-                
-                <div class="seat_group_container">
-                  <!-- Top Row Groups -->
-                  <div class="seat_group">
-                    <div class="seat_row">
-                      <div class="seat available" data-seat="A1">A1</div>
-                      <div class="seat available" data-seat="A2">A2</div>
-                    </div>
-                    <div class="seat_row">
-                      <div class="seat available" data-seat="A3">A3</div>
-                      <div class="seat available" data-seat="A4">A4</div>
-                    </div>
-                  </div>
-
-                  <div class="seat_group">
-                    <div class="seat_row">
-                      <div class="seat available" data-seat="B1">B1</div>
-                      <div class="seat available" data-seat="B2">B2</div>
-                    </div>
-                    <div class="seat_row">
-                      <div class="seat available" data-seat="B3">B3</div>
-                      <div class="seat available" data-seat="B4">B4</div>
-                    </div>
-                  </div>
-
-                  <div class="seat_group">
-                    <div class="seat_row">
-                      <div class="seat available" data-seat="C1">C1</div>
-                      <div class="seat available" data-seat="C2">C2</div>
-                    </div>
-                    <div class="seat_row">
-                      <div class="seat available" data-seat="C3">C3</div>
-                      <div class="seat available" data-seat="C4">C4</div>
-                    </div>
-                  </div>
-
-                  <!-- Middle Row Groups -->
-                  <div class="seat_group">
-                    <div class="seat_row">
-                      <div class="seat available" data-seat="D1">D1</div>
-                      <div class="seat available" data-seat="D2">D2</div>
-                    </div>
-                    <div class="seat_row">
-                      <div class="seat available" data-seat="D3">D3</div>
-                      <div class="seat available" data-seat="D4">D4</div>
-                    </div>
-                  </div>
-
-                  <div class="seat_group">
-                    <div class="seat_row">
-                      <div class="seat available" data-seat="E1">E1</div>
-                      <div class="seat available" data-seat="E2">E2</div>
-                    </div>
-                    <div class="seat_row">
-                      <div class="seat available" data-seat="E3">E3</div>
-                      <div class="seat available" data-seat="E4">E4</div>
-                    </div>
-                  </div>
-
-                  <div class="seat_group">
-                    <div class="seat_row">
-                      <div class="seat available" data-seat="F1">F1</div>
-                      <div class="seat available" data-seat="F2">F2</div>
-                    </div>
-                    <div class="seat_row">
-                      <div class="seat available" data-seat="F3">F3</div>
-                      <div class="seat available" data-seat="F4">F4</div>
-                    </div>
-                  </div>
-
-                  <!-- Bottom Row Groups -->
-                  <div class="seat_group">
-                    <div class="seat_row">
-                      <div class="seat available" data-seat="G1">G1</div>
-                      <div class="seat available" data-seat="G2">G2</div>
-                    </div>
-                    <div class="seat_row">
-                      <div class="seat available" data-seat="G3">G3</div>
-                      <div class="seat available" data-seat="G4">G4</div>
-                    </div>
-                  </div>
-
-                  <div class="seat_group">
-                    <div class="seat_row">
-                      <div class="seat available" data-seat="H1">H1</div>
-                      <div class="seat available" data-seat="H2">H2</div>
-                    </div>
-                    <div class="seat_row">
-                      <div class="seat available" data-seat="H3">H3</div>
-                      <div class="seat available" data-seat="H4">H4</div>
-                    </div>
-                  </div>
-
-                  <div class="seat_group">
-                    <div class="seat_row">
-                      <div class="seat available" data-seat="I1">I1</div>
-                      <div class="seat available" data-seat="I2">I2</div>
-                    </div>
-                    <div class="seat_row">
-                      <div class="seat available" data-seat="I3">I3</div>
-                      <div class="seat available" data-seat="I4">I4</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+            <div class="board_label">BOARD</div>
+            
+            <div class="seat_map" id="seat_map">
+              <!-- Seats will be dynamically generated here -->
             </div>
 
-            <!-- Format 2: V301 - 4 columns of 9 seats (| || |) -->
-            <div class="seating_chart" id="chart_V301" style="display: none;">
-              <div class="board_label">BOARD</div>
-              <div class="seating_grid format2">
-                <div class="supervisor_seat">
-                  <div class="seat supervisor">
-                    <span>LAB SUPERVISOR</span>
-                    <span class="seat_note">(Cannot be reserved)</span>
-                  </div>
-                </div>
-                
-                <div class="columns_container">
-                  <!-- Column 1 (Left) -->
-                  <div class="seat_column">
-                    <div class="seat available" data-seat="A1">A1</div>
-                    <div class="seat available" data-seat="A2">A2</div>
-                    <div class="seat available" data-seat="A3">A3</div>
-                    <div class="seat available" data-seat="A4">A4</div>
-                    <div class="seat available" data-seat="A5">A5</div>
-                    <div class="seat available" data-seat="A6">A6</div>
-                    <div class="seat available" data-seat="A7">A7</div>
-                    <div class="seat available" data-seat="A8">A8</div>
-                    <div class="seat available" data-seat="A9">A9</div>
-                  </div>
-
-                  <div class="column_spacer"></div>
-
-                  <!-- Column 2 (Middle Left) -->
-                  <div class="seat_column">
-                    <div class="seat available" data-seat="B1">B1</div>
-                    <div class="seat available" data-seat="B2">B2</div>
-                    <div class="seat available" data-seat="B3">B3</div>
-                    <div class="seat available" data-seat="B4">B4</div>
-                    <div class="seat available" data-seat="B5">B5</div>
-                    <div class="seat available" data-seat="B6">B6</div>
-                    <div class="seat available" data-seat="B7">B7</div>
-                    <div class="seat available" data-seat="B8">B8</div>
-                    <div class="seat available" data-seat="B9">B9</div>
-                  </div>
-
-                  <!-- Column 3 (Middle Right) -->
-                  <div class="seat_column">
-                    <div class="seat available" data-seat="C1">C1</div>
-                    <div class="seat available" data-seat="C2">C2</div>
-                    <div class="seat available" data-seat="C3">C3</div>
-                    <div class="seat available" data-seat="C4">C4</div>
-                    <div class="seat available" data-seat="C5">C5</div>
-                    <div class="seat available" data-seat="C6">C6</div>
-                    <div class="seat available" data-seat="C7">C7</div>
-                    <div class="seat available" data-seat="C8">C8</div>
-                    <div class="seat available" data-seat="C9">C9</div>
-                  </div>
-
-                  <div class="column_spacer"></div>
-
-                  <!-- Column 4 (Right) -->
-                  <div class="seat_column">
-                    <div class="seat available" data-seat="D1">D1</div>
-                    <div class="seat available" data-seat="D2">D2</div>
-                    <div class="seat available" data-seat="D3">D3</div>
-                    <div class="seat available" data-seat="D4">D4</div>
-                    <div class="seat available" data-seat="D5">D5</div>
-                    <div class="seat available" data-seat="D6">D6</div>
-                    <div class="seat available" data-seat="D7">D7</div>
-                    <div class="seat available" data-seat="D8">D8</div>
-                    <div class="seat available" data-seat="D9">D9</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Format 3: V310 - 6 rows x 6 columns -->
-            <div class="seating_chart" id="chart_V310" style="display: none;">
-              <div class="board_label">BOARD</div>
-              <div class="seating_grid format3">
-                <div class="supervisor_seat">
-                  <div class="seat supervisor">
-                    <span>LAB SUPERVISOR</span>
-                    <span class="seat_note">(Cannot be reserved)</span>
-                  </div>
-                </div>
-                
-                <div class="rows_container">
-                  <!-- Row 1 -->
-                  <div class="seat_row">
-                    <div class="seat available" data-seat="A1">A1</div>
-                    <div class="seat available" data-seat="A2">A2</div>
-                    <div class="seat available" data-seat="A3">A3</div>
-                    <div class="seat available" data-seat="A4">A4</div>
-                    <div class="seat available" data-seat="A5">A5</div>
-                    <div class="seat available" data-seat="A6">A6</div>
-                  </div>
-
-                  <!-- Row 2 -->
-                  <div class="seat_row">
-                    <div class="seat available" data-seat="B1">B1</div>
-                    <div class="seat available" data-seat="B2">B2</div>
-                    <div class="seat available" data-seat="B3">B3</div>
-                    <div class="seat available" data-seat="B4">B4</div>
-                    <div class="seat available" data-seat="B5">B5</div>
-                    <div class="seat available" data-seat="B6">B6</div>
-                  </div>
-
-                  <!-- Row 3 -->
-                  <div class="seat_row">
-                    <div class="seat available" data-seat="C1">C1</div>
-                    <div class="seat available" data-seat="C2">C2</div>
-                    <div class="seat available" data-seat="C3">C3</div>
-                    <div class="seat available" data-seat="C4">C4</div>
-                    <div class="seat available" data-seat="C5">C5</div>
-                    <div class="seat available" data-seat="C6">C6</div>
-                  </div>
-
-                  <!-- Spacer between row 3 and 4 -->
-                  <div class="row_spacer"></div>
-
-                  <!-- Row 4 -->
-                  <div class="seat_row">
-                    <div class="seat available" data-seat="D1">D1</div>
-                    <div class="seat available" data-seat="D2">D2</div>
-                    <div class="seat available" data-seat="D3">D3</div>
-                    <div class="seat available" data-seat="D4">D4</div>
-                    <div class="seat available" data-seat="D5">D5</div>
-                    <div class="seat available" data-seat="D6">D6</div>
-                  </div>
-
-                  <!-- Row 5 -->
-                  <div class="seat_row">
-                    <div class="seat available" data-seat="E1">E1</div>
-                    <div class="seat available" data-seat="E2">E2</div>
-                    <div class="seat available" data-seat="E3">E3</div>
-                    <div class="seat available" data-seat="E4">E4</div>
-                    <div class="seat available" data-seat="E5">E5</div>
-                    <div class="seat available" data-seat="E6">E6</div>
-                  </div>
-
-                  <!-- Row 6 -->
-                  <div class="seat_row">
-                    <div class="seat available" data-seat="F1">F1</div>
-                    <div class="seat available" data-seat="F2">F2</div>
-                    <div class="seat available" data-seat="F3">F3</div>
-                    <div class="seat available" data-seat="F4">F4</div>
-                    <div class="seat available" data-seat="F5">F5</div>
-                    <div class="seat available" data-seat="F6">F6</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Legend -->
             <div class="legend_container">
               <div class="legend_item">
                 <div class="legend_box legend_occupied"></div>

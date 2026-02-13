@@ -1,9 +1,23 @@
-// Room seat counts
+// Room seat counts (20 seats: A1-A5, B1-B5, C1-C5, D1-D5)
 const ROOM_SEATS = {
-  'A1706': 36,
-  'V301': 36,
-  'V310': 36
+  'G302A': 20,
+  'G302B': 20,
+  'G304B': 20
 };
+
+// Seat layout (5 columns x 4 rows)
+const lab_layout = [
+  "A1", "A2", "A3", "A4", "A5",
+  "B1", "B2", "B3", "B4", "B5",
+  "C1", "C2", "C3", "C4", "C5",
+  "D1", "D2", "D3", "D4", "D5"
+];
+
+// Track current mode: 'reserve' or 'remove'
+let currentMode = 'reserve';
+
+// Selected seats tracker
+let selectedSeats = [];
 
 // Get reservations from localStorage
 function getReservations() {
@@ -18,7 +32,6 @@ function saveReservations(reservations) {
 
 // Validate Student ID exists in system
 function validateStudentId(studentId) {
-  // Only check localStorage userAccounts
   const users = JSON.parse(localStorage.getItem("userAccounts")) || [];
   return users.find(user => user.idNumber === studentId);
 }
@@ -36,7 +49,7 @@ function getOccupiedSeats(date, room, timeIn) {
 
 // Calculate seats available
 function calculateAvailableSeats(date, room, timeIn) {
-  const totalSeats = ROOM_SEATS[room] || 36;
+  const totalSeats = ROOM_SEATS[room] || 20;
   const occupied = getOccupiedSeats(date, room, timeIn);
   return totalSeats - occupied.length;
 }
@@ -48,7 +61,7 @@ function updateBookingOverview(date, room, timeIn) {
   
   if (!date || !room || !timeIn) {
     if (room) {
-      const totalSeats = ROOM_SEATS[room] || 36;
+      const totalSeats = ROOM_SEATS[room] || 20;
       seatsAvailableEl.textContent = `${totalSeats}/${totalSeats}`;
     } else {
       seatsAvailableEl.textContent = '0/0';
@@ -57,93 +70,86 @@ function updateBookingOverview(date, room, timeIn) {
     return;
   }
   
-  const totalSeats = ROOM_SEATS[room] || 36;
+  const totalSeats = ROOM_SEATS[room] || 20;
   const available = calculateAvailableSeats(date, room, timeIn);
   
   seatsAvailableEl.textContent = `${available}/${totalSeats}`;
-  seatsRepairEl.textContent = '0'; // No repair seats for now
+  seatsRepairEl.textContent = '0';
 }
 
-// Update seating chart colors based on occupancy
-function updateSeatingChart(date, room, timeIn) {
-  if (!date || !room || !timeIn) return;
+// Render seats in the 5-column grid
+function renderSeats(room, date, timeIn) {
+  const seatMap = document.getElementById('seat_map');
+  seatMap.innerHTML = '';
+  selectedSeats = [];
+  
+  if (!room) return;
   
   const occupiedSeats = getOccupiedSeats(date, room, timeIn);
-  const chart = document.getElementById('chart_' + room);
   
-  if (!chart) return;
-  
-  // Reset all seats to available
-  chart.querySelectorAll('.seat:not(.supervisor)').forEach(seat => {
-    seat.classList.remove('occupied', 'selected', 'available');
-    seat.classList.add('available');
-  });
-  
-  // Mark occupied seats
-  occupiedSeats.forEach(seatId => {
-    const seatEl = chart.querySelector(`[data-seat="${seatId}"]`);
-    if (seatEl) {
-      seatEl.classList.remove('available', 'selected');
-      seatEl.classList.add('occupied');
+  lab_layout.forEach(seatId => {
+    const btn = document.createElement('button');
+    btn.textContent = seatId;
+    btn.classList.add('seat');
+    btn.dataset.seat = seatId;
+    
+    const isOccupied = occupiedSeats.includes(seatId);
+    
+    if (isOccupied) {
+      btn.classList.add('occupied');
+    } else {
+      btn.classList.add('available');
     }
+    
+    // Add click handler
+    btn.addEventListener('click', function() {
+      handleSeatClick(this, isOccupied);
+    });
+    
+    seatMap.appendChild(btn);
   });
 }
 
-// Selected seats tracker
-let selectedSeats = [];
-
-// Handle seat selection
-function setupSeatSelection(roomId) {
-  const chart = document.getElementById('chart_' + roomId);
-  if (!chart) {
-    console.log('Chart not found for room:', roomId);
-    return;
+// Handle seat click
+function handleSeatClick(seatEl, isOccupied) {
+  const seatId = seatEl.dataset.seat;
+  
+  console.log('Seat clicked:', seatId, 'Mode:', currentMode, 'Is Occupied:', isOccupied);
+  
+  // In RESERVE mode: can only select available seats
+  if (currentMode === 'reserve') {
+    if (isOccupied) {
+      alert('This seat is already reserved for this time slot.');
+      return;
+    }
   }
   
-  const seats = chart.querySelectorAll('.seat:not(.supervisor)');
-  console.log(`Setting up ${seats.length} seats for room ${roomId}`);
+  // In REMOVE mode: can only select occupied seats
+  if (currentMode === 'remove') {
+    if (!isOccupied) {
+      alert('This seat is not occupied. Please select an occupied seat to remove.');
+      return;
+    }
+  }
   
-  seats.forEach(seatEl => {
-    // Remove any existing listeners by cloning
-    const newSeatEl = seatEl.cloneNode(true);
-    seatEl.parentNode.replaceChild(newSeatEl, seatEl);
-    
-    newSeatEl.addEventListener('click', function(e) {
-      e.preventDefault();
-      e.stopPropagation();
-      
-      console.log('Seat clicked:', this.dataset.seat, 'Classes:', this.className);
-      
-      // Can only select available seats
-      if (this.classList.contains('occupied')) {
-        alert('This seat is already reserved for this time slot.');
-        return;
-      }
-      
-      if (this.classList.contains('repair')) {
-        alert('This seat is under repair.');
-        return;
-      }
-      
-      const seatId = this.dataset.seat;
-      
-      if (this.classList.contains('selected')) {
-        // Deselect
-        console.log('Deselecting seat:', seatId);
-        this.classList.remove('selected');
-        this.classList.add('available');
-        selectedSeats = selectedSeats.filter(s => s !== seatId);
-      } else {
-        // Select
-        console.log('Selecting seat:', seatId);
-        this.classList.remove('available');
-        this.classList.add('selected');
-        selectedSeats.push(seatId);
-      }
-      
-      console.log('Currently selected seats:', selectedSeats);
-    });
-  });
+  // Toggle selection
+  if (seatEl.classList.contains('selected')) {
+    // Deselect
+    seatEl.classList.remove('selected');
+    if (currentMode === 'reserve') {
+      seatEl.classList.add('available');
+    } else {
+      seatEl.classList.add('occupied');
+    }
+    selectedSeats = selectedSeats.filter(s => s !== seatId);
+  } else {
+    // Select
+    seatEl.classList.remove('available', 'occupied');
+    seatEl.classList.add('selected');
+    selectedSeats.push(seatId);
+  }
+  
+  console.log('Currently selected seats:', selectedSeats);
 }
 
 // Helper function to convert time string to minutes
@@ -152,7 +158,7 @@ function convertTimeToMinutes(timeStr) {
   return hours * 60 + minutes;
 }
 
-// Show/hide seating charts based on room selection
+// DOM Ready
 document.addEventListener('DOMContentLoaded', function() {
   const roomSelect = document.getElementById('roomSelect');
   const dateInput = document.getElementById('dateInput');
@@ -164,13 +170,46 @@ document.addEventListener('DOMContentLoaded', function() {
   const leftTimeOut = document.getElementById('timeOut');
   const leftRoomInput = document.getElementById('roomNumber');
   
-  // Reserve button
+  // Buttons
   const reserveButton = document.querySelector('.reserve_button');
+  const removeButton = document.querySelector('.remove_button');
   
   // Set min date to today
   const today = new Date().toISOString().split('T')[0];
   if (dateInput) dateInput.min = today;
   if (leftDateInput) leftDateInput.min = today;
+  
+  // Reserve button click handler
+  if (reserveButton) {
+    reserveButton.addEventListener('click', function() {
+      if (currentMode === 'reserve' && selectedSeats.length > 0) {
+        performReservation();
+      } else {
+        currentMode = 'reserve';
+        reserveButton.classList.add('active');
+        if (removeButton) removeButton.classList.remove('active');
+        selectedSeats = [];
+        updateDisplay();
+        console.log('Mode set to: RESERVE');
+      }
+    });
+  }
+  
+  // Remove button click handler  
+  if (removeButton) {
+    removeButton.addEventListener('click', function() {
+      if (currentMode === 'remove' && selectedSeats.length > 0) {
+        performRemoval();
+      } else {
+        currentMode = 'remove';
+        removeButton.classList.add('active');
+        if (reserveButton) reserveButton.classList.remove('active');
+        selectedSeats = [];
+        updateDisplay();
+        console.log('Mode set to: REMOVE');
+      }
+    });
+  }
   
   // Sync right panel date to left panel
   if (dateInput && leftDateInput) {
@@ -185,208 +224,203 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
   
-  // Sync right panel room to left panel and show seating chart
+  // Room selection handlers
   if (roomSelect) {
     roomSelect.addEventListener('change', function() {
-      const selectedRoom = this.value;
-      
-      console.log('Room selected:', selectedRoom);
-      
-      // Sync to left panel
-      if (leftRoomInput) {
-        leftRoomInput.value = selectedRoom;
-      }
-      
-      // Hide all charts
-      document.querySelectorAll('.seating_chart').forEach(chart => {
-        chart.style.display = 'none';
-      });
-      
-      // Reset selected seats
+      if (leftRoomInput) leftRoomInput.value = this.value;
       selectedSeats = [];
-      
-      // Show selected chart
-      if (selectedRoom) {
-        const chart = document.getElementById('chart_' + selectedRoom);
-        if (chart) {
-          chart.style.display = 'block';
-          
-          // Ensure all seats have the available class initially
-          setTimeout(() => {
-            chart.querySelectorAll('.seat:not(.supervisor)').forEach(seat => {
-              if (!seat.classList.contains('occupied') && !seat.classList.contains('repair')) {
-                seat.classList.add('available');
-              }
-            });
-            
-            // Setup seat selection handlers
-            setupSeatSelection(selectedRoom);
-            console.log('Seat selection setup complete for', selectedRoom);
-          }, 100);
-        }
-      }
-      
       updateDisplay();
     });
   }
   
-  // Sync left panel room to right panel
   if (leftRoomInput) {
     leftRoomInput.addEventListener('change', function() {
-      const selectedRoom = this.value;
-      
-      console.log('Left room input changed:', selectedRoom);
-      
-      // Sync to right panel
-      if (roomSelect) {
-        roomSelect.value = selectedRoom;
-        
-        // Trigger the room change event to show seating chart
-        const event = new Event('change');
-        roomSelect.dispatchEvent(event);
-      }
+      if (roomSelect) roomSelect.value = this.value;
+      selectedSeats = [];
+      updateDisplay();
     });
   }
   
-  // Update display when time in changes
+  // Time in change handler
   if (leftTimeIn) {
     leftTimeIn.addEventListener('change', function() {
       updateDisplay();
     });
   }
   
-  // Function to update all displays
+  // Update display function
   function updateDisplay() {
     const date = dateInput.value || leftDateInput.value;
     const room = roomSelect.value || leftRoomInput.value;
     const timeIn = leftTimeIn.value;
     
-    // Don't reset selected seats when just updating display
-    // selectedSeats = [];
-    
     updateBookingOverview(date, room, timeIn);
-    updateSeatingChart(date, room, timeIn);
+    renderSeats(room, date, timeIn);
   }
   
-  // Reserve button functionality
-  if (reserveButton) {
-    reserveButton.addEventListener('click', function() {
-      // Get form values
-      const studentId = leftStudentId.value.trim();
-      const date = leftDateInput.value;
-      const timeIn = leftTimeIn.value;
-      const timeOut = leftTimeOut.value;
-      const room = leftRoomInput.value;
+  // Perform reservation
+  function performReservation() {
+    const studentId = leftStudentId.value.trim();
+    const date = leftDateInput.value;
+    const timeIn = leftTimeIn.value;
+    const timeOut = leftTimeOut.value;
+    const room = leftRoomInput.value;
+    
+    // Validation
+    if (!studentId) {
+      alert('Please enter a Student ID.');
+      return;
+    }
+    
+    if (studentId.length !== 8 || isNaN(studentId)) {
+      alert('Please enter a valid 8-digit Student ID.');
+      return;
+    }
+    
+    if (!validateStudentId(studentId)) {
+      alert('Student ID not found in the system. Please check and try again.');
+      return;
+    }
+    
+    if (!date) {
+      alert('Please select a date.');
+      return;
+    }
+    
+    if (!timeIn) {
+      alert('Please select a Time In.');
+      return;
+    }
+    
+    if (!timeOut) {
+      alert('Please select a Time Out.');
+      return;
+    }
+    
+    const timeInMinutes = convertTimeToMinutes(timeIn);
+    const timeOutMinutes = convertTimeToMinutes(timeOut);
+    
+    if (timeOutMinutes <= timeInMinutes) {
+      alert('Time Out must be after Time In.');
+      return;
+    }
+    
+    if (!room) {
+      alert('Please select a room.');
+      return;
+    }
+    
+    if (selectedSeats.length === 0) {
+      alert('Please select at least one seat from the seating chart.');
+      return;
+    }
+    
+    // Check for conflicts
+    const existingReservations = getReservations();
+    const conflicts = [];
+    
+    selectedSeats.forEach(seatId => {
+      const conflict = existingReservations.some(res =>
+        res.date === date &&
+        res.room === room &&
+        res.seat === seatId &&
+        res.timeIn === timeIn
+      );
       
-      // Validation
-      if (!studentId) {
-        alert('Please enter a Student ID.');
-        return;
+      if (conflict) {
+        conflicts.push(seatId);
       }
-      
-      if (studentId.length !== 8 || isNaN(studentId)) {
-        alert('Please enter a valid 8-digit Student ID.');
-        return;
-      }
-      
-      // Validate Student ID exists
-      if (!validateStudentId(studentId)) {
-        alert('Student ID not found in the system. Please check and try again.');
-        return;
-      }
-      
-      if (!date) {
-        alert('Please select a date.');
-        return;
-      }
-      
-      if (!timeIn) {
-        alert('Please select a Time In.');
-        return;
-      }
-      
-      if (!timeOut) {
-        alert('Please select a Time Out.');
-        return;
-      }
-      
-      // Validate time out is after time in
-      const timeInMinutes = convertTimeToMinutes(timeIn);
-      const timeOutMinutes = convertTimeToMinutes(timeOut);
-      
-      if (timeOutMinutes <= timeInMinutes) {
-        alert('Time Out must be after Time In.');
-        return;
-      }
-      
-      if (!room) {
-        alert('Please select a room.');
-        return;
-      }
-      
-      if (selectedSeats.length === 0) {
-        alert('Please select at least one seat from the seating chart.');
-        return;
-      }
-      
-      // Check for conflicts
-      const existingReservations = getReservations();
-      const conflicts = [];
-      
-      selectedSeats.forEach(seatId => {
-        const conflict = existingReservations.some(res =>
-          res.date === date &&
-          res.room === room &&
-          res.seat === seatId &&
-          res.timeIn === timeIn
-        );
-        
-        if (conflict) {
-          conflicts.push(seatId);
-        }
-      });
-      
-      if (conflicts.length > 0) {
-        alert(`The following seats are already reserved: ${conflicts.join(', ')}`);
-        return;
-      }
-      
-      // Create reservations
-      const newReservations = selectedSeats.map(seatId => ({
-        userId: studentId,
-        username: 'Admin Reservation', // Admin-created reservation
-        date: date,
-        timeIn: timeIn,
-        timeOut: timeOut,
-        room: room,
-        seat: seatId,
-        anonymous: true // Admin reservations are anonymous
-      }));
-      
-      console.log('Creating reservations:', newReservations);
-      
-      // Save reservations
-      const allReservations = getReservations();
-      console.log('Existing reservations:', allReservations);
-      allReservations.push(...newReservations);
-      saveReservations(allReservations);
-      console.log('After saving, total reservations:', allReservations.length);
-      
-      // Verify it was saved
-      const verifyReservations = getReservations();
-      console.log('Verification - reservations in localStorage:', verifyReservations);
-      
-      // Success message
-      alert(`Successfully reserved ${selectedSeats.length} seat(s): ${selectedSeats.join(', ')}`);
-      
-      // Reset form
-      selectedSeats = [];
-      leftStudentId.value = '';
-      leftTimeIn.value = '';
-      leftTimeOut.value = '';
-      
-      // Update display
-      updateDisplay();
     });
+    
+    if (conflicts.length > 0) {
+      alert(`The following seats are already reserved: ${conflicts.join(', ')}`);
+      return;
+    }
+    
+    // Create reservations
+    const newReservations = selectedSeats.map(seatId => ({
+      userId: studentId,
+      username: 'Admin Reservation',
+      date: date,
+      timeIn: timeIn,
+      timeOut: timeOut,
+      room: room,
+      seat: seatId,
+      anonymous: true
+    }));
+    
+    // Save reservations
+    const allReservations = getReservations();
+    allReservations.push(...newReservations);
+    saveReservations(allReservations);
+    
+    alert(`Successfully reserved ${selectedSeats.length} seat(s): ${selectedSeats.join(', ')}`);
+    
+    // Reset form
+    selectedSeats = [];
+    leftStudentId.value = '';
+    leftTimeIn.value = '';
+    leftTimeOut.value = '';
+    
+    updateDisplay();
+  }
+  
+  // Perform removal
+  function performRemoval() {
+    const date = leftDateInput.value;
+    const timeIn = leftTimeIn.value;
+    const room = leftRoomInput.value;
+    
+    if (!date) {
+      alert('Please select a date.');
+      return;
+    }
+    
+    if (!timeIn) {
+      alert('Please select a Time In.');
+      return;
+    }
+    
+    if (!room) {
+      alert('Please select a room.');
+      return;
+    }
+    
+    if (selectedSeats.length === 0) {
+      alert('Please select at least one occupied seat to remove.');
+      return;
+    }
+    
+    const confirmMsg = `Are you sure you want to remove ${selectedSeats.length} reservation(s) for seat(s): ${selectedSeats.join(', ')}?`;
+    if (!confirm(confirmMsg)) {
+      return;
+    }
+    
+    let allReservations = getReservations();
+    const removedSeats = [];
+    
+    selectedSeats.forEach(seatId => {
+      const index = allReservations.findIndex(res =>
+        res.date === date &&
+        res.room === room &&
+        res.seat === seatId &&
+        res.timeIn === timeIn
+      );
+      
+      if (index !== -1) {
+        allReservations.splice(index, 1);
+        removedSeats.push(seatId);
+      }
+    });
+    
+    if (removedSeats.length > 0) {
+      saveReservations(allReservations);
+      alert(`Successfully removed ${removedSeats.length} reservation(s): ${removedSeats.join(', ')}`);
+    } else {
+      alert('No matching reservations found to remove.');
+    }
+    
+    selectedSeats = [];
+    updateDisplay();
   }
 });
