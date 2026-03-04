@@ -22,11 +22,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', require('./src/routes/indexRoutes'));
-app.use('/auth', require('./src/routes/authRoutes'));
-app.use('/reservation', require('./src/routes/reservationRoutes'));
-app.use('/lab', require('./src/routes/labRoutes'));
-app.use('/admin', require('./src/routes/adminRoutes'));
+app.use('/', require('./src/routes/index_routes'));
+app.use('/auth', require('./src/routes/auth_routes'));
+app.use('/reservation', require('./src/routes/reservation_routes'));
+app.use('/lab', require('./src/routes/lab_routes'));
+app.use('/admin', require('./src/routes/admin_routes'));
 
 app.listen(PORT, () =>  {
     console.log(`Server running at http://localhost:${PORT}`);
