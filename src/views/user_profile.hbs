@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang = "en">
+  
+<head>
+  <meta charset = "UTF-8">
+  <title> User Profile </title>
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/user_profile.css">
+</head>
+
+<body>
+  <section class = "header">
+    <h1>
+      <b>DLSU</b> Lab Reservation
+    </h1>
+  </section>
+
+  <section class = "page">
+    <h2> Personal Information </h2>
+    <p> ID Number: {{user.idNumber}} </p>
+    <p> Username: {{user.username}} </p>
+    <p> Email: {{user.email}} </p>
+
+    <a href = "/edit_profile" class = "btn"> Edit Profile </a>
+    <a href = "/edit_reservation" class = "btn"> Edit Reservation </a>
+    <a href = "/delete_reservation" class = "btn"> Delete Reservation </a>
+
+    <button id = "logout_btn" class = "logout_btn"> Logout </button>
+
+    </section>
+    <script src = "/js/user_profile.js"></script>
+</body>
