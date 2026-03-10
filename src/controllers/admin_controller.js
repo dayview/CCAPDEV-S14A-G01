@@ -1,6 +1,7 @@
 const Reservation = require('../models/Reservation');
 const Slot = require('../models/Slot');
 const Lab = require('../models/Lab');
+const User = require('../models/User');
 
 exports.getAdminHome = (req, res) => {
     res.render('admin/admin_homepage', { layout: 'admin' });
@@ -38,13 +39,38 @@ exports.getAdminReservations = async (req, res) => {
     }
 };
 
+exports.getAdminStudentReservations = (req, res) => {
+    res.render('admin/admin_student_reservation', { layout: 'admin' });
+};
+
+exports.getAdminStudentSearch = async (req, res) => {
+    try {
+        const { idNum } = req.query;
+        const user = await User.findOne({ idNum });
+        let reservations = [];
+        if (user) {
+            reservations = await Reservation.find({ user: user._id })
+                .populate({ path: 'slot', populate: { path: 'lab' } });
+        }
+        res.render('admin/admin_student_reservation', {
+            layout: 'admin',
+            reservations,
+            searchedId: idNum,
+            notFound: !user
+        });
+    } catch (err) {
+        console.error('getAdminStudentSearch error:', err);
+        res.status(500).render('admin/admin_student_reservation', { layout: 'admin', error: 'Search failed.' });
+    }
+};
+
 exports.getAdminSlotsOverview = async (req, res) => {
     try {
         const slots = await Slot.find().populate('lab');
         res.render('admin/admin_slots_overview', { layout: 'admin', slots });
     } catch (err) {
         console.error('getAdminSlotsOverview error:', err);
-        res.status(500).render('admin/admin_slots_overview', { layout: 'admin', error: 'Could not load slots.' });
+        res.status(500).render('admin/admin_slot_overview', { layout: 'admin', error: 'Could not load slots.' });
     }
 };
 
@@ -52,7 +78,7 @@ exports.getAdminSlotReservation = async (req, res) => {
     try {
         const slot = await Slot.findById(req.params.id).populate('lab');
         const labs = await Lab.find();
-        res.render('admin/admin_slot/reservation', { layout: 'admin', slot, labs });
+        res.render('admin/admin_slot_reservation', { layout: 'admin', slot, labs });
     } catch (err) {
         console.error('getAdminSlotReservation error:', err);
         res.status(500).render('admin/admin_slot_reservation', { layout: 'admin', error: 'Could not load slot details.' });
