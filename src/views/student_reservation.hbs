@@ -1,0 +1,46 @@
+{{#> (layout "main")}}
+
+<section class="history_page">
+    <div class="history_container">
+        <h1 class="page_title">My Reservation History</h1>
+
+        <div class="user_info">
+            <p><strong>Student ID:</strong> <span id="userIdDisplay"></span></p>
+        </div>
+
+        <div class="filter_section">
+            <label for="filterStatus">Filter by:</label>
+            <select id="filterStatus">
+                <option value="all">All Reservations</option>
+                <option value="upcoming">Upcoming</option>
+                <option value="past">past</option>
+            </select>
+        </div>
+
+        <div class="table_container">
+            <table class="history_table">
+                <thead>
+                    <tr>
+                        <th>Laboratory</th>
+                        <th>Seat</th>
+                        <th>Date</th>
+                        <th>Time In</th>
+                        <th>Time Out</th>
+                        <th>Status</th>
+                        <th>Anonymous</th>
+                    </tr>
+                </thead>
+                <tbody id="history_body">
+                </tbody>
+            </table>
+        </div>
+
+        <div id="noReservations" class="no_reservations" style="display: none;">
+            <p>You have no reservations yet.</p>
+            <a href="reservation.html" class="btn">Make a Reservation</a>
+        </div>
+    </div>
+</section>
+
+<script src="../js/header_navigation.js"></script>
+<script src="../js/reservation_history.js"></script>
