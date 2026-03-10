@@ -3,7 +3,7 @@ const mongoose = require ('mongoose');
 const connectDB = require('./src/config/db');
 
 const User = require('./src/models/User');
-const Lab = requrie('./src/models/Lab');
+const Lab = require('./src/models/Lab');
 const Slot = require('./src/models/Slot');
 const Reservation = require('./src/models/Reservation');
 
@@ -49,7 +49,7 @@ const labs = [
         openTime: '08:00', closeTime: '18:00', description: 'CS-ST laboratory classes'
     },
     {
-        labname: 'AG1901', building: 'Andrew', floor: 19, capacity: 30,
+        labName: 'AG1901', building: 'Andrew', floor: 19, capacity: 30,
         openTime: '07:30', closeTime: '20:00', description: 'IT/IS laboratory classes'
     },
     {
