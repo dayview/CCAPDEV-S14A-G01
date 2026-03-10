@@ -1,6 +1,4 @@
-{{#> (layout "admin")}}
-
-<form>
+<form action="/admin/login" method="POST">
     <div class="login_block">
         <h2 class="login_header"> Admin Sign-In </h2>
         <div class="username">
@@ -17,9 +15,8 @@
 
         <div class="login_action">
             <button type="submit" id="login_btn"> LOG-IN </button>
-            <a href="index.html" class="btn">Return to Main Page</a>
+            <a href="/" class="btn">Return to Main Page</a>
         </div>
     </div>
 </form>
-
-<script src="../js/admin_login.js"></script>
+<script src="/js/admin_login.js"></script>

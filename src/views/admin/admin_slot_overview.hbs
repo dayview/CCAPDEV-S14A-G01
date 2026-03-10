@@ -1,18 +1,15 @@
-{{#> (layout "admin")}}
-
 <main class="main_container">
-
     <div class="dashboard">
         <section class="panel left_panel">
             <div class="user_box">
                 <div class="user_top_row">
-                    <div class="avatar"><img src="../images/profile.png"></div>
+                    <div class="avatar"><img src="/images/profile.png"></div>
                     <h2>Welcome ADMIN<br>(Username)!</h2>
                 </div>
             </div>
             <div class="menu_box active">SLOTS OVERVIEW</div>
             <div class="menu_box">
-                <a href="admin_slot_reservation.html" class="menu_link">VIEW ROOM<br>RESERVATIONS</a>
+                <a href="/admin/slots/:id" class="menu_link">VIEW ROOM<br>RESERVATIONS</a>
             </div>
         </section>
 
@@ -99,7 +96,6 @@
             </div>
         </section>
     </div>
-
 </main>
-<script src="../js/header_navigation.js"></script>
-<script src="../js/admin_slots_overview.js"></script>
+<script src="/js/header_navigation.js"></script>
+<script src="/js/admin_slots_overview.js"></script>
