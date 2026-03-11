@@ -24,9 +24,9 @@
                     <label class="input_label">Room:</label>
                     <select class="info_input" id="roomSelect">
                         <option value="">Select a room</option>
-                        <option value="G302A">G302A</option>
-                        <option value="G302B">G302B</option>
-                        <option value="G304B">G304B</option>
+                        {{#each slots}}
+                        <option value="{{this.lab.labName}}">{{this.lab.labName}}</option>
+                        {{/each}}
                     </select>
                 </div>
 

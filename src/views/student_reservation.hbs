@@ -31,6 +31,17 @@
                     </tr>
                 </thead>
                 <tbody id="history_body">
+                    {{#each slots}}
+                    <tr>
+                        <td>{{this.lab.labName}}</td>
+                        <td>{{this.seatNum}}</td>
+                        <td>{{this.date}}</td>
+                        <td>{{this.startTime}}</td>
+                        <td>{{this.endTime}}</td>
+                        <td>{{this.status}}</td>
+                        <td>-</td>
+                    </tr>
+                    {{/each}}
                 </tbody>
             </table>
         </div>

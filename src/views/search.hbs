@@ -43,9 +43,9 @@
         <section class="r_box">
             <label for="room_num" class="form-label">Room</label>
             <select id="room_num" class="form-control">
-                <option value="G302A">G302A</option>
-                <option value="G302B">G302B</option>
-                <option value="G304B">G304B</option>
+                {{#each labs}}
+                <option value="{{this.labName}}">{{this.labName}}</option>
+                {{/each}}
             </select>
         </section>
 

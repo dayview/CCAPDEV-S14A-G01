@@ -4,6 +4,12 @@
     <div class="signup_block">
         <h2 class="signup">Sign-Up</h2>
 
+        {{#if error}}
+        <div class="error-message" style="color: red; margin: 10px 0;">
+            {{error}}
+        </div>
+        {{/if}}
+
         <div class="profile">
             <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="Profile Picture">
         </div>

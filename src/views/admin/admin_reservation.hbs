@@ -42,6 +42,17 @@
                     </tr>
                 </thead>
                 <tbody id="history_body">
+                    {{#each reservations}}
+                    <tr>
+                        <td>{{this.slot.lab.labName}}</td>
+                        <td>{{this.slot.seatNum}}</td>
+                        <td>{{this.slot.date}}</td>
+                        <td>{{this.slot.startTime}}</td>
+                        <td>{{this.slot.endTime}}</td>
+                        <td>{{this.status}}</td>
+                        <td>{{#if this.isAnonymous}}Yes{{else}}No{{/if}}</td>
+                    </tr>
+                    {{/each}}
                 </tbody>
             </table>
         </div>

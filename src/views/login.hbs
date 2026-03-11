@@ -14,6 +14,12 @@
                 <label> <input type="checkbox" id="remember" /> Remember Me</label>
             </div>
 
+            {{#if error}}
+            <div class="error-message" style="color: red; margin: 10px 0;">
+                {{error}}
+            </div>
+            {{/if}}
+
             <div class="login_action">
                 <button type="submit" id="login_btn">Log In</button>
                 <a href="/auth/signup" class="btn">Sign-Up</a>
