@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang = "en">
+<head>
+  <meta charset = "UTF-8">
+  <title> Search </title>
+  <link rel = "stylesheet" href = "/css/main.css">
+  <link rel = "stylesheet" href = "/css/search.css">
+</head>
+  
+<body>
+    <section class = "header">
+      <div class = "logo">
+        <img src = "/images/dlsu-logo-white.png" alt = "DLSU Logo" height = "30">
+      </div>
+      <div class = "header-actions">
+        <a href = "/reservation" class = "btn"> Return Home </a>
+        <a href = "/user_profile" class = "btn"> Return Home </a>
+      </div>
+    </section>
+    <section class = "search-page">
+      <div class = "search-form">
+        <h2> Search Available Seats </h2>
+        <div class = "field">
+          <label for = "reserve_time"> Time </label>
+          <select id = "reserve_time">
+          <option value = ""> Select Time </option>
+          <option value = "07:30"> {{#if filters.is0730}}selected{{/if}}> 07:30 - 08:00 </option>
+          <option value = "08:00"> {{#if filters.is0730}}selected{{/if}}> 08:00 - 08:30 </option>
+          <option value = "08:30"> {{#if filters.is0730}}selected{{/if}}> 08:30 - 09:00 </option>
+          <option value = "09:00"> {{#if filters.is0730}}selected{{/if}}> 09:00 - 09:30 </option>
+          <option value = "09:30"> {{#if filters.is0730}}selected{{/if}}> 09:30 - 10:00 </option>
+          <option value = "10:00"> {{#if filters.is0730}}selected{{/if}}> 10:00 - 10:30 </option>
+          <option value = "10:30"> {{#if filters.is0730}}selected{{/if}}> 10:30 - 11:00 </option>
+          <option value = "11:00"> {{#if filters.is0730}}selected{{/if}}> 11:00 - 11:30 </option>
+          <option value = "11:30"> {{#if filters.is0730}}selected{{/if}}> 11:30 - 12:00 </option>
+          <option value = "12:00"> {{#if filters.is0730}}selected{{/if}}> 12:00 - 12:30 </option>
+          <option value = "12:30"> {{#if filters.is0730}}selected{{/if}}> 12:30 - 13:00 </option>
+          <option value = "13:00"> {{#if filters.is0730}}selected{{/if}}> 13:00 - 13:30 </option>
+          <option value = "13:30"> {{#if filters.is0730}}selected{{/if}}> 13:30 - 14:00 </option>
+          <option value = "14:00"> {{#if filters.is0730}}selected{{/if}}> 14:00 - 14:30 </option>
+          <option value = "14:30"> {{#if filters.is0730}}selected{{/if}}> 14:30 - 15:00 </option>
+          <option value = "15:00"> {{#if filters.is0730}}selected{{/if}}> 15:00 - 15:30 </option>
+          <option value = "15:30"> {{#if filters.is0730}}selected{{/if}}> 15:30 - 16:00 </option>
+          <option value = "16:00"> {{#if filters.is0730}}selected{{/if}}> 16:00 - 16:30 </option>
+          <option value = "16:30"> {{#if filters.is0730}}selected{{/if}}> 16:30 - 17:00 </option>
+          <option value = "17:00"> {{#if filters.is0730}}selected{{/if}}> 17:00 - 17:30 </option>
+          <option value = "17:30"> {{#if filters.is0730}}selected{{/if}}> 17:30 - 18:00 </option>
+          <option value = "18:00"> {{#if filters.is0730}}selected{{/if}}> 18:00 - 18:30 </option>
+          <option value = "18:30"> {{#if filters.is0730}}selected{{/if}}> 18:30 - 19:00 </option>
+          <option value = "19:00"> {{#if filters.is0730}}selected{{/if}}> 19:00 - 19:30 </option>
+          <option value = "19:30"> {{#if filters.is0730}}selected{{/if}}> 19:30 - 20:00 </option>
+          </select>
+        </div>   
+        <div class = "field">
+          <label for = "room_num"> Room </label>
+          <select id = "room_num">
+            <option value = "G301A" {{#if filters.isG301A}}selected{{/if}}>G301A</option>
+            <option value = "G301B" {{#if filters.isG301B}}selected{{/if}}>G301B</option>
+            <option value = "G302A" {{#if filters.isG301A}}selected{{/if}}>G302A</option>
+            <option value = "G302B" {{#if filters.isG301A}}selected{{/if}}>G302B</option>
+            <option value = "G303A" {{#if filters.isG301A}}selected{{/if}}>G303A</option>
+            <option value = "G303B" {{#if filters.isG301B}}selected{{/if}}>G303B</option>
+            <option value = "G304A" {{#if filters.isG301A}}selected{{/if}}>G304A</option>
+            <option value = "G304B" {{#if filters.isG301A}}selected{{/if}}>G304B</option>
+            <option value = "G305A" {{#if filters.isG301A}}selected{{/if}}>G305A</option>
+            <option value = "G305B" {{#if filters.isG301B}}selected{{/if}}>G305B</option>
+            <option value = "G306A" {{#if filters.isG301A}}selected{{/if}}>G306A</option>
+            <option value = "G306B" {{#if filters.isG301A}}selected{{/if}}>G306B</option>
+          </select>
+        </div>
+        <button type = "button" class = "search-btn"> Search </button>
+      </div>
+      <div id = "available_seats" class = "results-box">
+        {{#if results.length}}
+        <p id = "seat_results"> Available Seats: </p>
+        <div id = "available_seats_text">
+          {{#each results}}
+          <div class = "seat-result">
+            Seat {{this.seat}} - {{this.room}} - {{this.time}}
+          </div>
+          {{/each}}
+        </div>
+        {{else}}
+        <p id = "seats_results"> No available seats found. </p>
+        <p id = "available_seats_text"></p>
+        {{/if}}
+      </div>
+    </section>
+  <script src. ="js/search.js"></script>
+</body>
+</html>
