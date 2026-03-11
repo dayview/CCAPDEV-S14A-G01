@@ -1,1 +1,43 @@
-<!-- Insert handlebars code here -->
+<!DOCTYPE html>
+<html lang = "en">
+  <head>
+    <meta charset = "UTF-8">
+    <title> Login </title>
+    <link rel = "stylesheet" href = "/css/main.css">
+    <link rel = "stylesheet" href = "/css/login.css">
+  </head>
+
+  <body>
+    <section class = "header">
+      <img src = "/images/dlsu-logo-white.png" alt = "DLSU Logo" height = "30">
+      <a href = "/" class = "btn"> Return to Main Page </a>
+    </section>
+
+    <section class = "login_block">
+      <h2 class = "login"> LOGIN </h2>
+      {{#if error}}
+      <p class = "error-message"> {{error}} </p>
+      {{/if}}
+
+      <form>
+        <div class = "username">
+          <label> Username * </label>
+          <input type = "text" id = "username" value = "{{username}}" required>
+        </div>
+
+        <div class = "password">
+          <label> Password * </label>
+          <input type = "password" id = "password" required>
+        </div>
+
+        <div class = "remember_me">
+          <input type = "checkbox" id = "remember" {{#if remember}}checked{{/if}}>
+          <label for = "remember"> Remember Me </label>
+        </div>
+      </form>
+
+      <a href = "/signup" class = "signup-link"> Don't have an account?</a>
+    </section>
+    <script src = "/js/login.js></script>
+  </body>
+      </html>
