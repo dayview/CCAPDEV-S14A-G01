@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang = "en">
+  <head>
+    <meta charset = "UTF-8">
+    <title> Reservation </title>
+    <link rel = "stylesheet" href = "/css/main.css">
+    <link rel = "stylesheet" href = "/css/reservation.css">
+  </head>
+  <body>
+    <section class = "header">
+      <div class = "logo">
+        <img src = "/images/dlsu-logo-white.png" alt = "DLSU Logo" height = "30">
+      </div>
+      <div class = "header-actions">
+        <a href = "/search" class = "btn"> Search </a>
+        <a href = "/user_profile" class = "btn"> User Profile </a>
+      </div>
+    </section>
+    <section class = "reservation-page">
+      <div class = "reservation-form">
+        <h2> Reserve a Seat </h2>
+        <div class = "field">
+          <label for = "reserve_date"> Date </label>
+          <input type = "date" id = "reserve_date" value = "{{filters.date}}">
+        </div>
+        <div class = "field">
+          <label for = "reserve_time"> Time </label>
+          <select id = "reserve_time">
+          <option value = ""> Select Time </option>
+          <option value = "07:30"> {{#if filters.is0730}}selected{{/if}}> 07:30 - 08:00 </option>
+          <option value = "08:00"> {{#if filters.is0730}}selected{{/if}}> 08:00 - 08:30 </option>
+          <option value = "08:30"> {{#if filters.is0730}}selected{{/if}}> 08:30 - 09:00 </option>
+          <option value = "09:00"> {{#if filters.is0730}}selected{{/if}}> 09:00 - 09:30 </option>
+          <option value = "09:30"> {{#if filters.is0730}}selected{{/if}}> 09:30 - 10:00 </option>
+          <option value = "10:00"> {{#if filters.is0730}}selected{{/if}}> 10:00 - 10:30 </option>
+          <option value = "10:30"> {{#if filters.is0730}}selected{{/if}}> 10:30 - 11:00 </option>
+          <option value = "11:00"> {{#if filters.is0730}}selected{{/if}}> 11:00 - 11:30 </option>
+          <option value = "11:30"> {{#if filters.is0730}}selected{{/if}}> 11:30 - 12:00 </option>
+          <option value = "12:00"> {{#if filters.is0730}}selected{{/if}}> 12:00 - 12:30 </option>
+          <option value = "12:30"> {{#if filters.is0730}}selected{{/if}}> 12:30 - 13:00 </option>
+          <option value = "13:00"> {{#if filters.is0730}}selected{{/if}}> 13:00 - 13:30 </option>
+          <option value = "13:30"> {{#if filters.is0730}}selected{{/if}}> 13:30 - 14:00 </option>
+          <option value = "14:00"> {{#if filters.is0730}}selected{{/if}}> 14:00 - 14:30 </option>
+          <option value = "14:30"> {{#if filters.is0730}}selected{{/if}}> 14:30 - 15:00 </option>
+          <option value = "15:00"> {{#if filters.is0730}}selected{{/if}}> 15:00 - 15:30 </option>
+          <option value = "15:30"> {{#if filters.is0730}}selected{{/if}}> 15:30 - 16:00 </option>
+          <option value = "16:00"> {{#if filters.is0730}}selected{{/if}}> 16:00 - 16:30 </option>
+          <option value = "16:30"> {{#if filters.is0730}}selected{{/if}}> 16:30 - 17:00 </option>
+          <option value = "17:00"> {{#if filters.is0730}}selected{{/if}}> 17:00 - 17:30 </option>
+          <option value = "17:30"> {{#if filters.is0730}}selected{{/if}}> 17:30 - 18:00 </option>
+          <option value = "18:00"> {{#if filters.is0730}}selected{{/if}}> 18:00 - 18:30 </option>
+          <option value = "18:30"> {{#if filters.is0730}}selected{{/if}}> 18:30 - 19:00 </option>
+          <option value = "19:00"> {{#if filters.is0730}}selected{{/if}}> 19:00 - 19:30 </option>
+          <option value = "19:30"> {{#if filters.is0730}}selected{{/if}}> 19:30 - 20:00 </option>
+          </select>
+        </div>   
+        <div class = "field">
+          <label for = "room_num"> Room </label>
+          <select id = "room_num">
+            <option value = "G301A" {{#if reservation.isG301A}}selected{{/if}}>G301A</option>
+            <option value = "G301B" {{#if reservation.isG301B}}selected{{/if}}>G301B</option>
+            <option value = "G302A" {{#if reservation.isG301A}}selected{{/if}}>G302A</option>
+            <option value = "G302B" {{#if reservation.isG301A}}selected{{/if}}>G302B</option>
+            <option value = "G303A" {{#if reservation.isG301A}}selected{{/if}}>G303A</option>
+            <option value = "G303B" {{#if reservation.isG301B}}selected{{/if}}>G303B</option>
+            <option value = "G304A" {{#if reservation.isG301A}}selected{{/if}}>G304A</option>
+            <option value = "G304B" {{#if reservation.isG301A}}selected{{/if}}>G304B</option>
+            <option value = "G305A" {{#if reservation.isG301A}}selected{{/if}}>G305A</option>
+            <option value = "G305B" {{#if reservation.isG301B}}selected{{/if}}>G305B</option>
+            <option value = "G306A" {{#if reservation.isG301A}}selected{{/if}}>G306A</option>
+            <option value = "G306B" {{#if reservation.isG301A}}selected{{/if}}>G306B</option>
+          </select>
+        </div>
+        <div class = "field checkbox-field">
+          <input type = "checkbox" id= "anonymous" {{#if filters.anonymous}}checked{{/if}}>
+          <label for = "anonymous"> Reserve Anonymously </label>
+        </div>
+        <div id = "seat_map" class = "seat-map">
+          {{#each seats}}
+          <div
+            class = "seat {{#if this.taken}} taken {{/if}}"
+            data-seat = "{{this.number}}" > {{this.number}}
+          </div>
+          {{/each}}
+        </div>
+        <button type = "button" class = "reserve-btn"> Reserve </button>
+      </div>
+
+      <div class = "reservation-info">
+        <h3> Reservation Details </h3>
+        <p> Date: <span id = "infoDate"> {{selected.date}} </span></p>
+        <p> Time In: <span id = "infoTimeIn"> {{selected.timeIn}} </span></p>
+        <p> Time Out: <span id = "infoTimeOut"> {{selected.timeOut}} </span></p>
+        <p> Room: <span id = "infoRoom"> {{selected.room}} </span></p>
+        <p> Seat: <span id = "infoSeat"> {{selected.seat}} </span></p>
+      </div>
+    </section>
+    <script src = "/js/reservation.js"></script>
+        
+  </body>
+</html>html>
