@@ -1,10 +1,8 @@
-{{#> (layout "main")}}
+<script src="/js/signup.js"></script>
 
-<script src="../js/signup.js"></script>
-
-<form id="signup">
+<form id="signup" action="/auth/signup" method="POST">
     <div class="signup_block">
-        <h2 class="signup">SIGN-UP</h2>
+        <h2 class="signup">Sign-Up</h2>
 
         <div class="profile">
             <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="Profile Picture">
@@ -12,28 +10,38 @@
 
         <div class="id">
             <label>ID Number *</label>
-            <input type="text" id="idnumber" required>
+            <input type="text" id="idnumber" name="idNum" required>
         </div>
 
         <div class="username">
             <label>Username *</label>
-            <input type="text" id="user" required>
+            <input type="text" id="user" name="username" required>
+        </div>
+
+        <div class="firstname">
+            <label>First Name *</label>
+            <input type="text" id="firstname" name="firstName" required>
+        </div>
+
+        <div class="lastname">
+            <label>Last Name *</label>
+            <input type="text" id="lastName" name="lastName" required>
         </div>
 
         <div class="password">
             <label>Password *</label>
-            <input type="password" id="password" required>
+            <input type="password" id="password" name="password" required>
         </div>
 
         <div class="email">
             <label>Email *</label>
-            <input type="email" id="email" required>
+            <input type="email" id="email" name="email" required>
         </div>
 
         <div class="buttons">
             <button type="submit" class="submit-btn">Sign-Up</button>
         </div>
 
-        <a href="login.html" class="login-link">Already have an account?</a>
+        <a href="/auth/login" class="login-link">Already have an account?</a>
     </div>
 </form>
