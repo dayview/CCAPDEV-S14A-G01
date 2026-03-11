@@ -8,6 +8,7 @@ const userSchema = new mongoose.Schema({
         match: /^\d{8}$/
         /* Implementation notes: <to insert> */
     },
+    username: { type: String, required: true, unique: true, trim: true },
     firstName: { type: String, required: true, trim: true },
     lastName: { type: String, required: true, trim: true },
     email: {

@@ -1,5 +1,5 @@
 require('dotenv').config();
-const mongoose = require ('mongoose');
+const mongoose = require('mongoose');
 const connectDB = require('./src/config/db');
 
 const User = require('./src/models/User');
@@ -9,27 +9,27 @@ const Reservation = require('./src/models/Reservation');
 
 const users = [
     {
-        idNum: '12345678', firstName: 'Danny', lastName: 'Cheng',
+        idNum: '12345678', username: 'dcheng', firstName: 'Danny', lastName: 'Cheng',
         email: 'danny_cheng@dlsu.edu.ph', password: 'dcheng123',
         role: 'student', description: 'BSCS-ST, ID123'
     },
     {
-        idNum: '12100005', firstName: 'Leon', lastName: 'Pavino',
+        idNum: '12100005', username: 'lpavino', firstName: 'Leon', lastName: 'Pavino',
         email: 'leon_pavino@dlsu.edu.ph', password: 'lpavino121',
         role: 'student', description: 'BSIS, ID121'
     },
     {
-        idNum: '12100099', firstName: 'Justine', lastName: 'Major',
+        idNum: '12100099', username: 'jmajor', firstName: 'Justine', lastName: 'Major',
         email: 'justine_major@dlsu.edu.ph', password: 'jmajor121',
         role: 'student', description: 'BSCS-ST, ID123'
     },
     {
-        idNum: '12100021', firstName: 'Alj', lastName: 'Sese',
+        idNum: '12100021', username: 'asese', firstName: 'Alj', lastName: 'Sese',
         email: 'alj_sese@dlsu.edu.ph', password: 'asese123',
         role: 'student', description: 'BS-MTH, ID121'
     },
     {
-        idNum: '12100056', firstName: 'Massi', lastName: 'Colcol',
+        idNum: '12100056', username: 'mcolcol', firstName: 'Massi', lastName: 'Colcol',
         email: 'massi_colcol@dlsu.edu.ph', password: 'mcolcol123',
         role: 'student', description: 'BSCS-ST, ID122'
     }

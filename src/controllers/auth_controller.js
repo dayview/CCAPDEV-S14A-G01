@@ -6,8 +6,8 @@ exports.getLogin = (req, res) => {
 
 exports.postLogin = async (req, res) => {
     try {
-        const { email, password } = req.body;
-        const user = await User.findOne({ email, password });
+        const { username, password } = req.body;
+        const user = await User.findOne({ username, password });
         if (user) {
             res.redirect('/reservation');
         } else {
@@ -25,8 +25,8 @@ exports.getSignup = (req, res) => {
 
 exports.postSignup = async (req, res) => {
     try {
-        const { idNum, firstName, lastName, email, password } = req.body;
-        await User.create({ idNum, firstName, lastName, email, password });
+        const { idNum, username, firstName, lastName, email, password } = req.body;
+        await User.create({ idNum, username, firstName, lastName, email, password });
         res.redirect('/auth/login');
     } catch (err) {
         console.error('postSignup error:', err);
