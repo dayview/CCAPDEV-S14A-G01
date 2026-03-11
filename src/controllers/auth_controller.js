@@ -35,11 +35,14 @@ exports.postSignup = async (req, res) => {
 };
 
 exports.getProfile = async (req, res) => {
-    res.render('user_profile');
+    const user = await User.findById(req.query.userId);
+    res.render('user_profile', { user });
 };
 
 exports.postProfile = async (req, res) => {
     try {
+        const { userId, description } = req.body;
+        await User.findByIdAndUpdate(userId, { description });
         res.redirect('/auth/profile');
     } catch (err) {
         console.error('postProfile error:', err);

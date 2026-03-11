@@ -14,8 +14,8 @@ exports.getAdminLogin = (req, res) => {
 exports.postAdminLogin = async (req, res) => {
     try {
         const User = require('../models/User');
-        const { email, password } = req.body;
-        const admin = await User.findOne({ email, password, role: 'admin' });
+        const { username, password } = req.body;
+        const admin = await User.findOne({ username, password, role: 'admin' });
         if (admin) {
             res.redirect('/admin');
         } else {
@@ -67,7 +67,7 @@ exports.getAdminStudentSearch = async (req, res) => {
 exports.getAdminSlotsOverview = async (req, res) => {
     try {
         const slots = await Slot.find().populate('lab');
-        res.render('admin/admin_slots_overview', { layout: 'admin', slots });
+        res.render('admin/admin_slot_overview', { layout: 'admin', slots });
     } catch (err) {
         console.error('getAdminSlotsOverview error:', err);
         res.status(500).render('admin/admin_slot_overview', { layout: 'admin', error: 'Could not load slots.' });

@@ -8,7 +8,7 @@ router.post('/login', ctrl.postLogin);
 router.get('/signup', ctrl.getSignup);
 router.post('/signup', ctrl.postSignup);
 
-router.get('/profile', ctrl.postSignup);
-router.get('/profile', ctrl.postProfile);
+router.get('/profile', ctrl.getProfile);
+router.post('/profile', ctrl.postProfile);
 
 module.exports = router;
