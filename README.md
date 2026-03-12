@@ -10,74 +10,39 @@ A lab reservation (DLSU Lab Reservation) system developed for CCAPDEV Term 2 AY 
 
 ## Project Description
 
-
 ## Technologies Used
 - **Frontend**: HTML5, CSS3, JavaScript
 - **Backend**: Node.js, Express.js, Bootstrap
 - **Database**: MongoDB with Mongoose
 - **Template Engine**: Handlebars
-- **Other Tools**: [Insert any additional libraries/frameworks]
 
 ## File Structure
 ```
 CCAPDEV-S14A-G01/
 ├── node_modules/     # Dependencies
 ├── public/           # Static files served to client
-|   ├── assets/       # Other static files
 |   ├── css/          # Stylesheets
 |   ├── images/       # Image assets
 |   ├── js/           # Client-side JavaScript
 ├── src/              # Source code
 |   ├── config/       # Configuration files
 |   ├── controllers/  # Business logic & request handlers
-|   ├── middleware/   # Customer middleware (auth, validation)
 |   ├── models/       # MongoDB schemas (Mongoose)
 |   ├── routes/       # Express route definitions
-|   ├── utils/        # Helper functions
 |   ├── views/        # Handlebars templates
 ├── .env              # Environment variables (NOT in Git)
 ├── .gitignore        # Files to exclude from Git
 ├── package.json      # Project dependencies and scripts
 ├── package-lock.json # Locked dependency versions
-├── server.js         # Main application entry point
 ├── README.md         # This file (documentation)
+├── seed.js           # Hard-coded data values for demonstration
+├── server.js         # Main application entry point
 ```
-
-### Folder Descriptions
-
-#### `public/`
-Contains all **static assets** that are directly served to the client:
-- **css/**: Place all stylesheets here
-- **js/**: Client-side JavaScript for DOM manipulation and AJAX
-- **images/**: Store all image files
-
-#### `src/`
-Contains all **server-side source code**:
-- **controllers/**: Handle business logic and coordinate between models and views
-    - Example: `userController.js`, `reservationController.js`
-
-- **models/**: Define MongoDB schemas using Mongoose
-    - Example: `User.js`, `Reservation.js`
-
-- **routes/**: Define Express routes using `express.Router()`
-    - Example: `userRoutes.js`, `reservationRoutes.js`
-
-- **views/**: Handlebars template files (`.hbs`)
-    - **layouts/**: Main page layouts
-    - **partials/**: Reusable components (header, footer, navigation)
-
-- **middleware/**: Custom middleware functions
-    - Example: Authentication, input validation, error handling
-
-- **config/**: Configuration files
-    - Example: `db.config.js` for database connection
-
-- **utils/**: Reusable helper functions
 
 ## Setup Instructions
 
 ### Prerequisites
-- Node.js (version [not yet listed] or higher)
+- Node.js (v24.14.0 or higher)
 - MongoDB Community Server
 - MongoDB Compass (optional, for GUI)
 - Git
@@ -116,7 +81,7 @@ npm run dev
 ```
 
 6. **Access the application**
-- Open your browser and navigate to `http://localhost:3000`
+- Open your browser and navigate to `http://localhost:<PORT NUMBER>`
 
 ## Development Workflow
 

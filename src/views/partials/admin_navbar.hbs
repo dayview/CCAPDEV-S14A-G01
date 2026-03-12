@@ -1,0 +1,11 @@
+<nav class="navbar admin-navbar">
+    <a href="/admin"><img src="/images/dlsu-logo-white.png" alt="DLSU Logo" height="30"></a>
+    {{#unless isLoginPage}}
+    <div class="nav-links">
+        <a href="/admin">Dashboard</a>
+        <a href="/admin/slots">Manage Slots</a>
+        <a href="/admin/reservations">Reservations</a>
+        <a href="/admin/login">Logout</a>
+    </div>
+    {{/unless}}
+</nav>

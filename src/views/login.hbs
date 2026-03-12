@@ -1,0 +1,30 @@
+<div class="main">
+    <form action="/auth/login" method="POST">
+        <div class="login_block">
+            <h2 class="login_header">User Sign-In</h2>
+            <div class="username">
+                <input type="text" placeholder="Username" id="username" name="username" required />
+            </div>
+
+            <div class="password">
+                <input type="password" placeholder="Password" id="password" name="password" required />
+            </div>
+
+            <div class="remember">
+                <label> <input type="checkbox" id="remember" /> Remember Me</label>
+            </div>
+
+            {{#if error}}
+            <div class="error-message" style="color: red; margin: 10px 0;">
+                {{error}}
+            </div>
+            {{/if}}
+
+            <div class="login_action">
+                <button type="submit" id="login_btn">Log In</button>
+                <a href="/auth/signup" class="btn">Sign-Up</a>
+                <a href="/" class="btn">Return to Main Page</a>
+            </div>
+        </div>
+    </form>
+</div>
