@@ -66,11 +66,66 @@ exports.getAdminStudentSearch = async (req, res) => {
 
 exports.getAdminSlotsOverview = async (req, res) => {
     try {
-        const slots = await Slot.find().populate('lab');
-        res.render('admin/admin_slot_overview', { layout: 'admin', slots });
+        const labs = await Lab.find().sort({ labName: 1 });
+        res.render('admin/admin_slot_overview', { layout: 'admin', labs });
     } catch (err) {
         console.error('getAdminSlotsOverview error:', err);
         res.status(500).render('admin/admin_slot_overview', { layout: 'admin', error: 'Could not load slots.' });
+    }
+};
+
+exports.getAdminSlotSearch = async (req, res) => {
+    try {
+        const { lab: labName, date } = req.query;
+
+        if (!labName || !date) {
+            return res.status(400).json({ error: 'lab and date query parameters are required.' });
+        }
+
+        const lab = await Lab.findOne({ labName });
+        if (!lab) {
+            return res.status(404).json({ error: 'Lab not found.' });
+        }
+
+        const searchDate = new Date(date);
+        const nextDay = new Date(searchDate);
+        nextDay.setDate(nextDay.getDate() + 1);
+
+        const slots = await Slot.find({
+            lab: lab._id,
+            date: { $gte: searchDate, $lt: nextDay }
+        });
+
+        const timeSlotMap = {};
+        for (const slot of slots) {
+            if (!timeSlotMap[slot.startTime]) {
+                timeSlotMap[slot.startTime] = {
+                    startTime: slot.startTime,
+                    endTime: slot.endTime,
+                    totalSeats: 0,
+                    availableSeats: 0,
+                    reservedSeats: 0
+                };
+            }
+            timeSlotMap[slot.startTime].totalSeats++;
+            if (slot.status === 'available') {
+                timeSlotMap[slot.startTime].availableSeats++;
+            } else {
+                timeSlotMap[slot.startTime].reservedSeats++;
+            }
+        }
+
+        const timeSlots = Object.values(timeSlotMap)
+            .sort((a, b) => a.startTime.localeCompare(b.startTime));
+
+        res.json({
+            lab: { labName: lab.labName, capacity: lab.capacity },
+            date,
+            timeSlots
+        });
+    } catch (err) {
+        console.error('getAdminSlotSearch error:', err);
+        res.status(500).json({ error: 'Slot search failed.' });
     }
 };
 
