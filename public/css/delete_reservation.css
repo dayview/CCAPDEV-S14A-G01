@@ -1,6 +1,6 @@
 body {
     margin: 0;
-    background-image: url("https://www.dlsu.edu.ph/wp-content/uploads/2017/12/1DLSU-at-duskE.jpg");
+    background-image: url("/public/images/dlsu-background.jpg");
     background-repeat: no-repeat;
     background-size: cover;
     background-attachment: fixed;
