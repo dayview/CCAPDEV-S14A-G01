@@ -1,0 +1,55 @@
+<link rel="stylesheet" href="/css/signup.css">
+
+<script src="/js/signup.js"></script>
+
+<form id="signup" action="/auth/signup" method="POST">
+    <div class="signup_block">
+        <h2 class="signup">Sign-Up</h2>
+
+        {{#if error}}
+        <div class="error-message" style="color: red; margin: 10px 0;">
+            {{error}}
+        </div>
+        {{/if}}
+
+        <div class="profile">
+            <img src="/images/default_avatar.png" alt="Profile Picture">
+        </div>
+
+        <div class="id">
+            <label>ID Number *</label>
+            <input type="text" id="idnumber" name="idNum" required>
+        </div>
+
+        <div class="username">
+            <label>Username *</label>
+            <input type="text" id="user" name="username" required>
+        </div>
+
+        <div class="firstname">
+            <label>First Name *</label>
+            <input type="text" id="firstname" name="firstName" required>
+        </div>
+
+        <div class="lastname">
+            <label>Last Name *</label>
+            <input type="text" id="lastName" name="lastName" required>
+        </div>
+
+        <div class="password">
+            <label>Password *</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+
+        <div class="email">
+            <label>Email *</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+
+        <div class="buttons">
+            <button type="submit" class="submit-btn">Sign-Up</button>
+        </div>
+
+        <a href="/auth/login" class="login-link">Already have an account?</a>
+    </div>
+</form>

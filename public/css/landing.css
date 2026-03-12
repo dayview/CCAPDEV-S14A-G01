@@ -1,0 +1,11 @@
+.landing-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.landing-options {
+    display: flex;
+    justify-content: center;
+
+}
