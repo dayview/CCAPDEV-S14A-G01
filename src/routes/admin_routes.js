@@ -12,6 +12,7 @@ router.get('/student-reservations', ctrl.getAdminStudentReservations);
 router.get('/student-reservations/search', ctrl.getAdminStudentSearch);
 
 router.get('/slots', ctrl.getAdminSlotsOverview);
+router.get('/slots/search', ctrl.getAdminSlotSearch);
 router.get('/slots/:id', ctrl.getAdminSlotReservation);
 
 module.exports = router;
