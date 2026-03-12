@@ -110,6 +110,27 @@ p, li, ul, span, label {
     background-color: #2d4410;
 }
 
+/* navbar links */
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.nav-links a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 10px;
+    transition: background-color 0.2s ease;
+}
+
+.nav-links a:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
 /* welcome header section */
 .header-section {
     background: linear-gradient(135deg, #3c5a14 0%, #2d4410 100%);
