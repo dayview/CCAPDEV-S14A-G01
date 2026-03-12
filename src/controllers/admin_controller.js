@@ -18,11 +18,11 @@ exports.postAdminLogin = async (req, res) => {
         if (admin) {
             res.redirect('/admin');
         } else {
-            res.render('admin/admin_login', { layout: 'admin', error: 'Invalid admin credentials.' });
+            res.render('admin/admin_login', { layout: 'admin', isLoginPage: true, error: 'Invalid admin credentials.' });
         }
     } catch (err) {
         console.error('postAdminLogin error:', err);
-        res.status(500).render('admin/admin_login', { layout: 'admin', error: 'Something went wrong.' });
+        res.status(500).render('admin/admin_login', { layout: 'admin', isLoginPage: true, error: 'Something went wrong.' });
     }
 };
 
@@ -40,7 +40,7 @@ exports.getAdminReservations = async (req, res) => {
 };
 
 exports.getAdminStudentReservations = (req, res) => {
-    res.render('admin/admin_student_reservation', { layout: 'admin' });
+    res.render('admin/admin_reservation', { layout: 'admin' });
 };
 
 exports.getAdminStudentSearch = async (req, res) => {
@@ -58,7 +58,7 @@ exports.getAdminStudentSearch = async (req, res) => {
             return res.json({ notFound: !user, reservations });
         }
 
-        res.render('admin/admin_student_reservation', {
+        res.render('admin/admin_reservation', {
             layout: 'admin',
             reservations,
             searchedId: idNum,
@@ -66,7 +66,7 @@ exports.getAdminStudentSearch = async (req, res) => {
         });
     } catch (err) {
         console.error('getAdminStudentSearch error:', err);
-        res.status(500).render('admin/admin_student_reservation', { layout: 'admin', error: 'Search failed.' });
+        res.status(500).render('admin/admin_reservation', { layout: 'admin', error: 'Search failed.' });
     }
 };
 
@@ -180,7 +180,7 @@ exports.getAdminSlotReservation = async (req, res) => {
 
 exports.postAdminSlotReservation = async (req, res) => {
     try {
-        const { studentId, date, timeIn, timeOut, room, seats } = req.body;
+        const { studentId, date, timeIn, timeOut, room, seats, isAnonymous } = req.body;
 
         const user = await User.findOne({ idNum: studentId });
         if (!user) {
@@ -226,7 +226,7 @@ exports.postAdminSlotReservation = async (req, res) => {
             await Reservation.create({
                 user: user._id,
                 slot: slot._id,
-                isAnonymous: false,
+                isAnonymous: !!isAnonymous,
                 status: 'active'
             });
 

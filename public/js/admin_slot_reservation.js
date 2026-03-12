@@ -100,6 +100,34 @@ function convertTimeToMinutes(timeStr) {
   return hours * 60 + minutes;
 }
 
+function filterTimeOptions(selectEl, referenceTime, direction) {
+    if (!selectEl) return;
+
+    // If no reference time, unhide all options and return
+    if (!referenceTime) {
+        Array.from(selectEl.options).forEach(option => option.hidden = false);
+        return;
+    }
+
+    const refMinutes = convertTimeToMinutes(referenceTime);
+
+    Array.from(selectEl.options).forEach(option => {
+        if (!option.value) return;
+        const optMinutes = convertTimeToMinutes(option.value);
+        if (direction === 'after') {
+            option.hidden = optMinutes <= refMinutes;
+        } else {
+            option.hidden = optMinutes >= refMinutes;
+        }
+    });
+
+    if (selectEl.value) {
+        const currentMinutes = convertTimeToMinutes(selectEl.value);
+        if (direction === 'after' && currentMinutes <= refMinutes) selectEl.value = '';
+        if (direction === 'before' && currentMinutes >= refMinutes) selectEl.value = '';
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function() {
   const roomSelect = document.getElementById('roomSelect');
   const dateInput = document.getElementById('dateInput');
@@ -173,7 +201,17 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   if (leftTimeIn) {
-    leftTimeIn.addEventListener('change', updateDisplay);
+    leftTimeIn.addEventListener('change', function() {
+      filterTimeOptions(leftTimeOut, this.value, 'after');
+      updateDisplay();
+    });
+  }
+
+  if (leftTimeOut) {
+    leftTimeOut.addEventListener('change', function() {
+      filterTimeOptions(leftTimeIn, this.value, 'before');
+      updateDisplay();
+    });
   }
 
   async function updateDisplay() {
@@ -191,7 +229,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const date = leftDateInput.value;
     const timeIn = leftTimeIn.value;
     const timeOut = leftTimeOut.value;
-    const room = leftRoomInput.value;
+    const room = roomSelect.value;
 
     if (!studentId) { alert('Please enter a Student ID.'); return; }
     if (studentId.length !== 8 || isNaN(studentId)) { alert('Please enter a valid 8-digit Student ID.'); return; }
@@ -237,7 +275,7 @@ document.addEventListener('DOMContentLoaded', function() {
   async function performRemoval() {
     const date = leftDateInput.value;
     const timeIn = leftTimeIn.value;
-    const room = leftRoomInput.value;
+    const room = roomSelect.value;
 
     if (!date) { alert('Please select a date.'); return; }
     if (!timeIn) { alert('Please select a Time In.'); return; }
