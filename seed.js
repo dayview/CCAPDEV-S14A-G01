@@ -108,11 +108,7 @@ async function seed() {
     const insertedReservations = await Reservation.insertMany(reservations);
     console.log(`Inserted ${insertedReservations.length} reservations.`);
 
-<<<<<<< HEAD
-    console.log('\n Seeding complete.');
-=======
     console.log('\nSeeding complete.');
->>>>>>> main
     mongoose.disconnect();
 }
 

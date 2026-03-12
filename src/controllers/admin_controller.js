@@ -66,21 +66,14 @@ exports.getAdminStudentSearch = async (req, res) => {
 
 exports.getAdminSlotsOverview = async (req, res) => {
     try {
-<<<<<<< HEAD
-        const slots = await Slot.find().populate('lab');
-        res.render('admin/admin_slot_overview', { layout: 'admin', slots });
-=======
         const labs = await Lab.find().sort({ labName: 1 });
         res.render('admin/admin_slot_overview', { layout: 'admin', labs });
->>>>>>> main
     } catch (err) {
         console.error('getAdminSlotsOverview error:', err);
         res.status(500).render('admin/admin_slot_overview', { layout: 'admin', error: 'Could not load slots.' });
     }
 };
 
-<<<<<<< HEAD
-=======
 exports.getAdminSlotSearch = async (req, res) => {
     try {
         const { lab: labName, date } = req.query;
@@ -136,7 +129,6 @@ exports.getAdminSlotSearch = async (req, res) => {
     }
 };
 
->>>>>>> main
 exports.getAdminSlotReservation = async (req, res) => {
     try {
         const slot = await Slot.findById(req.params.id).populate('lab');

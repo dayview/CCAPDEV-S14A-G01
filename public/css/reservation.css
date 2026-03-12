@@ -66,14 +66,8 @@ body {
 }
 
 .reminders-label {
-<<<<<<< HEAD
-    font-weight: bold;
-    margin: 24px 0 12px 0;
-    position: static;
-=======
     position: absolute;
     font-weight: bold;
->>>>>>> main
 }
 
 .seat_map {
