@@ -32,6 +32,11 @@ const users = [
         idNum: '12100056', username: 'mcolcol', firstName: 'Massi', lastName: 'Colcol',
         email: 'massi_colcol@dlsu.edu.ph', password: 'mcolcol123',
         role: 'student', description: 'BSCS-ST, ID122'
+    },
+    {
+        idNum: '99999999', username: 'admin', firstName: 'Admin', lastName: 'User',
+        email: 'admin@dlsu.edu.ph', password: 'admin123',
+        role: 'admin', description: 'System administrator'
     }
 ];
 
