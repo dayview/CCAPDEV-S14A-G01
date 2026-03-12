@@ -1,10 +1,21 @@
-<link rel="stylesheet" href="/css/user_profile.css">
 
-<script src="/js/user_profile.js"></script>
+<link rel = "stylesheet" href = "/css/user_profile.css">
 
-<section class="page">
-    <a href="/auth/profile">User Information</a>
-    <a href="/lab/search">Search Seat</a>
-    <a href="/reservation">My Reservation</a>
-    <button id="logout_btn">Logout</button>
+<section class = "header">
+    <h1><b>DLSU</b> Lab Reservation</h1>
+    <a href="/reservation" class = "btn"> Return to Home </a>
 </section>
+
+<section class = "page">
+    <div id = "userInfo">
+        <p><strong>Name: </strong> {{user.firstName}} {{user.lastName}} </p>
+        <p><strong>Username: </strong> {{user.username}} </p>
+        <p><strong>ID Number: </strong> {{user.idNumber}} </p>
+    </div>
+
+    <a href = "/edit_profile"> User Information </a>
+    <a href = "/edit_reservation"> Edit Reservation </a>
+    <button id = "logout_btn" type = "button"> Logout </button>
+</section>
+
+<script src = "/js/user_profile.js"></script>
