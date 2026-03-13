@@ -8,11 +8,11 @@ const resultsBox = document.getElementById("availableseats");
 const resultstext = document.getElementById("seatsresults");
 const seattext = document.getElementById("availableseatstext");
 
-const lab_layout = [
-  "A1","A2","A3","A4","A5",
-  "B1","B2","B3","B4","B5",
-  "C1","C2","C3","C4","C5",
-  "D1","D2","D3","D4","D5"
+const labLayout = [
+    "1", "2", "3", "4", "5",
+    "6", "7", "8", "9", "10",
+    "11", "12", "13", "14", "15",
+    "16", "17", "18", "19", "20"
 ];
 
 function getReservations() {
@@ -51,13 +51,10 @@ function showavailableseats(){
 
     const reservedSeats = new Set(reservations.filter(reserved => reserved.date === date && reserved.timeIn === timeIn && reserved.room === room).map(reserved => reserved.seat)); 
 
-    const available = lab_layout.filter(seat => !reservedSeats.has(seat));
+    const available = labLayout.filter(seat => !reservedSeats.has(seat));
 
     resultstext.textContent = 
-    `Room: ${room} 
-     Date: ${date} 
-     Time: ${timeIn}
-     Available: ${available.length}/${lab_layout.length}`;
+    `Room: ${room} | Date: ${date} | Time: ${timeIn} | Available: ${available.length}/${labLayout.length}`;
 
     seattext.textContent = available.length ? available.join(", ") : "No available seats for that schedule.";
 }

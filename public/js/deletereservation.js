@@ -20,7 +20,14 @@ function info(value){
 function renderReservations(){
     const reservations = getReservations();
     
-    const current = reservations.map((r, idx) => ({r, idx})).filter(item => item.r.userId === currentUser.idNumber);
+    const validRooms = ["GK302A", "GK302B", "GK304B"];
+
+    const current = reservations
+        .map((r, idx) => ({ r, idx }))
+        .filter(item =>
+            item.r.userId === currentUserId &&
+            validRooms.includes(item.r.room)
+     );
 
     reservationbody.innerHTML = "";
 
