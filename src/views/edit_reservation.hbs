@@ -1,88 +1,44 @@
-<link rel="stylesheet" href="/css/edit_reservation.css">
-<script src="/js/editreservation.js" defer></script>
+<link rel="stylesheet" href="/css/delete_reservation.css">
 
-<section class="left-panel">
-    <div class="information-block">
-        <h1>Booking Information</h1>
-        <p>Date: <span id="infoDate"></span></p>
-        <p>Time In: <span id="infoTimeIn"></span></p>
-        <p>Time Out: <span id="infoTimeOut"></span></p>
-        <p>Room: <span id="infoRoom"></span></p>
-        <p>Seat: <span id="infoSeat"></span></p>
-        <div class="r_button">
-            <button class="reserve-btn" type="button" disabled>Edit Reserve</button>
-        </div>
+<section class="table-page">
+    <h2 class="table-title">Delete Reservation</h2>
+
+    {{#if reservations.length}}
+    <div class="table-content">
+        <table id="reservationtable" class="reservation-table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Time In</th>
+                    <th>Room</th>
+                    <th>Seat</th>
+                    <th>Anonymous</th>
+                    <th>Status</th>
+                    <th class="deletebtn"></th>
+                </tr>
+            </thead>
+            <tbody id="reservationbody">
+                {{#each reservations}}
+                <tr>
+                    <td>{{this.date}}</td>
+                    <td>{{this.timeIn}}</td>
+                    <td>{{this.room}}</td>
+                    <td>{{this.seat}}</td>
+                    <td>{{#if this.isAnonymous}}Yes{{else}}No{{/if}}</td>
+                    <td><span class="status">{{this.status}}</span></td>
+                    <td class="delete">
+                        <form action="/reservation/delete/{{this._id}}" method="POST" onsubmit="return confirm('Delete this reservation?')">
+                            <button type="submit" class="deletebtn">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
     </div>
-
-    <strong class="edit-label">Edit Reservation</strong>
-    <ul class="edit-list">
-        <li>You can edit your seat, room, date, and time here</li>
-        <li>Please review the booking information before saving</li>
-        <li>If you have multiple reservations, the latest one will be the one to be changed</li>
-    </ul>
-</section>
-
-<section class="right-panel">
-    <div class="selection">
-        <section class="r_box">
-            <label for="reserve_date">Date</label>
-            <input type="date" id="reserve_date" class="form-control">
-        </section>
-
-        <section class="r_box">
-            <label for="reserve_time" class="form-label">Time In</label>
-            <select id="reserve_time" class="form-control">
-                <option value="07:30">07:30</option>
-                <option value="08:00">08:00</option>
-                <option value="08:30">08:30</option>
-                <option value="09:00">09:00</option>
-                <option value="09:30">09:30</option>
-                <option value="10:00">10:00</option>
-                <option value="10:30">10:30</option>
-                <option value="11:00">11:00</option>
-                <option value="11:30">11:30</option>
-                <option value="12:00">12:00</option>
-                <option value="12:30">12:30</option>
-                <option value="13:00">13:00</option>
-                <option value="13:30">13:30</option>
-                <option value="14:00">14:00</option>
-                <option value="14:30">14:30</option>
-                <option value="15:00">15:00</option>
-                <option value="15:30">15:30</option>
-                <option value="16:00">16:00</option>
-                <option value="16:30">16:30</option>
-                <option value="17:00">17:00</option>
-                <option value="17:30">17:30</option>
-                <option value="18:00">18:00</option>
-                <option value="18:30">18:30</option>
-                <option value="19:00">19:00</option>
-                <option value="19:30">19:30</option>
-                <option value="20:00">20:00</option>
-            </select>
-        </section>
-
-        <section class="r_box">
-            <label for="room_num" class="form-label">Room</label>
-            <select id="room_num" class="form-control">
-                <option value="">Select Room</option>
-                <option value="GK302A">GK302A</option>
-                <option value="GK302B">GK302B</option>
-                <option value="GK304B">GK304B</option>
-            </select>
-        </section>
+    {{else}}
+    <div id="noreservation" class="no-reservation">
+        You have no reservation/s.
     </div>
-
-    <div class="room">
-        <div class="seat-card">
-            <h4 class="board-title">Board</h4>
-        </div>
-        <div id="seat_map"></div>
-    </div>
-
-    <div class="legend">
-        <span class="legend-box occupied"></span> <span class="text-black">Occupied</span>
-        <span class="legend-box repair"></span> <span class="text-black">Under Repair</span>
-        <span class="legend-box available"></span> <span class="text-black">Available</span>
-        <span class="legend-box selected"></span> <span class="text-black">Selected</span>
-    </div>
+    {{/if}}
 </section>
