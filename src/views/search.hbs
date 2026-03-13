@@ -1,6 +1,5 @@
 <link rel="stylesheet" href="/css/search.css">
 
-<script src="/js/search.js" defer></script>
 
 <section class="search-tab">
     <div class="selection">
@@ -40,12 +39,13 @@
             </select>
         </section>
 
-        <section class="r_box">
+         <section class="r_box">
             <label for="room_num" class="form-label">Room</label>
             <select id="room_num" class="form-control">
-                {{#each labs}}
-                <option value="{{this.labName}}">{{this.labName}}</option>
-                {{/each}}
+                <option value="">Select Room</option>
+                <option value="GK302A">GK302A</option>
+                <option value="GK302B">GK302B</option>
+                <option value="GK304B">GK304B</option>
             </select>
         </section>
 
