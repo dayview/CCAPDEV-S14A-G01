@@ -5,16 +5,17 @@
     <a href="/reservation" class = "btn"> Return to Home </a>
 </section>
 
-<section class = "page">
-    <div id = "userInfo">
-        <p><strong>Name: </strong> {{user.firstName}} {{user.lastName}} </p>
-        <p><strong>Username: </strong> {{user.username}} </p>
-        <p><strong>ID Number: </strong> {{user.idNumber}} </p>
+<section class="page">
+    <div id="userInfo">
+        <p><strong>Name: </strong> {{user.firstName}} {{user.lastName}}</p>
+        <p><strong>Username: </strong> {{user.username}}</p>
+        <p><strong>ID Number: </strong> {{user.idNum}}</p>
     </div>
 
-    <a href = "/edit_profile"> User Information </a>
-    <a href = "/edit_reservation"> Edit Reservation </a>
-    <button id = "logout_btn" type = "button"> Logout </button>
+    <a href="/auth/profile">User Information</a>
+    <a href="/reservation/search">Search Reservation</a>
+    <a href="/reservation/edit">Edit Reservation</a>
+    <a href="/reservation/delete">Delete Reservation</a>
+    <button id="logout_btn" type="button">Logout</button>
 </section>
-
 <script src = "/js/user_profile.js"></script>
