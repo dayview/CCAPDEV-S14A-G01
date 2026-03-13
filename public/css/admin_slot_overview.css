@@ -207,6 +207,9 @@ body::before {
   border: none;
   padding: 0 12px;
   font-size: 14px;
+  background-color: white;
+  color: #333;
+  color-scheme: light;
 }
 
 .booking_box {
@@ -314,20 +317,13 @@ body::before {
 }
 
 .status_available {
-  background: #4CAF50;
-}
-
-.status_class {
-  background: #4169E1;
+  background: #7aad3a;
 }
 
 .status_full {
-  background: #DC143C;
+  background: #f27090;
 }
 
-.status_unavailable {
-  background: #FFA726;
-}
 
 .legend_container {
   display: flex;
@@ -358,19 +354,11 @@ body::before {
 }
 
 .legend_available {
-  background: #4CAF50;
-}
-
-.legend_class {
-  background: #4169E1;
+  background: #7aad3a;
 }
 
 .legend_full {
-  background: #DC143C;
-}
-
-.legend_unavailable {
-  background: #FFA726;
+  background: #f27090;
 }
 
 .schedule_table td.selected_slot {

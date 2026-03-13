@@ -82,13 +82,9 @@
                 </div>
 
                 <div class="form_group">
-                    <label class="form_label">ROOM</label>
-                    <select class="form_input" id="roomNumber">
-                        <option value="">Select a room</option>
-                        {{#each labs}}
-                        <option value="{{this.labName}}">{{this.labName}}</option>
-                        {{/each}}
-                    </select>
+                    <label class="form_label">
+                        <input type="checkbox" id="isAnonymous"> Anonymous
+                        </label>
                 </div>
             </div>
 
@@ -105,9 +101,9 @@
                     <label class="input_label">Room:</label>
                     <select class="info_input" id="roomSelect">
                         <option value="">Select a room</option>
-                        <option value="G302A">G302A</option>
-                        <option value="G302B">G302B</option>
-                        <option value="G304B">G304B</option>
+                        <option value="GK302A">GK302A</option>
+                        <option value="GK302B">GK302B</option>
+                        <option value="GK304B">GK304B</option>
                     </select>
                 </div>
 
@@ -154,4 +150,5 @@
         </section>
     </div>
 </main>
+<script src="/js/header_navigation.js"></script>
 <script src="/js/admin_slot_reservation.js"></script>

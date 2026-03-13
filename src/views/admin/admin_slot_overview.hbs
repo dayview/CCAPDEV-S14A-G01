@@ -11,7 +11,7 @@
             </div>
             <div class="menu_box active">SLOTS OVERVIEW</div>
             <div class="menu_box">
-                <a href="/admin/slots/:id" class="menu_link">VIEW ROOM<br>RESERVATIONS</a>
+                <a href="/admin/slots/reservation" class="menu_link">VIEW ROOM<br>RESERVATIONS</a>
             </div>
         </section>
 
@@ -26,9 +26,7 @@
                     <label class="input_label">Room:</label>
                     <select class="info_input" id="roomSelect">
                         <option value="">Select a room</option>
-                        {{#each labs}}
-                        <option value="{{this.labName}}">{{this.labName}}</option>
-                        {{/each}}
+                        {{#each labs}}<option value="{{this.labName}}">{{this.labName}}</option>{{/each}}
                     </select>
                 </div>
 
@@ -99,4 +97,5 @@
         </section>
     </div>
 </main>
+<script src="/js/header_navigation.js"></script>
 <script src="/js/admin_slot_overview.js"></script>

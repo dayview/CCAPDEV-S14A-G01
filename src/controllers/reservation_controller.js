@@ -1,10 +1,11 @@
 const Reservation = require('../models/Reservation');
 const Slot = require('../models/Slot');
+const Lab = require('../models/Lab');
 
 exports.getReservationOverview = async (req, res) => {
     try {
-        const slots = await Slot.find().populate('lab');
-        res.render('reservation', { slots });
+        const labs = await Lab.find().sort({ labName: 1 }).lean();
+        res.render('reservation', { labs });
     } catch (err) {
         console.error('getReservationOverview error:', err);
         res.status(500).render('reservation', { error: 'Could not load slots.' });

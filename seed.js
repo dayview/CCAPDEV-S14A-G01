@@ -11,7 +11,7 @@ const users = [
     {
         idNum: '12345678', username: 'dcheng', firstName: 'Danny', lastName: 'Cheng',
         email: 'danny_cheng@dlsu.edu.ph', password: 'dcheng123',
-        role: 'student', description: 'BSCS-ST, ID123'
+        role: 'admin', description: 'BSCS-ST, ID123'
     },
     {
         idNum: '12100005', username: 'lpavino', firstName: 'Leon', lastName: 'Pavino',
