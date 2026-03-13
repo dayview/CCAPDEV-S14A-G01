@@ -66,8 +66,9 @@ body {
 }
 
 .reminders-label {
-    position: absolute;
     font-weight: bold;
+    margin: 24px 0 12px 0;
+    position: static;
 }
 
 .seat_map {

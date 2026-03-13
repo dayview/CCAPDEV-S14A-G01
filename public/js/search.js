@@ -1,5 +1,5 @@
 if(localStorage.getItem("isLoggedIn") !== "true"){
-    window.location.href = "login.html";
+    window.location.href = "/auth/login";
 }
 
 const inputDate = document.getElementById("reserve_date");

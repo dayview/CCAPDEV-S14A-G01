@@ -12,7 +12,7 @@ if (!authenticated || !currentUser) {
   localStorage.removeItem("rememberUntil");
   localStorage.removeItem("currentUser");
   sessionStorage.removeItem("isLoggedIn");
-  window.location.href = "login.html";
+  window.location.href = "/auth/login";
 }
 
 const userIdDisplay = document.getElementById('userIdDisplay');

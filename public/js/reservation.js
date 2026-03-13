@@ -151,7 +151,7 @@ function saveReservations(list) {
 reserveBtn.addEventListener("click", () => {
     if (!authenticated || !currentUser) {
         alert("Please log in to reserve a seat.");
-        window.location.href = "login.html";
+        window.location.href = "/auth/login";
         return;
     }
 

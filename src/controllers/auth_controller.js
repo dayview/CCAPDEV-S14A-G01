@@ -8,7 +8,9 @@ exports.postLogin = async (req, res) => {
     try {
         const { username, password } = req.body;
         const user = await User.findOne({ username, password });
+
         if (user) {
+            req.session.userId = user._id;
             res.redirect('/reservation');
         } else {
             res.render('login', { error: 'Invalid credentials.' });
@@ -35,8 +37,22 @@ exports.postSignup = async (req, res) => {
 };
 
 exports.getProfile = async (req, res) => {
-    const user = await User.findById(req.query.userId);
-    res.render('user_profile', { user });
+    try {
+        if (!req.session.userId) {
+            return res.redirect('/auth/login');
+        }
+
+        const user = await User.findById(req.session.userId);
+
+        if (!user) {
+            return res.redirect('/auth/login');
+        }
+
+        res.render('user_profile', { user });
+    } catch (err) {
+        console.error('getProfile error:', err);
+        res.status(500).render('user_profile', { error: 'Could not load profile.' });
+    }
 };
 
 exports.postProfile = async (req, res) => {
@@ -48,4 +64,14 @@ exports.postProfile = async (req, res) => {
         console.error('postProfile error:', err);
         res.status(500).render('user_profile', { error: 'Could not update profile.' });
     }
+};
+
+exports.logout = (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+            console.error('logout error:', err);
+            return res.redirect('/auth/profile');
+        }
+        res.redirect('/auth/login');
+    });
 };

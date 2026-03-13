@@ -65,3 +65,33 @@ exports.postDeleteReservation = async (req, res) => {
         res.status(500).render('delete_reservation', { error: 'Could not cancel reservation.' });
     }
 };
+
+exports.getSearchPage = (req, res) => {
+    res.render('search');
+};
+
+exports.getEditPage = async (req, res) => {
+    try {
+        const reservations = await Reservation.find({ status: { $ne: 'cancelled' } }).populate({
+            path: 'slot',
+            populate: { path: 'lab' }
+        });
+        res.render('edit_reservation', { reservations });
+    } catch (err) {
+        console.error('getEditPage error:', err);
+        res.status(500).render('edit_reservation', { error: 'Could not load reservations.' });
+    }
+};
+
+exports.getDeletePage = async (req, res) => {
+    try {
+        const reservations = await Reservation.find({ status: { $ne: 'cancelled' } }).populate({
+            path: 'slot',
+            populate: { path: 'lab' }
+        });
+        res.render('delete_reservation', { reservations });
+    } catch (err) {
+        console.error('getDeletePage error:', err);
+        res.status(500).render('delete_reservation', { error: 'Could not load reservations.' });
+    }
+};
