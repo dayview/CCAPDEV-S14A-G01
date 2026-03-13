@@ -32,38 +32,26 @@ const users = [
         idNum: '12100056', username: 'mcolcol', firstName: 'Massi', lastName: 'Colcol',
         email: 'massi_colcol@dlsu.edu.ph', password: 'mcolcol123',
         role: 'student', description: 'BSCS-ST, ID122'
-    },
-    {
-        idNum: '99999999', username: 'admin', firstName: 'Admin', lastName: 'User',
-        email: 'admin@dlsu.edu.ph', password: 'admin123',
-        role: 'admin', description: 'System administrator'
     }
 ];
 
 const labs = [
     {
-        labName: 'GK301A', building: 'Gokongwei', floor: 3, capacity: 40,
-        openTime: '07:30', closeTime: '19:00', description: 'General purpose for CS laboratory classes'
+        labName: 'GK302A', building: 'Gokongwei', floor: 3, capacity: 20,
+        openTime: '07:30', closeTime: '18:00', description: 'General purpose for CS laboratory classes'
     },
     {
-        labName: 'GK301B', building: 'Gokongwei', floor: 3, capacity: 40,
-        openTime: '07:30', closeTime: '19:00', description: 'General purpose for CS laboratory classes'
+        labName: 'GK302B', building: 'Gokongwei', floor: 3, capacity: 20,
+        openTime: '07:30', closeTime: '18:00', description: 'General purpose for CS laboratory classes'
     },
     {
-        labName: 'GK302', building: 'Gokongwei', floor: 3, capacity: 35,
-        openTime: '08:00', closeTime: '18:00', description: 'CS-ST laboratory classes'
-    },
-    {
-        labName: 'AG1901', building: 'Andrew', floor: 19, capacity: 30,
-        openTime: '07:30', closeTime: '20:00', description: 'IT/IS laboratory classes'
-    },
-    {
-        labName: 'LS307', building: 'La Salle', floor: 3, capacity: 25,
-        openTime: '08:00', closeTime: '17:00', description: 'COB/SOE/COS Multi-laboratory classes'
+        labName: 'GK304B', building: 'Gokongwei', floor: 3, capacity: 20,
+        openTime: '07:30', closeTime: '18:00', description: 'CS-ST laboratory classes'
     }
 ];
 
-const d = (str) => new Date(str);
+const today = new Date(); today.setHours(0, 0, 0, 0);
+const d = (offsetDays = 0) => { const date = new Date(today); date.setDate(date.getDate() + offsetDays); return date; };
 
 async function seed() {
     await connectDB();
@@ -80,20 +68,24 @@ async function seed() {
     const insertedLabs = await Lab.insertMany(labs);
     console.log(`Inserted ${insertedUsers.length} users, ${insertedLabs.length} labs.`);
 
-    const GK301A = insertedLabs.find(l => l.labName === 'GK301A')._id;
-    const GK301B = insertedLabs.find(l => l.labName === 'GK301B')._id;
-    const AG1901 = insertedLabs.find(l => l.labName === 'AG1901')._id;
+    const GK302A = insertedLabs.find(l => l.labName === 'GK302A')._id;
+    const GK302B = insertedLabs.find(l => l.labName === 'GK302B')._id;
+    const GK304B = insertedLabs.find(l => l.labName === 'GK304B')._id;
 
     const slots = [
-        { lab: GK301A, date: d('2026-03-10'), startTime: '08:00', endTime: '09:30', seatNum: 1, status: 'available' },
-        { lab: GK301A, date: d('2026-03-10'), startTime: '08:00', endTime: '09:30', seatNum: 2, status: 'reserved' },
-        { lab: GK301A, date: d('2026-03-10'), startTime: '10:00', endTime: '11:30', seatNum: 1, status: 'available' },
-        { lab: GK301B, date: d('2026-03-10'), startTime: '08:00', endTime: '09:30', seatNum: 5, status: 'walk-in' },
-        { lab: GK301B, date: d('2026-03-11'), startTime: '13:00', endTime: '14:30', seatNum: 3, status: 'available' },
-        { lab: AG1901, date: d('2026-03-11'), startTime: '09:00', endTime: '10:30', seatNum: 10, status: 'reserved' },
-        { lab: AG1901, date: d('2026-03-12'), startTime: '14:00', endTime: '15:30', seatNum: 7, status: 'available' },
-        { lab: AG1901, date: d('2026-03-12'), startTime: '16:00', endTime: '17:30', seatNum: 2, status: 'available' }
-    ];
+    { lab: GK302A, date: d(0), startTime: '08:00', endTime: '09:30', seatNum: 1, status: 'reserved' },
+    { lab: GK302A, date: d(0), startTime: '08:00', endTime: '09:30', seatNum: 2, status: 'reserved' },
+    { lab: GK302A, date: d(0), startTime: '10:00', endTime: '11:30', seatNum: 1, status: 'available' },
+    { lab: GK302A, date: d(0), startTime: '10:00', endTime: '11:30', seatNum: 2, status: 'available' },
+    { lab: GK302A, date: d(0), startTime: '13:00', endTime: '14:30', seatNum: 1, status: 'reserved' },
+    { lab: GK302A, date: d(0), startTime: '15:00', endTime: '16:30', seatNum: 1, status: 'reserved' },
+    { lab: GK302B, date: d(0), startTime: '08:00', endTime: '09:30', seatNum: 5, status: 'walk-in' },
+    { lab: GK302B, date: d(0), startTime: '13:00', endTime: '14:30', seatNum: 3, status: 'available' },
+    { lab: GK302B, date: d(0), startTime: '16:00', endTime: '17:30', seatNum: 1, status: 'available' },
+    { lab: GK304B, date: d(0), startTime: '09:00', endTime: '10:30', seatNum: 10, status: 'reserved' },
+    { lab: GK304B, date: d(0), startTime: '14:00', endTime: '15:30', seatNum: 7, status: 'available' },
+    { lab: GK304B, date: d(0), startTime: '16:00', endTime: '17:30', seatNum: 2, status: 'available' }
+];
 
     const insertedSlots = await Slot.insertMany(slots);
     console.log(`Inserted ${insertedSlots.length} slots.`);

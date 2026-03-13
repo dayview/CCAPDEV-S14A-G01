@@ -4,11 +4,10 @@ const Lab = require('../models/Lab');
 const User = require('../models/User');
 
 exports.getAdminHome = (req, res) => {
-    res.render('admin/admin_homepage', { layout: 'admin', username: req.session.username });
+    res.render('admin/admin_homepage', { layout: 'admin' });
 };
 
 exports.getAdminLogin = (req, res) => {
-    if (req.session.isAdmin) return res.redirect('/admin');
     res.render('admin/admin_login', { layout: 'admin', isLoginPage: true });
 };
 
@@ -17,8 +16,6 @@ exports.postAdminLogin = async (req, res) => {
         const { username, password } = req.body;
         const admin = await User.findOne({ username, password, role: 'admin' });
         if (admin) {
-            req.session.isAdmin = true;
-            req.session.userId = admin._id;
             res.redirect('/admin');
         } else {
             res.render('admin/admin_login', { layout: 'admin', isLoginPage: true, error: 'Invalid admin credentials.' });
@@ -27,10 +24,6 @@ exports.postAdminLogin = async (req, res) => {
         console.error('postAdminLogin error:', err);
         res.status(500).render('admin/admin_login', { layout: 'admin', isLoginPage: true, error: 'Something went wrong.' });
     }
-};
-
-exports.getAdminLogout = (req, res) => {
-    req.session.destroy(() => res.redirect('/admin/login'));
 };
 
 exports.getAdminReservations = async (req, res) => {
@@ -109,6 +102,7 @@ exports.getAdminSlotSearch = async (req, res) => {
             date: { $gte: searchDate, $lt: nextDay }
         });
 
+        // Count only reserved/walk-in seats per time slot from DB records
         const reservedCountMap = {};
         for (const slot of slots) {
             if (slot.status !== 'available') {
@@ -116,6 +110,7 @@ exports.getAdminSlotSearch = async (req, res) => {
             }
         }
 
+        // Emit a full entry for every time slot using lab.capacity as the source of truth
         const ALL_TIME_SLOTS = [
             '07:30', '08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00',
             '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00',
@@ -202,6 +197,7 @@ exports.postAdminSlotReservation = async (req, res) => {
 
         const results = [];
         for (const seatNum of seats) {
+            // Upsert the slot: find or create it
             let slot = await Slot.findOne({
                 lab: lab._id,
                 date: slotDate,
