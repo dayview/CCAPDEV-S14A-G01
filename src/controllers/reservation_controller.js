@@ -2,6 +2,34 @@ const Reservation = require('../models/Reservation');
 const Slot = require('../models/Slot');
 const Lab = require('../models/Lab');
 
+exports.getSearchPage = async (req, res) => {
+    try {
+        res.render('search');
+    } catch (err) {
+        console.error('getSearchPage error:', err);
+        res.status(500).send('Could not load search page.');
+    }
+};
+
+exports.getEditPage = async (req, res) => {
+    try {
+        res.render('edit_reservation');
+    } catch (err) {
+        console.error('getEditPage error:', err);
+        res.status(500).send('Could not load edit page.');
+    }
+};
+
+exports.getDeletePage = async (req, res) => {
+    try {
+        res.render('delete_reservation', { reservations: [] });
+    } catch (err) {
+        console.error('getDeletePage error:', err);
+        res.status(500).send('Could not load delete page.');
+    }
+};
+
+
 exports.getReservationOverview = async (req, res) => {
     try {
         const labs = await Lab.find().sort({ labName: 1 }).lean();
