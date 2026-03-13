@@ -1,15 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const logoutUser = document.getElementById("logout_btn");
-
-    if (!logoutUser) return;
-
-    logoutUser.addEventListener("click", (e) => {
-        e.preventDefault();
-
-        localStorage.removeItem("currentUser");
-        localStorage.removeItem("rememberUntil");
-        sessionStorage.removeItem("isLoggedIn");
-
-        window.location.href = "/auth/login";
-    });
-});
+    const logoutBtn = document.getElementById("logout_btn");
+    if (!logoutBtn) return;
+    logoutBtn.addEventListener("click", function () {
+        window.location.assign("/auth/logout");
+    })
+})
