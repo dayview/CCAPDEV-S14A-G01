@@ -24,7 +24,8 @@ exports.getStudentReservation = async (req, res) => {
 
 exports.postStudentReservation = async (req, res) => {
     try {
-        const { userId, slotId, isAnonymous } = req.body;
+        const { slotId, isAnonymous } = req.body;
+        const userId = req.session.userId;
         await Reservation.create({ user: userId, slot: slotId, isAnonymous: !!isAnonymous });
         await Slot.findByIdAndUpdate(slotId, { status: 'reserved' });
         res.redirect('/reservation');
@@ -37,6 +38,7 @@ exports.postStudentReservation = async (req, res) => {
 exports.getEditReservation = async (req, res) => {
     try {
         const reservation = await Reservation.findById(req.params.id).populate('slot');
+        if (!reservation) return res.redirect('/reservation');
         res.render('edit_reservation', { reservation });
     } catch (err) {
         console.error('getEditReservation error:', err);
@@ -58,6 +60,7 @@ exports.postEditReservation = async (req, res) => {
 exports.postDeleteReservation = async (req, res) => {
     try {
         const reservation = await Reservation.findById(req.params.id);
+        if (!reservation) return res.redirect('/reservation');
         await Slot.findByIdAndUpdate(reservation.slot, { status: 'available' });
         await Reservation.findByIdAndUpdate(req.params.id, { status: 'cancelled' });
         res.redirect('/reservation');

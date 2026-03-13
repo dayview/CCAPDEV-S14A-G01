@@ -8,6 +8,7 @@ exports.getAdminHome = (req, res) => {
 };
 
 exports.getAdminLogin = (req, res) => {
+    if (req.session.isAdmin) return res.redirect('/admin');
     res.render('admin/admin_login', { layout: 'admin', isLoginPage: true });
 };
 
@@ -16,6 +17,8 @@ exports.postAdminLogin = async (req, res) => {
         const { username, password } = req.body;
         const admin = await User.findOne({ username, password, role: 'admin' });
         if (admin) {
+            req.session.isAdmin = true;
+            req.session.userId = admin._id;
             res.redirect('/admin');
         } else {
             res.render('admin/admin_login', { layout: 'admin', isLoginPage: true, error: 'Invalid admin credentials.' });
@@ -24,6 +27,10 @@ exports.postAdminLogin = async (req, res) => {
         console.error('postAdminLogin error:', err);
         res.status(500).render('admin/admin_login', { layout: 'admin', isLoginPage: true, error: 'Something went wrong.' });
     }
+};
+
+exports.getAdminLogout = (req, res) => {
+    req.session.destroy(() => res.redirect('/admin/login'));
 };
 
 exports.getAdminReservations = async (req, res) => {

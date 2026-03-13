@@ -11,4 +11,6 @@ router.post('/signup', ctrl.postSignup);
 router.get('/profile', ctrl.getProfile);
 router.post('/profile', ctrl.postProfile);
 
+router.get('/logout', ctrl.getLogout);
+
 module.exports = router;
