@@ -3,10 +3,7 @@
 <section class="table-page">
     <h2 class="table-title">Delete Reservation</h2>
 
-    <div id="noreservation" class="no-reservation" style="display:none;">
-        You have no reservation/s.
-    </div>
-
+    {{#if reservations.length}}
     <div class="table-content">
         <table id="reservationtable" class="reservation-table">
             <thead>
@@ -20,9 +17,28 @@
                     <th class="deletebtn"></th>
                 </tr>
             </thead>
-            <tbody id="reservationbody"></tbody>
+            <tbody id="reservationbody">
+                {{#each reservations}}
+                <tr>
+                    <td>{{this.date}}</td>
+                    <td>{{this.timeIn}}</td>
+                    <td>{{this.room}}</td>
+                    <td>{{this.seat}}</td>
+                    <td>{{#if this.isAnonymous}}Yes{{else}}No{{/if}}</td>
+                    <td><span class="status">{{this.status}}</span></td>
+                    <td class="delete">
+                        <form action="/reservation/delete/{{this._id}}" method="POST" onsubmit="return confirm('Delete this reservation?')">
+                            <button type="submit" class="deletebtn">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {{/each}}
+            </tbody>
         </table>
     </div>
-
+    {{else}}
+    <div id="noreservation" class="no-reservation">
+        You have no reservation/s.
+    </div>
+    {{/if}}
 </section>
-<script src="/js/deletereservation.js" defer></script>
