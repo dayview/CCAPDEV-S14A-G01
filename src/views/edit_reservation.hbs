@@ -10,24 +10,25 @@
         <p>Room: <span id="infoRoom"></span></p>
         <p>Seat: <span id="infoSeat"></span></p>
         <div class="r_button">
-            <button class="reserve-btn" disabled>Edit Reserve</button>
+            <button class="reserve-btn" type="button" disabled>Edit Reserve</button>
         </div>
     </div>
 
     <strong class="edit-label">Edit Reservation</strong>
     <ul class="edit-list">
-        <li>You can only edit your seat on your reservation</li>
-        <li>Please delete your reservation and book another reservation if you are planning to book in another room, date or time</li>
-        <li>If you have multiple reservation, the latest one will be the one to be changed</li>
+        <li>You can edit your seat, room, date, and time here</li>
+        <li>Please review the booking information before saving</li>
+        <li>If you have multiple reservations, the latest one will be the one to be changed</li>
     </ul>
 </section>
 
 <section class="right-panel">
     <div class="selection">
         <section class="r_box">
-            <label for="reserve_date"> Date </label>
+            <label for="reserve_date">Date</label>
             <input type="date" id="reserve_date" class="form-control">
         </section>
+
         <section class="r_box">
             <label for="reserve_time" class="form-label">Time In</label>
             <select id="reserve_time" class="form-control">
@@ -59,9 +60,15 @@
                 <option value="20:00">20:00</option>
             </select>
         </section>
+
         <section class="r_box">
             <label for="room_num" class="form-label">Room</label>
-            <input type="text" class="form-control" value="{{reservation.slot.lab.labName}}" disabled>
+            <select id="room_num" class="form-control">
+                <option value="">Select Room</option>
+                <option value="GK302A">GK302A</option>
+                <option value="GK302B">GK302B</option>
+                <option value="GK304B">GK304B</option>
+            </select>
         </section>
     </div>
 
@@ -78,5 +85,4 @@
         <span class="legend-box available"></span> <span class="text-black">Available</span>
         <span class="legend-box selected"></span> <span class="text-black">Selected</span>
     </div>
-
 </section>
