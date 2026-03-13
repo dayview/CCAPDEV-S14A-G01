@@ -25,14 +25,6 @@ function logout() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-<<<<<<< HEAD
-    const logoutBtn = document.getElementById("logout_btn");
-    if (!logoutBtn) return;
-    logoutBtn.addEventListener("click", function () {
-        window.location.assign("/auth/logout");
-    })
-})
-=======
     const logoutUser = document.getElementById("logout_btn");
 
     if (!logoutUser) return;
@@ -45,5 +37,3 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-
->>>>>>> parent of 5cc2b34 (fix redirect of edit search and delete and fix bugs)
