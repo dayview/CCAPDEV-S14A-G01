@@ -40,13 +40,12 @@
             </select>
         </section>
 
-         <section class="r_box">
+        <section class="r_box">
             <label for="room_num" class="form-label">Room</label>
             <select id="room_num" class="form-control">
-                <option value="">Select Room</option>
-                <option value="GK302A">GK302A</option>
-                <option value="GK302B">GK302B</option>
-                <option value="GK304B">GK304B</option>
+                {{#each labs}}
+                <option value="{{this.labName}}">{{this.labName}}</option>
+                {{/each}}
             </select>
         </section>
 

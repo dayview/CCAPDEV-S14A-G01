@@ -1,3 +1,7 @@
+if(localStorage.getItem("isLoggedIn") !== "true"){
+    window.location.href = "login.html";
+}
+
 const inputDate = document.getElementById("reserve_date");
 const inputTime = document.getElementById("reserve_time");
 const inputRoom = document.getElementById("room_num");
@@ -8,72 +12,61 @@ const resultsBox = document.getElementById("availableseats");
 const resultstext = document.getElementById("seatsresults");
 const seattext = document.getElementById("availableseatstext");
 
-function formatDate(date) {
+const lab_layout = [
+  "A1","A2","A3","A4","A5",
+  "B1","B2","B3","B4","B5",
+  "C1","C2","C3","C4","C5",
+  "D1","D2","D3","D4","D5"
+];
+
+function getReservations() {
+    const raw = localStorage.getItem("reservations");
+    return raw ? JSON.parse(raw) : [];
+}
+
+function formatDate(date){
     return date.toISOString().split("T")[0];
 }
 
-if (inputDate) {
-    const today = new Date();
-    const maxDate = new Date();
-    maxDate.setDate(today.getDate() + 6);
+const today = new Date();
+const maxDate = new Date();
+maxDate.setDate(today.getDate() + 6);
 
-    inputDate.min = formatDate(today);
-    inputDate.max = formatDate(maxDate);
+inputDate.min = formatDate(today);
+inputDate.max = formatDate(maxDate);
+if(!inputDate.value) inputDate.value = formatDate(today);
 
-    if (!inputDate.value) {
-        inputDate.value = formatDate(today);
-    }
-}
+resultsBox.style.display= "none";
 
-if (resultsBox) {
-    resultsBox.style.display = "none";
-}
-
-async function showAvailableSeats() {
-    const date = inputDate?.value;
-    const time = inputTime?.value;
-    const room = inputRoom?.value;
-
-    if (!resultsBox || !resultstext || !seattext) return;
+function showavailableseats(){
+    const date = inputDate.value
+    const timeIn = inputTime.value;
+    const room = inputRoom.value;
 
     resultsBox.style.display = "block";
 
-    if (!date || !time || !room) {
+    const reservations = getReservations();
+
+    if(!date || !timeIn || !room){
         resultstext.textContent = "";
-        seattext.textContent = "Please select date, time, and room.";
+        seattext.textContent = "Please select date, time and room.";
         return;
     }
 
-    try {
-        const response = await fetch(
-            `/reservation/search-availability?date=${encodeURIComponent(date)}&time=${encodeURIComponent(time)}&room=${encodeURIComponent(room)}`
-        );
+    const reservedSeats = new Set(reservations.filter(reserved => reserved.date === date && reserved.timeIn === timeIn && reserved.room === room).map(reserved => reserved.seat)); 
 
-        const data = await response.json();
+    const available = lab_layout.filter(seat => !reservedSeats.has(seat));
 
-        if (!response.ok) {
-            throw new Error(data.error || "Failed to load available seats.");
-        }
+    resultstext.textContent = 
+    `Room: ${room} 
+     Date: ${date} 
+     Time: ${timeIn}
+     Available: ${available.length}/${lab_layout.length}`;
 
-        const availableSeats = data.availableSeats || [];
-
-        resultstext.textContent =
-            `Room: ${room} | Date: ${date} | Time: ${time} | Available: ${availableSeats.length}/20`;
-
-        seattext.textContent =
-            availableSeats.length > 0
-                ? availableSeats.join(", ")
-                : "No available seats for that schedule.";
-    } catch (err) {
-        console.error("Search error:", err);
-        resultstext.textContent = "";
-        seattext.textContent = err.message || "Could not fetch seat availability.";
-    }
+    seattext.textContent = available.length ? available.join(", ") : "No available seats for that schedule.";
 }
 
-if (searchbtn) {
-    searchbtn.addEventListener("click", (e) => {
-        e.preventDefault();
-        showAvailableSeats();
-    });
-}
+searchbtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    showavailableseats();
+});

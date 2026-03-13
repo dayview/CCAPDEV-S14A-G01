@@ -1,53 +1,49 @@
+const rememberUntil = Number(localStorage.getItem("rememberUntil"));
+const sessionLogin = sessionStorage.getItem("isLoggedIn");
+const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+
+let authenticated = false;
+
+if(rememberUntil && Date.now() <= rememberUntil) {
+    authenticated = true;
+} else if (sessionLogin) {
+    authenticated = true;
+}
+
+if (!authenticated || !currentUser){
+   localStorage.removeItem("rememberUntil");
+    localStorage.removeItem("currentUser");
+    sessionStorage.removeItem("isLoggedIn");
+    window.location.href = "login.html";
+}
+
 const noreservation = document.getElementById("noreservation");
 const reservationtable = document.getElementById("reservationtable");
 const reservationbody = document.getElementById("reservationbody");
 
-const reservationsDataEl = document.getElementById("reservations-data");
-const reservations = reservationsDataEl ? JSON.parse(reservationsDataEl.textContent) : [];
-
-function info(value) {
-    if (value === null || value === undefined || value === "") return "";
-    return `${value}`;
+function getReservations() {
+    const raw = localStorage.getItem("reservations");
+    return raw ? JSON.parse(raw) : [];
 }
 
-function getRoom(reservation) {
-    if (reservation.room) return reservation.room;
-    if (reservation.slot?.lab?.labName) return reservation.slot.lab.labName;
-    if (reservation.slot?.labName) return reservation.slot.labName;
-    return "";
+function saveReservations(reservations){
+    localStorage.setItem("reservations", JSON.stringify(reservations));
 }
 
-function getSeat(reservation) {
-    if (reservation.seat) return reservation.seat;
-    if (reservation.slot?.seat) return reservation.slot.seat;
-    if (reservation.slot?.seatNumber) return reservation.slot.seatNumber;
-    return "";
+function info(value){
+    if(value === null || value === undefined) return "";
+    return `${value}`; //${value} turns to string 
 }
 
-function getDate(reservation) {
-    if (reservation.date) return reservation.date;
-    if (reservation.slot?.date) return reservation.slot.date;
-    return "";
-}
+//creates the info about the reservation
+function renderReservations(){
+    const reservations = getReservations();
+    
+    const current = reservations.map((r, idx) => ({r, idx})).filter(item => item.r.userId === currentUser.idNumber);
 
-function getTimeIn(reservation) {
-    if (reservation.timeIn) return reservation.timeIn;
-    if (reservation.slot?.timeIn) return reservation.slot.timeIn;
-    return "";
-}
-
-function getAnonymous(reservation) {
-    return reservation.isAnonymous ? "Yes" : "No";
-}
-
-function getStatus(reservation) {
-    return reservation.status ? reservation.status : "Confirmed";
-}
-
-function renderReservations() {
     reservationbody.innerHTML = "";
 
-    if (!reservations || reservations.length === 0) {
+    if(current.length === 0){
         reservationtable.style.display = "none";
         noreservation.style.display = "block";
         return;
@@ -56,44 +52,48 @@ function renderReservations() {
     reservationtable.style.display = "table";
     noreservation.style.display = "none";
 
-    reservations.forEach((reservation) => {
+    current.forEach(({r, idx}) => {
         const tr = document.createElement("tr");
-
         tr.innerHTML = `
-            <td>${info(getDate(reservation))}</td>
-            <td>${info(getTimeIn(reservation))}</td>
-            <td>${info(getRoom(reservation))}</td>
-            <td>${info(getSeat(reservation))}</td>
-            <td>${info(getAnonymous(reservation))}</td>
-            <td><span class="status">${info(getStatus(reservation))}</span></td>
-            <td class="delete">
-                <form action="/reservation/delete/${reservation._id}" method="POST" class="delete-form">
-                    <button type="submit" class="deletebtn">Delete</button>
-                </form>
-            </td>
+        <td> ${info(r.date)} </td>
+        <td> ${info(r.timeIn)} </td>
+        <td> ${info(r.room)} </td>
+        <td> ${info(r.seat)} </td>
+        <td> ${info(r.anonymous ? "Yes" : "No")} </td>
+        <td> <span class = "status"> Confirmed</span> </td>
+        <td class ="delete">
+            <button class = "deletebtn" data-index="${idx}">Delete</button>
+        </td>
         `;
 
         reservationbody.appendChild(tr);
+        
     });
 }
 
-reservationbody.addEventListener("submit", (e) => {
-    const form = e.target.closest(".delete-form");
-    if (!form) return;
+reservationbody.addEventListener("click", (e) => {
+    const btn = e.target.closest(".deletebtn");
+    if(!btn) return;
 
-    const row = form.closest("tr");
-    const date = row.children[0]?.textContent?.trim() || "";
-    const timeIn = row.children[1]?.textContent?.trim() || "";
-    const room = row.children[2]?.textContent?.trim() || "";
-    const seat = row.children[3]?.textContent?.trim() || "";
+    const index = Number(btn.dataset.index); //read and write the data
+    if(Number.isNaN(index)) return; //NaN not a number
 
-    const final = confirm(
-        `Delete this reservation?\n\nDate: ${date}\nTime: ${timeIn}\nRoom: ${room}\nSeat: ${seat}`
-    );
+    const reservations = getReservations();
+    const chosen = reservations[index];
 
-    if (!final) {
-        e.preventDefault();
+    if(!chosen || chosen.userId !== currentUser.idNumber){
+        alert("Cant delete the reservation.");
+        return;
     }
+
+    const final = confirm(`Delete this reservation?\n\nDate: ${chosen.date}\nTime: ${chosen.timeIn}\nRoom: ${chosen.room}\nSeat: ${chosen.seat}`);
+    if(!final) return;
+    
+    reservations.splice(index,1);
+    saveReservations(reservations);
+    renderReservations();
 });
 
 renderReservations();
+
+
