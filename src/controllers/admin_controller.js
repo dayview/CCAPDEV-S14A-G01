@@ -4,7 +4,7 @@ const Lab = require('../models/Lab');
 const User = require('../models/User');
 
 exports.getAdminHome = (req, res) => {
-    res.render('admin/admin_homepage', { layout: 'admin' });
+    res.render('admin/admin_homepage', { layout: 'admin', username: req.session.username });
 };
 
 exports.getAdminLogin = (req, res) => {
