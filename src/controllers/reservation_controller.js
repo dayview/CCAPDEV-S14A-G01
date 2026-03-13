@@ -66,3 +66,38 @@ exports.postDeleteReservation = async (req, res) => {
         res.status(500).render('delete_reservation', { error: 'Could not cancel reservation.' });
     }
 };
+
+exports.searchAvailability = async (req, res) => {
+    try {
+        const { date, time, room } = req.query;
+
+        if (!date || !time || !room) {
+            return res.status(400).json({ error: 'Missing date, time, or room.' });
+        }
+
+        const lab = await Lab.findOne({ labName: room }).lean();
+
+        if (!lab) {
+            return res.status(404).json({ error: 'Room not found.' });
+        }
+
+        const [year, month, day] = date.split('-').map(Number);
+        const slotDate = new Date(year, month - 1, day, 0, 0, 0, 0);
+
+        const slots = await Slot.find({
+            lab: lab._id,
+            date: slotDate,
+            startTime: time,
+            status: 'available'
+        }).lean();
+
+        const availableSeats = slots
+            .map(slot => slot.seatNum)
+            .sort((a, b) => a - b);
+
+        res.json({ availableSeats });
+    } catch (err) {
+        console.error('searchAvailability error:', err);
+        res.status(500).json({ error: 'Could not fetch available seats.' });
+    }
+};
