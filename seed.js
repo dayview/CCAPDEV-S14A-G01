@@ -1,6 +1,7 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
 const connectDB = require('./src/config/db');
+const bcrypt = require('bcrypt');
 
 const User = require('./src/models/User');
 const Lab = require('./src/models/Lab');
@@ -67,7 +68,6 @@ const d = (str) => new Date(str);
 
 async function seed() {
     await connectDB();
-
     await Promise.all([
         User.deleteMany({}),
         Lab.deleteMany({}),
@@ -76,7 +76,11 @@ async function seed() {
     ]);
     console.log('Collections cleared.');
 
-    const insertedUsers = await User.insertMany(users);
+    const hashedUsers = await Promise.all(
+        users.map(async u => ({ ...u, password: await bcrypt.hash(u.password, 10)}))
+    );
+    
+    const insertedUsers = await User.insertMany(hashedUsers);
     const insertedLabs = await Lab.insertMany(labs);
     console.log(`Inserted ${insertedUsers.length} users, ${insertedLabs.length} labs.`);
 
