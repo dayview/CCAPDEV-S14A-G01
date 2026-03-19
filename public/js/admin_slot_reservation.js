@@ -1,127 +1,92 @@
 const ROOM_SEATS = {
-  'G302A': 20,
-  'G302B': 20,
-  'G304B': 20
+  'GK302A': 20,
+  'GK302B': 20,
+  'GK304B': 20
 };
 
 const lab_layout = [
-  "A1", "A2", "A3", "A4", "A5",
-  "B1", "B2", "B3", "B4", "B5",
-  "C1", "C2", "C3", "C4", "C5",
-  "D1", "D2", "D3", "D4", "D5"
+  "1",  "2",  "3",  "4",  "5",
+  "6",  "7",  "8",  "9",  "10",
+  "11", "12", "13", "14", "15",
+  "16", "17", "18", "19", "20"
 ];
 
 let currentMode = 'reserve';
-
 let selectedSeats = [];
+let currentOccupiedSeats = [];
 
-function getReservations() {
-  const raw = localStorage.getItem("reservations");
-  return raw ? JSON.parse(raw) : [];
+async function fetchOccupiedSeats(room, date, timeIn) {
+  if (!room || !date || !timeIn) return [];
+  try {
+    const res = await fetch(`/admin/slots/seats?lab=${encodeURIComponent(room)}&date=${encodeURIComponent(date)}&timeIn=${encodeURIComponent(timeIn)}`);
+    if (!res.ok) return [];
+    const data = await res.json();
+    return data.occupiedSeats || [];
+  } catch (err) {
+    console.error('fetchOccupiedSeats error:', err);
+    return [];
+  }
 }
 
-function saveReservations(reservations) {
-  localStorage.setItem("reservations", JSON.stringify(reservations));
-}
-
-function validateStudentId(studentId) {
-  const users = JSON.parse(localStorage.getItem("userAccounts")) || [];
-  return users.find(user => user.idNumber === studentId);
-}
-
-function getOccupiedSeats(date, room, timeIn) {
-  const reservations = getReservations();
-  
-  return reservations.filter(res => 
-    res.date === date && 
-    res.room === room && 
-    res.timeIn === timeIn
-  ).map(res => res.seat);
-}
-
-function calculateAvailableSeats(date, room, timeIn) {
-  const totalSeats = ROOM_SEATS[room] || 20;
-  const occupied = getOccupiedSeats(date, room, timeIn);
-  return totalSeats - occupied.length;
-}
-
-function updateBookingOverview(date, room, timeIn) {
+function updateBookingOverview(room, occupiedSeats) {
   const seatsAvailableEl = document.getElementById('seatsAvailable');
   const seatsRepairEl = document.getElementById('seatsRepair');
-  
-  if (!date || !room || !timeIn) {
-    if (room) {
-      const totalSeats = ROOM_SEATS[room] || 20;
-      seatsAvailableEl.textContent = `${totalSeats}/${totalSeats}`;
-    } else {
-      seatsAvailableEl.textContent = '0/0';
-    }
-    seatsRepairEl.textContent = '0';
-    return;
-  }
-  
   const totalSeats = ROOM_SEATS[room] || 20;
-  const available = calculateAvailableSeats(date, room, timeIn);
-  
-  seatsAvailableEl.textContent = `${available}/${totalSeats}`;
+
+  if (!room) {
+    seatsAvailableEl.textContent = '0/0';
+  } else {
+    const available = totalSeats - occupiedSeats.length;
+    seatsAvailableEl.textContent = `${available}/${totalSeats}`;
+  }
   seatsRepairEl.textContent = '0';
 }
 
-function renderSeats(room, date, timeIn) {
+function renderSeats(room, occupiedSeats) {
   const seatMap = document.getElementById('seat_map');
   seatMap.innerHTML = '';
   selectedSeats = [];
-  
+
   if (!room) return;
-  
-  const occupiedSeats = getOccupiedSeats(date, room, timeIn);
-  
+
   lab_layout.forEach(seatId => {
     const btn = document.createElement('button');
     btn.textContent = seatId;
     btn.classList.add('seat');
     btn.dataset.seat = seatId;
-    
+
     const isOccupied = occupiedSeats.includes(seatId);
-    
+
     if (isOccupied) {
       btn.classList.add('occupied');
     } else {
       btn.classList.add('available');
     }
-    
+
     btn.addEventListener('click', function() {
       handleSeatClick(this, isOccupied);
     });
-    
+
     seatMap.appendChild(btn);
   });
 }
 
 function handleSeatClick(seatEl, isOccupied) {
   const seatId = seatEl.dataset.seat;
-  
-  if (currentMode === 'reserve') {
-    if (isOccupied) {
-      alert('This seat is already reserved for this time slot.');
-      return;
-    }
+
+  if (currentMode === 'reserve' && isOccupied) {
+    alert('This seat is already reserved for this time slot.');
+    return;
   }
-  
-  if (currentMode === 'remove') {
-    if (!isOccupied) {
-      alert('This seat is not occupied. Please select an occupied seat to remove.');
-      return;
-    }
+
+  if (currentMode === 'remove' && !isOccupied) {
+    alert('This seat is not occupied. Please select an occupied seat to remove.');
+    return;
   }
-  
+
   if (seatEl.classList.contains('selected')) {
     seatEl.classList.remove('selected');
-    if (currentMode === 'reserve') {
-      seatEl.classList.add('available');
-    } else {
-      seatEl.classList.add('occupied');
-    }
+    seatEl.classList.add(isOccupied ? 'occupied' : 'available');
     selectedSeats = selectedSeats.filter(s => s !== seatId);
   } else {
     seatEl.classList.remove('available', 'occupied');
@@ -135,23 +100,51 @@ function convertTimeToMinutes(timeStr) {
   return hours * 60 + minutes;
 }
 
+function filterTimeOptions(selectEl, referenceTime, direction) {
+    if (!selectEl) return;
+
+    // If no reference time, unhide all options and return
+    if (!referenceTime) {
+        Array.from(selectEl.options).forEach(option => option.hidden = false);
+        return;
+    }
+
+    const refMinutes = convertTimeToMinutes(referenceTime);
+
+    Array.from(selectEl.options).forEach(option => {
+        if (!option.value) return;
+        const optMinutes = convertTimeToMinutes(option.value);
+        if (direction === 'after') {
+            option.hidden = optMinutes <= refMinutes;
+        } else {
+            option.hidden = optMinutes >= refMinutes;
+        }
+    });
+
+    if (selectEl.value) {
+        const currentMinutes = convertTimeToMinutes(selectEl.value);
+        if (direction === 'after' && currentMinutes <= refMinutes) selectEl.value = '';
+        if (direction === 'before' && currentMinutes >= refMinutes) selectEl.value = '';
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function() {
   const roomSelect = document.getElementById('roomSelect');
   const dateInput = document.getElementById('dateInput');
-  
+
   const leftStudentId = document.getElementById('studentId');
   const leftDateInput = document.getElementById('reservationDate');
   const leftTimeIn = document.getElementById('timeIn');
   const leftTimeOut = document.getElementById('timeOut');
   const leftRoomInput = document.getElementById('roomNumber');
-  
+
   const reserveButton = document.querySelector('.reserve_button');
   const removeButton = document.querySelector('.remove_button');
-  
+
   const today = new Date().toISOString().split('T')[0];
   if (dateInput) dateInput.min = today;
   if (leftDateInput) leftDateInput.min = today;
-  
+
   if (reserveButton) {
     reserveButton.addEventListener('click', function() {
       if (currentMode === 'reserve' && selectedSeats.length > 0) {
@@ -165,7 +158,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
   }
-  
+
   if (removeButton) {
     removeButton.addEventListener('click', function() {
       if (currentMode === 'remove' && selectedSeats.length > 0) {
@@ -179,19 +172,18 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
   }
-  
+
   if (dateInput && leftDateInput) {
     dateInput.addEventListener('change', function() {
       leftDateInput.value = this.value;
       updateDisplay();
     });
-    
     leftDateInput.addEventListener('change', function() {
       dateInput.value = this.value;
       updateDisplay();
     });
   }
-  
+
   if (roomSelect) {
     roomSelect.addEventListener('change', function() {
       if (leftRoomInput) leftRoomInput.value = this.value;
@@ -199,7 +191,7 @@ document.addEventListener('DOMContentLoaded', function() {
       updateDisplay();
     });
   }
-  
+
   if (leftRoomInput) {
     leftRoomInput.addEventListener('change', function() {
       if (roomSelect) roomSelect.value = this.value;
@@ -207,178 +199,115 @@ document.addEventListener('DOMContentLoaded', function() {
       updateDisplay();
     });
   }
-  
+
   if (leftTimeIn) {
     leftTimeIn.addEventListener('change', function() {
+      filterTimeOptions(leftTimeOut, this.value, 'after');
       updateDisplay();
     });
   }
-  
-  function updateDisplay() {
+
+  if (leftTimeOut) {
+    leftTimeOut.addEventListener('change', function() {
+      filterTimeOptions(leftTimeIn, this.value, 'before');
+      updateDisplay();
+    });
+  }
+
+  async function updateDisplay() {
     const date = dateInput.value || leftDateInput.value;
     const room = roomSelect.value || leftRoomInput.value;
     const timeIn = leftTimeIn.value;
-    
-    updateBookingOverview(date, room, timeIn);
-    renderSeats(room, date, timeIn);
+
+    currentOccupiedSeats = await fetchOccupiedSeats(room, date, timeIn);
+    updateBookingOverview(room, currentOccupiedSeats);
+    renderSeats(room, currentOccupiedSeats);
   }
-  
-  function performReservation() {
+
+  async function performReservation() {
     const studentId = leftStudentId.value.trim();
     const date = leftDateInput.value;
     const timeIn = leftTimeIn.value;
     const timeOut = leftTimeOut.value;
-    const room = leftRoomInput.value;
-    
-    if (!studentId) {
-      alert('Please enter a Student ID.');
-      return;
+    const room = roomSelect.value;
+
+    if (!studentId) { alert('Please enter a Student ID.'); return; }
+    if (studentId.length !== 8 || isNaN(studentId)) { alert('Please enter a valid 8-digit Student ID.'); return; }
+    if (!date) { alert('Please select a date.'); return; }
+    if (!timeIn) { alert('Please select a Time In.'); return; }
+    if (!timeOut) { alert('Please select a Time Out.'); return; }
+    if (convertTimeToMinutes(timeOut) <= convertTimeToMinutes(timeIn)) {
+      alert('Time Out must be after Time In.'); return;
     }
-    
-    if (studentId.length !== 8 || isNaN(studentId)) {
-      alert('Please enter a valid 8-digit Student ID.');
-      return;
-    }
-    
-    if (!validateStudentId(studentId)) {
-      alert('Student ID not found in the system. Please check and try again.');
-      return;
-    }
-    
-    if (!date) {
-      alert('Please select a date.');
-      return;
-    }
-    
-    if (!timeIn) {
-      alert('Please select a Time In.');
-      return;
-    }
-    
-    if (!timeOut) {
-      alert('Please select a Time Out.');
-      return;
-    }
-    
-    const timeInMinutes = convertTimeToMinutes(timeIn);
-    const timeOutMinutes = convertTimeToMinutes(timeOut);
-    
-    if (timeOutMinutes <= timeInMinutes) {
-      alert('Time Out must be after Time In.');
-      return;
-    }
-    
-    if (!room) {
-      alert('Please select a room.');
-      return;
-    }
-    
-    if (selectedSeats.length === 0) {
-      alert('Please select at least one seat from the seating chart.');
-      return;
-    }
-    
-    const existingReservations = getReservations();
-    const conflicts = [];
-    
-    selectedSeats.forEach(seatId => {
-      const conflict = existingReservations.some(res =>
-        res.date === date &&
-        res.room === room &&
-        res.seat === seatId &&
-        res.timeIn === timeIn
-      );
-      
-      if (conflict) {
-        conflicts.push(seatId);
+    if (!room) { alert('Please select a room.'); return; }
+    if (selectedSeats.length === 0) { alert('Please select at least one seat.'); return; }
+
+    try {
+      const res = await fetch('/admin/slots/reservation', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ studentId, date, timeIn, timeOut, room, seats: selectedSeats, isAnonymous: document.getElementById('isAnonymous').checked })
+      });
+      const data = await res.json();
+
+      if (!res.ok) { alert(data.error || 'Reservation failed.'); return; }
+
+      const failed = data.results.filter(r => !r.success);
+      const succeeded = data.results.filter(r => r.success);
+
+      if (succeeded.length > 0) {
+        alert(`Successfully reserved seat(s): ${succeeded.map(r => r.seat).join(', ')}`);
       }
-    });
-    
-    if (conflicts.length > 0) {
-      alert(`The following seats are already reserved: ${conflicts.join(', ')}`);
-      return;
+      if (failed.length > 0) {
+        alert(`Could not reserve seat(s): ${failed.map(r => `${r.seat} (${r.reason})`).join(', ')}`);
+      }
+
+      leftStudentId.value = '';
+      leftTimeIn.value = '';
+      leftTimeOut.value = '';
+      await updateDisplay();
+    } catch (err) {
+      console.error('performReservation error:', err);
+      alert('An error occurred. Please try again.');
     }
-    
-    const newReservations = selectedSeats.map(seatId => ({
-      userId: studentId,
-      username: 'Admin Reservation',
-      date: date,
-      timeIn: timeIn,
-      timeOut: timeOut,
-      room: room,
-      seat: seatId,
-      anonymous: true
-    }));
-    
-    const allReservations = getReservations();
-    allReservations.push(...newReservations);
-    saveReservations(allReservations);
-    
-    alert(`Successfully reserved ${selectedSeats.length} seat(s): ${selectedSeats.join(', ')}`);
-    
-    selectedSeats = [];
-    leftStudentId.value = '';
-    leftTimeIn.value = '';
-    leftTimeOut.value = '';
-    
-    updateDisplay();
   }
-  
-  function performRemoval() {
+
+  async function performRemoval() {
     const date = leftDateInput.value;
     const timeIn = leftTimeIn.value;
-    const room = leftRoomInput.value;
-    
-    if (!date) {
-      alert('Please select a date.');
-      return;
-    }
-    
-    if (!timeIn) {
-      alert('Please select a Time In.');
-      return;
-    }
-    
-    if (!room) {
-      alert('Please select a room.');
-      return;
-    }
-    
-    if (selectedSeats.length === 0) {
-      alert('Please select at least one occupied seat to remove.');
-      return;
-    }
-    
-    const confirmMsg = `Are you sure you want to remove ${selectedSeats.length} reservation(s) for seat(s): ${selectedSeats.join(', ')}?`;
-    if (!confirm(confirmMsg)) {
-      return;
-    }
-    
-    let allReservations = getReservations();
-    const removedSeats = [];
-    
-    selectedSeats.forEach(seatId => {
-      const index = allReservations.findIndex(res =>
-        res.date === date &&
-        res.room === room &&
-        res.seat === seatId &&
-        res.timeIn === timeIn
-      );
-      
-      if (index !== -1) {
-        allReservations.splice(index, 1);
-        removedSeats.push(seatId);
+    const room = roomSelect.value;
+
+    if (!date) { alert('Please select a date.'); return; }
+    if (!timeIn) { alert('Please select a Time In.'); return; }
+    if (!room) { alert('Please select a room.'); return; }
+    if (selectedSeats.length === 0) { alert('Please select at least one occupied seat to remove.'); return; }
+
+    if (!confirm(`Remove reservation(s) for seat(s): ${selectedSeats.join(', ')}?`)) return;
+
+    try {
+      const res = await fetch('/admin/slots/removal', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ date, timeIn, room, seats: selectedSeats })
+      });
+      const data = await res.json();
+
+      if (!res.ok) { alert(data.error || 'Removal failed.'); return; }
+
+      const succeeded = data.results.filter(r => r.success);
+      const failed = data.results.filter(r => !r.success);
+
+      if (succeeded.length > 0) {
+        alert(`Successfully removed reservation(s) for seat(s): ${succeeded.map(r => r.seat).join(', ')}`);
       }
-    });
-    
-    if (removedSeats.length > 0) {
-      saveReservations(allReservations);
-      alert(`Successfully removed ${removedSeats.length} reservation(s): ${removedSeats.join(', ')}`);
-    } else {
-      alert('No matching reservations found to remove.');
+      if (failed.length > 0) {
+        alert(`Could not remove seat(s): ${failed.map(r => `${r.seat} (${r.reason})`).join(', ')}`);
+      }
+
+      await updateDisplay();
+    } catch (err) {
+      console.error('performRemoval error:', err);
+      alert('An error occurred. Please try again.');
     }
-    
-    selectedSeats = [];
-    updateDisplay();
   }
 });

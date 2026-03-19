@@ -32,8 +32,7 @@ exports.getDeletePage = async (req, res) => {
 exports.getReservationOverview = async (req, res) => {
     try {
         const labs = await Lab.find().sort({ labName: 1 }).lean();
-        const slots = await Slot.find({status: 'available'}).populate('lab').lean();
-        res.render('reservation', {labs, slots});
+        res.render('reservation', { labs });
     } catch (err) {
         console.error('getReservationOverview error:', err);
         res.status(500).render('reservation', { error: 'Could not load slots.' });
@@ -49,6 +48,7 @@ exports.getStudentReservation = async (req, res) => {
         res.status(500).render('student_reservation', { error: 'Could not load available slots.' });
     }
 };
+
 
 exports.postStudentReservation = async (req, res) => {
     try {
@@ -68,13 +68,13 @@ exports.postStudentReservation = async (req, res) => {
     } catch (err) {
         console.error('postStudentReservation error:', err);
         res.status(500).render('student_reservation', { error: 'Could not create reservation.' });
+        res.status(500).render('student_reservation', { error: 'Could not create reservation.' });
     }
 };
 
 exports.getEditReservation = async (req, res) => {
     try {
         const reservation = await Reservation.findById(req.params.id).populate('slot');
-        if (!reservation) return res.redirect('/reservation');
         res.render('edit_reservation', { reservation });
     } catch (err) {
         console.error('getEditReservation error:', err);
@@ -96,7 +96,6 @@ exports.postEditReservation = async (req, res) => {
 exports.postDeleteReservation = async (req, res) => {
     try {
         const reservation = await Reservation.findById(req.params.id);
-        if (!reservation) return res.redirect('/reservation');
         await Slot.findByIdAndUpdate(reservation.slot, { status: 'available' });
         await Reservation.findByIdAndUpdate(req.params.id, { status: 'cancelled' });
         res.redirect('/reservation');
