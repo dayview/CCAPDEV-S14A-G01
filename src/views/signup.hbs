@@ -11,6 +11,10 @@
         </div>
         {{/if}}
 
+        {{#each errors}}
+        <p class="text-danger">{{this.msg}}</p>
+        {{/each}}
+
         <div class="id">
             <label>ID Number *</label>
             <input type="text" id="idnumber" name="idNum" placeholder="ID Number" required>
