@@ -29,7 +29,6 @@ exports.getDeletePage = async (req, res) => {
     }
 };
 
-
 exports.getReservationOverview = async (req, res) => {
     try {
         const labs = await Lab.find().sort({ labName: 1 }).lean();
@@ -50,66 +49,25 @@ exports.getStudentReservation = async (req, res) => {
         res.status(500).render('student_reservation', { error: 'Could not load available slots.' });
     }
 };
+
 exports.postStudentReservation = async (req, res) => {
     try {
-        const { labName, date, timeIn, timeOut, seatNum, isAnonymous } = req.body;
         const userId = req.session.userId;
+        const { slotId, isAnonymous } = req.body;
 
-        const lab = await Lab.findOne({ labName });
-        if (!lab) {
-            return res.status(404).render('reservation', {
-                labs: await Lab.find().sort({ labName: 1 }).lean(),
-                slots: await Slot.find({ status: 'available' }).populate('lab').lean(),
-                error: 'Lab not found.'
-            });
+        if (!userId) return res.redirect('/auth/login');
+
+        const slot = await Slot.findById(slotId);
+        if (!slot || slot.status !== 'available') {
+            return res.status(400).render('student_reservation', { error: 'Slot is no longer available.' });
         }
 
-        const [year, month, day] = date.split('-').map(Number);
-        const slotDate = new Date(year, month - 1, day, 0, 0, 0, 0);
-
-        let slot = await Slot.findOne({
-            lab: lab._id,
-            date: slotDate,
-            startTime: timeIn,
-            seatNum: Number(seatNum)
-        });
-
-        if (slot && slot.status !== 'available') {
-            return res.status(409).render('reservation', {
-                labs: await Lab.find().sort({ labName: 1 }).lean(),
-                slots: await Slot.find({ status: 'available' }).populate('lab').lean(),
-                error: `Seat ${seatNum} at ${timeIn} is already reserved.`
-            });
-        }
-
-        if (!slot) {
-            slot = await Slot.create({
-                lab: lab._id,
-                date: slotDate,
-                startTime: timeIn,
-                endTime: timeOut,
-                seatNum: Number(seatNum),
-                status: 'reserved'
-            });
-        } else {
-            await Slot.findByIdAndUpdate(slot._id, { status: 'reserved' });
-        }
-
-        await Reservation.create({
-            user: userId,
-            slot: slot._id,
-            isAnonymous: !!isAnonymous,
-            status: 'active'
-        });
-
+        await Reservation.create({ user: userId, slot: slotId, isAnonymous: !!isAnonymous });
+        await Slot.findByIdAndUpdate(slotId, { status: 'reserved' });
         res.redirect('/reservation');
     } catch (err) {
         console.error('postStudentReservation error:', err);
-        res.status(500).render('reservation', {
-            labs: await Lab.find().sort({ labName: 1 }).lean(),
-            slots: await Slot.find({ status: 'available' }).populate('lab').lean(),
-            error: 'Could not create reservation.'
-        });
+        res.status(500).render('student_reservation', { error: 'Could not create reservation.' });
     }
 };
 
