@@ -4,6 +4,7 @@ const session = require('express-session');
 const { engine } = require('express-handlebars');
 const path = require('path');
 const connectDB = require('./src/config/db');
+const MongoStore = require('connect-mongo');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -24,9 +25,15 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(session({
-    secret: process.env.SESSION_SECRET || 'devsecret',
+    secret: process.env.SESSION_SECRET,
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
+    store: MongoStore.create({ mongoUrl: process.env.MONGODB_URI }),
+    cookie: {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        maxAge: 1000 * 60 * 60 * 24
+    }
 }));
 
 app.use('/', require('./src/routes/index_routes'));
@@ -34,6 +41,15 @@ app.use('/auth', require('./src/routes/auth_routes'));
 app.use('/reservation', require('./src/routes/reservation_routes'));
 app.use('/lab', require('./src/routes/lab_routes'));
 app.use('/admin', require('./src/routes/admin_routes'));
+
+app.use((req, res) => {
+    res.status(404).render('404', { message: 'Page not found.' });
+});
+
+app.use((err, req, res, next) => {
+    console.error('Unhandled error:', err.stack);
+    res.status(500).render('error', { message: 'An internal error occurred.' });
+});
 
 app.listen(PORT, () =>  {
     console.log(`Server running at http://localhost:${PORT}`);
