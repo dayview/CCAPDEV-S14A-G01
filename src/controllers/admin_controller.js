@@ -2,6 +2,7 @@ const Reservation = require('../models/Reservation');
 const Slot = require('../models/Slot');
 const Lab = require('../models/Lab');
 const User = require('../models/User');
+const bcrypt = require('bcrypt');
 
 exports.getAdminHome = (req, res) => {
     res.render('admin/admin_homepage', { layout: 'admin', username: req.session.username });
@@ -15,14 +16,13 @@ exports.getAdminLogin = (req, res) => {
 exports.postAdminLogin = async (req, res) => {
     try {
         const { username, password } = req.body;
-        const admin = await User.findOne({ username, password, role: 'admin' });
-        if (admin) {
-            req.session.isAdmin = true;
-            req.session.userId = admin._id;
-            res.redirect('/admin');
-        } else {
-            res.render('admin/admin_login', { layout: 'admin', isLoginPage: true, error: 'Invalid admin credentials.' });
+        const admin = await User.findOne({ username, role: 'admin' });
+        if (!admin || !(await bcrypt.compare(password, admin.password))) {
+            return res.render('admin/admin_login', { layout: 'admin', isLoginPage: true, error: 'Invalid admin credentials.' });
         }
+        req.session.userId = admin._id;
+        req.session.isAdmin = true;
+        res.redirect('/admin');
     } catch (err) {
         console.error('postAdminLogin error:', err);
         res.status(500).render('admin/admin_login', { layout: 'admin', isLoginPage: true, error: 'Something went wrong.' });
