@@ -1,20 +1,29 @@
 const User = require('../models/User');
+const bcrypt = require('bcrypt');
+const SALT_ROUNDS = 10;
+const { validationResult } = require('express-validator');
 
 exports.getLogin = (req, res) => {
     res.render('login');
 };
 
 exports.postLogin = async (req, res) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        return res.render('login', { errors: errors.array() });
+    }
+    
     try {
         const { username, password } = req.body;
-        const user = await User.findOne({ username, password });
-        if (user) {
-            req.session.userId = user._id;
-            req.session.username = user.username;
-            res.redirect('/reservation');
-        } else {
-            res.render('login', { error: 'Invalid credentials.' });
+        const user = await User.findOne({ username });
+        if (!user || !(await bcrypt.compare(password, user.password))) {
+            return res.render('login', { error: 'Invalid username or password.' });
         }
+        req.session.userId = user._id;
+        req.session.username = user.username;
+        req.session.isAdmin = user.role === 'admin';
+        res.redirect(user.role === 'admin' ? '/admin' : '/reservation');
     } catch (err) {
         console.error('postLogin error:', err);
         res.status(500).render('login', { error: 'Something went wrong. Please try again.' });
@@ -26,9 +35,16 @@ exports.getSignup = (req, res) => {
 };
 
 exports.postSignup = async (req, res) => {
+    const errors = validationResults(req);
+
+    if (!errors.isEmpty()) {
+        return res.render('signup', { errors: errors.array() });
+    }
+
     try {
         const { idNum, username, firstName, lastName, email, password } = req.body;
-        await User.create({ idNum, username, firstName, lastName, email, password });
+        const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
+        await User.create({ idNum, username, firstName, lastName, email, password: hashedPassword });
         res.redirect('/auth/login');
     } catch (err) {
         console.error('postSignup error:', err);
