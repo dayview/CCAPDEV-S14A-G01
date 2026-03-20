@@ -1,13 +1,14 @@
 const Reservation = require('../models/Reservation');
 const Slot = require('../models/Slot');
 const Lab = require('../models/Lab');
+const { validationResult } = require('express-validator');
 
 exports.getSearchPage = async (req, res) => {
     try {
         res.render('search');
     } catch (err) {
         console.error('getSearchPage error:', err);
-        res.status(500).send('Could not load search page.');
+        res.status(500).render('error', { message: 'Could not load search page.'});
     }
 };
 
@@ -16,7 +17,7 @@ exports.getEditPage = async (req, res) => {
         res.render('edit_reservation');
     } catch (err) {
         console.error('getEditPage error:', err);
-        res.status(500).send('Could not load edit page.');
+        res.status(500).render('error', { message: 'Could not load edit page.' });
     }
 };
 
@@ -25,7 +26,7 @@ exports.getDeletePage = async (req, res) => {
         res.render('delete_reservation', { reservations: [] });
     } catch (err) {
         console.error('getDeletePage error:', err);
-        res.status(500).send('Could not load delete page.');
+        res.status(500).render('error', { message: 'Could not load delete page.' });
     }
 };
 
@@ -49,8 +50,13 @@ exports.getStudentReservation = async (req, res) => {
     }
 };
 
-
 exports.postStudentReservation = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        const slots = await Slot.find({ status: 'available' }).populate('lab');
+        return res.status(400).render('student_reservation', { errors: errors.array(), slots });
+    }
+
     try {
         const userId = req.session.userId;
         const { slotId, isAnonymous } = req.body;
@@ -68,7 +74,6 @@ exports.postStudentReservation = async (req, res) => {
     } catch (err) {
         console.error('postStudentReservation error:', err);
         res.status(500).render('student_reservation', { error: 'Could not create reservation.' });
-        res.status(500).render('student_reservation', { error: 'Could not create reservation.' });
     }
 };
 
@@ -83,6 +88,12 @@ exports.getEditReservation = async (req, res) => {
 };
 
 exports.postEditReservation = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        const reservation = await Reservation.findById(req.params.id).populate('slot');
+        return res.status(400).render('edit_reservation', { errors: errors.array(), reservation });
+    }
+
     try {
         const { isAnonymous, remarks } = req.body;
         await Reservation.findByIdAndUpdate(req.params.id, { isAnonymous: !!isAnonymous, remarks });
@@ -129,10 +140,7 @@ exports.searchAvailability = async (req, res) => {
             status: 'available'
         }).lean();
 
-        const availableSeats = slots
-            .map(slot => slot.seatNum)
-            .sort((a, b) => a - b);
-
+        const availableSeats = slots.map(slot => slot.seatNum).sort((a, b) => a - b);
         res.json({ availableSeats });
     } catch (err) {
         console.error('searchAvailability error:', err);
