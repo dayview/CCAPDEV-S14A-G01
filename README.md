@@ -1,4 +1,4 @@
-# CCAPDEV-S14A-G01
+# CCAPDEV-S14A-G01 - animo.labs
 
 A lab seat reservation system developed for CCAPDEV Term 2 AY 2025-2026. The system allows students to browse available computer laboratory slots and make, edit, or cancel reservations. Administrators can manage lab slot availability and view all student reservations.
 
