@@ -48,6 +48,14 @@ const labs = [
     {
         labName: 'GK304B', building: 'Gokongwei', floor: 3, capacity: 20,
         openTime: '07:30', closeTime: '18:00', description: 'CS-ST laboratory classes'
+    },
+    {
+        labName: 'GK305A', building: 'Gokongwei', floor: 3, capacity: 20,
+        openTime: '07:30', closeTime: '18:00', description: 'CS lab for networking classes'
+    },
+    {
+        labName: 'GK305B', building: 'Gokongwei', floor: 3, capacity: 20,
+        openTime: '07:30', closeTime: '18:00', description: 'CS lab for software engineering classes'
     }
 ];
 
@@ -75,6 +83,8 @@ async function seed() {
     const GK302A = insertedLabs.find(l => l.labName === 'GK302A')._id;
     const GK302B = insertedLabs.find(l => l.labName === 'GK302B')._id;
     const GK304B = insertedLabs.find(l => l.labName === 'GK304B')._id;
+    const GK305A = insertedLabs.find(l => l.labName === 'GK305A')._id;
+    const GK305B = insertedLabs.find(l => l.labName === 'GK305B')._id;
 
     const slots = [
     { lab: GK302A, date: d(0), startTime: '08:00', endTime: '09:30', seatNum: 1, status: 'reserved' },
@@ -88,7 +98,11 @@ async function seed() {
     { lab: GK302B, date: d(0), startTime: '16:00', endTime: '17:30', seatNum: 1, status: 'available' },
     { lab: GK304B, date: d(0), startTime: '09:00', endTime: '10:30', seatNum: 10, status: 'reserved' },
     { lab: GK304B, date: d(0), startTime: '14:00', endTime: '15:30', seatNum: 7, status: 'available' },
-    { lab: GK304B, date: d(0), startTime: '16:00', endTime: '17:30', seatNum: 2, status: 'available' }
+    { lab: GK304B, date: d(0), startTime: '16:00', endTime: '17:30', seatNum: 2, status: 'available' },
+    { lab: GK305A, date: d(0), startTime: '08:00', endTime: '09:30', seatNum: 3, status: 'available' },
+    { lab: GK305A, date: d(0), startTime: '10:00', endTime: '11:30', seatNum: 5, status: 'reserved' },
+    { lab: GK305B, date: d(0), startTime: '09:00', endTime: '10:30', seatNum: 2, status: 'available' },
+    { lab: GK305B, date: d(0), startTime: '14:00', endTime: '15:30', seatNum: 4, status: 'reserved' }
 ];
 
     const insertedSlots = await Slot.insertMany(slots);
