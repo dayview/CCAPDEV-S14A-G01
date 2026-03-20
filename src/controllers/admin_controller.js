@@ -1,3 +1,4 @@
+const { validationResult } = require('express-validator');
 const Reservation = require('../models/Reservation');
 const Slot = require('../models/Slot');
 const Lab = require('../models/Lab');
@@ -26,6 +27,10 @@ exports.postAdminLogin = async (req, res) => {
         console.error('postAdminLogin error:', err);
         res.status(500).render('admin/admin_login', { layout: 'admin', isLoginPage: true, error: 'Something went wrong.' });
     }
+};
+
+exports.getAdminLogout = (req, res) => {
+    req.session.destroy(() => res.redirect('/admin/login'));
 };
 
 exports.getAdminReservations = async (req, res) => {
@@ -171,6 +176,11 @@ exports.getAdminSlotSeats = async (req, res) => {
 };
 
 exports.getAdminSlotReservation = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
     try {
         const labs = await Lab.find().lean();
         res.render('admin/admin_slot_reservation', { layout: 'admin', labs });
@@ -181,6 +191,11 @@ exports.getAdminSlotReservation = async (req, res) => {
 };
 
 exports.postAdminSlotReservation = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+    
     try {
         const { studentId, date, timeIn, timeOut, room, seats, isAnonymous } = req.body;
 
