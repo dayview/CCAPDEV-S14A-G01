@@ -1,0 +1,19 @@
+.about-hero {
+    position: relative;
+    background: url('/images/dlsu-backgound.jpg') center/cover no-repeat;
+    min-height: 100vh;
+    color: #fff;
+}
+
+.about-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    z-index: 0;
+}
+
+.about-hero .container {
+    position: relative;
+    z-index: 1;
+}
