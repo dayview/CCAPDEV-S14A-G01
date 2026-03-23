@@ -32,48 +32,92 @@ exports.getDeletePage = async (req, res) => {
 
 exports.getReservationOverview = async (req, res) => {
     try {
-        const labs = await Lab.find().sort({ labName: 1 }).lean();
-        res.render('reservation', { labs });
+        res.render('reservation', {
+            isLoggedIn: !!req.session.userId
+        });
     } catch (err) {
-        console.error('getReservationOverview error:', err);
-        res.status(500).render('reservation', { error: 'Could not load slots.' });
+        res.status(500).render('reservation', {
+            error: 'Could not load reservation page.',
+            isLoggedIn: !!req.session.userId
+        });
     }
 };
 
 exports.getStudentReservation = async (req, res) => {
     try {
-        const slots = await Slot.find({ status: 'available' }).populate('lab');
-        res.render('student_reservation', { slots });
-    } catch (err) {
-        console.error('getStudentReservation error:', err);
-        res.status(500).render('student_reservation', { error: 'Could not load available slots.' });
+        const reservations = await Reservation.find({user: req.session.userId}).populate({
+            path: 'slot',
+            populate: {path: 'lab'}
+        }).lean();
+        res.render('reservation_history', {reservations});
+    }
+    catch (err) {
+        res.status(500).render('reservation_history', { error: 'Could not load reservations.' });
     }
 };
 
 exports.postStudentReservation = async (req, res) => {
     const errors = validationResult(req);
+    if (!req.session.userId) {
+        return res.redirect('/auth/login');
+    }
+
     if (!errors.isEmpty()) {
         const slots = await Slot.find({ status: 'available' }).populate('lab');
-        return res.status(400).render('student_reservation', { errors: errors.array(), slots });
+        return res.status(400).render('reservation', { errors: errors.array(), slots });
     }
 
     try {
         const userId = req.session.userId;
-        const { slotId, isAnonymous } = req.body;
+        const { slotId, labName, date, timeIn, seatNum, isAnonymous } = req.body;
 
         if (!userId) return res.redirect('/auth/login');
 
-        const slot = await Slot.findById(slotId);
-        if (!slot || slot.status !== 'available') {
-            return res.status(400).render('student_reservation', { error: 'Slot is no longer available.' });
+        let slot;
+
+        if (slotId) slot = await Slot.findById(slotId);
+
+        else if (labName && date && timeIn && seatNum) {
+            const lab = await Lab.findOne({labName});
+            if (!lab) {
+                return res.status(404).render('reservation', {
+                    error: 'Lab not found.',
+                    isLoggedIn: true
+                });
+            }
+
+            const [year, month, day] = date.split('-').map(Number);
+            const slotDate = new Date(year, month - 1, day, 0, 0, 0, 0);
+
+            slot = await Slot.findOne({
+                lab: lab._id,
+                date: slotDate,
+                startTime: timeIn,
+                seatNum: Number(seatNum)
+            });
+        }
+        else {
+            return res.status(400).render('reservation', {
+                error: 'Incomplete reservation details.',
+                isLoggedIn: true
+            });
         }
 
-        await Reservation.create({ user: userId, slot: slotId, isAnonymous: !!isAnonymous });
-        await Slot.findByIdAndUpdate(slotId, { status: 'reserved' });
+        if(!slot || slot.status !== 'available') {
+            return res.status(400).render('reservation', {
+                error: 'Slot is no longer available.',
+                isLoggedIn: true
+            });
+        }
+
+        await Reservation.create({ user: userId, slot: slot._id, isAnonymous: !!isAnonymous });
+        await Slot.findByIdAndUpdate(slot._id, { status: 'reserved' });
         res.redirect('/reservation');
     } catch (err) {
-        console.error('postStudentReservation error:', err);
-        res.status(500).render('student_reservation', { error: 'Could not create reservation.' });
+        res.status(500).render('reservation', {
+            error: 'Could not create reservation.',
+            isLoggedIn: true
+        });
     }
 };
 
