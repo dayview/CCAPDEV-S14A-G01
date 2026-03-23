@@ -1,84 +1,88 @@
 <link rel="stylesheet" href="/css/about.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
 
-<div class="about-hero py-5">
-    <div class="container">
-        <h1 class="fw-bold display-5 mb-1">About animo.labs</h1>
-        <p class="text-white-50 mb-4">CCAPDEV Term 2 AY 2025-2026 &bull; Group S14A-G01</p>
+<div class="page">
+    <div class="about-header">
+        <h1><span class="logo-bold">About animo.labs</span> </h1>
+        <p>CCAPDEV Term 2 AY 2025-2026 &bull; Group S14A-G01</p>
 
-        <div class="card bg-dark bg-opacity-50 text-white border-0 rounded-3 mb-4 p-4">
-            <h5 class="fw-semibold mb-3">Group Members</h5>
-            <ul class="list-unstyled mb-0">
-                <li>COLCOL, Llandro Massimo B.</li>
-                <li>MAJOR, Justine Aniko P.</li>
-                <li>PAVINO, Leon Gabriel C.</li>
-                <li>SESE, Alphonse Juanito T.</li>
-            </ul>
-        </div>
+        <div class="about-cards">
+            <div class="about-card">
+                <h3>Group Members</h3>
+                <ul>
+                    <li>COLCOL, Llandro Massimo B.</li>
+                    <li>MAJOR, Justine Aniko P.</li>
+                    <li>PAVINO, Leon Gabriel C.</li>
+                    <li>SESE, Alphonse Juanito T.</li>
+                </ul>
+            </div>
 
-        <div class="card bg-dark bg-opacity-50 text-white border-0 rounded-3 mb-4 p-4">
-            <h5 class="fw-semibold mb-3">npm Packages used</h5>
-            <table class="table table-dark table-borderless table-sm mb-0">
-                <thead class="text-white-50">
-                    <tr>
-                        <th>Package</th>
-                        <th>Version</th>
-                        <th>Purpose</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>express</td>
-                        <td>^4.18.2</td>
-                        <td>Web application framework</td>
-                    </tr>
-                    <tr>
-                        <td>mongoose</td>
-                        <td>^8.2.0</td>
-                        <td>MongoDB object modeling (ODM)</td>
-                    </tr>
-                    <tr>
-                        <td>express-handlebars</td>
-                        <td>^7.1.2</td>
-                        <td>Handlebars template engine</td>
-                    </tr>
-                    <tr>
-                        <td>express-session</td>
-                        <td>^1.19.0</td>
-                        <td>Session-based user authentication</td>
-                    </tr>
-                    <tr>
-                        <td>connect-mongo</td>
-                        <td>^5.1.0</td>
-                        <td>Persistent MongoDB session store</td>
-                    </tr>
-                    <tr>
-                        <td>bcrypt</td>
-                        <td>^5.1.1</td>
-                        <td>Password hashing</td>
-                    </tr>
-                    <tr>
-                        <td>express-validator</td>
-                        <td>^7.2.0</td>
-                        <td>Back-end form validation</td>
-                    </tr>
-                    <tr>
-                        <td>dotenv</td>
-                        <td>^16.4.1</td>
-                        <td>Environment variable management</td>
-                    </tr>
-                    <tr>
-                        <td>nodemon</td>
-                        <td>^3.1.0</td>
-                        <td> Auto-restart during development</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+            <div class="about-card">
+                <h3>npm Packages used</h3>
+                <table class="about-table">
+                    <thead>
+                        <tr>
+                            <th>Package</th>
+                            <th>Version</th>
+                            <th>Purpose</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>express</td>
+                            <td>^4.18.2</td>
+                            <td>Web application framework</td>
+                        </tr>
+                        <tr>
+                            <td>mongoose</td>
+                            <td>^8.2.0</td>
+                            <td>MongoDB object modeling (ODM)</td>
+                        </tr>
+                        <tr>
+                            <td>express-handlebars</td>
+                            <td>^7.1.2</td>
+                            <td>Handlebars template engine</td>
+                        </tr>
+                        <tr>
+                            <td>express-session</td>
+                            <td>^1.19.0</td>
+                            <td>Session-based user authentication</td>
+                        </tr>
+                        <tr>
+                            <td>connect-mongo</td>
+                            <td>^5.1.0</td>
+                            <td>Persistent MongoDB session store</td>
+                        </tr>
+                        <tr>
+                            <td>bcrypt</td>
+                            <td>^5.1.1</td>
+                            <td>Password hashing</td>
+                        </tr>
+                        <tr>
+                            <td>express-validator</td>
+                            <td>^7.2.0</td>
+                            <td>Back-end form validation</td>
+                        </tr>
+                        <tr>
+                            <td>dotenv</td>
+                            <td>^16.4.1</td>
+                            <td>Environment variable management</td>
+                        </tr>
+                        <tr>
+                            <td>nodemon</td>
+                            <td>^3.1.0</td>
+                            <td> Auto-restart during development</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
 
-        <div class="card bg-dark bg-opacity-50 text-white border-0 rounded-3 p-4">
-            <h5 class="fw-semibold mb-3">Third-Party Libraries</h5>
-            <ul class="list-unstyled mb-0">
-                <li><strong>Bootstrap 5</strong> - CSS framework for responsive UI components</li>
+
+        <div class="about-card">
+            <h3>Third-Party Libraries</h3>
+            <ul>
                 <li><strong>Google Fonts</strong> - Atkinson Hyperlegible and Inter typefaces</li>
             </ul>
         </div>
