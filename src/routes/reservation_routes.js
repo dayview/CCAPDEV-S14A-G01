@@ -4,9 +4,7 @@ const { body } = require('express-validator');
 const ctrl = require('../controllers/reservation_controller');
 const { requireStudent } = require('../middleware/auth');
 
-const reservationRules = [
-    body('slotId').notEmpty().withMessage('A slot must be selected.')
-];
+const reservationRules = [];
 
 const editRules = [
     body('remarks').optional().isLength({ max: 300 }).withMessage('Remarks must be 300 characters or fewer.')
@@ -17,8 +15,8 @@ router.get('/', ctrl.getReservationOverview);
 router.get('/student', requireStudent, ctrl.getStudentReservation);
 router.post('/student', requireStudent, reservationRules, ctrl.postStudentReservation);
 
-router.get('/search', requireStudent, ctrl.getSearchPage);
-router.get('/search-availability', requireStudent, ctrl.searchAvailability);
+router.get('/search', ctrl.getSearchPage);
+router.get('/search-availability', ctrl.searchAvailability);
 
 router.get('/edit', requireStudent, ctrl.getEditPage);
 router.get('/delete', requireStudent, ctrl.getDeletePage);
