@@ -32,48 +32,91 @@ exports.getDeletePage = async (req, res) => {
 
 exports.getReservationOverview = async (req, res) => {
     try {
-        const labs = await Lab.find().sort({ labName: 1 }).lean();
-        res.render('reservation', { labs });
+        res.render('reservation', {
+            isLoggedIn: !!req.session.userId
+        });
     } catch (err) {
-        console.error('getReservationOverview error:', err);
-        res.status(500).render('reservation', { error: 'Could not load slots.' });
+        res.status(500).render('reservation', {
+            error: 'Could not load reservation page.',
+            isLoggedIn: !!req.session.userId
+        });
     }
 };
 
 exports.getStudentReservation = async (req, res) => {
     try {
-        const slots = await Slot.find({ status: 'available' }).populate('lab');
-        res.render('student_reservation', { slots });
-    } catch (err) {
-        console.error('getStudentReservation error:', err);
-        res.status(500).render('student_reservation', { error: 'Could not load available slots.' });
+        const reservations = await Reservation.find({user: req.session.userId}).populate({
+            path: 'slot',
+            populate: {path: 'lab'}
+        }).lean();
+        res.render('reservation_history', {reservations});
+    }
+    catch (err) {
+        res.status(500).render('reservation_history', { error: 'Could not load reservations.' });
     }
 };
 
 exports.postStudentReservation = async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        const slots = await Slot.find({ status: 'available' }).populate('lab');
-        return res.status(400).render('student_reservation', { errors: errors.array(), slots });
-    }
-
     try {
         const userId = req.session.userId;
-        const { slotId, isAnonymous } = req.body;
-
         if (!userId) return res.redirect('/auth/login');
 
-        const slot = await Slot.findById(slotId);
-        if (!slot || slot.status !== 'available') {
-            return res.status(400).render('student_reservation', { error: 'Slot is no longer available.' });
+        const {labName, date, timeIn, timeOut, seatNum, isAnonymous} = req.body;
+
+        if (!labName || !date || !timeIn || !seatNum) {
+            return res.status(400).render('reservation', {
+                error: 'All booking fields are required.'
+            });
         }
 
-        await Reservation.create({ user: userId, slot: slotId, isAnonymous: !!isAnonymous });
-        await Slot.findByIdAndUpdate(slotId, { status: 'reserved' });
-        res.redirect('/reservation');
-    } catch (err) {
-        console.error('postStudentReservation error:', err);
-        res.status(500).render('student_reservation', { error: 'Could not create reservation.' });
+        const lab = await Lab.findOne({labName});
+
+        if(!lab) {
+            return res.status(400).render('reservation', {
+                error: 'Lab not found.'
+            });
+        }
+
+        const [year, month, day] = date.split('-').map(Number);
+        const slotDate = new Date(year, month - 1, day, 0, 0, 0, 0);
+
+        let slot = await Slot.findOne({
+            lab: lab._id,
+            date: slotDate,
+            startTime: timeIn,
+            seatNum: Number(seatNum)
+        });
+
+        if (slot && slot.status !== 'available') {
+            return res.status(400).render('reservation', {
+                error: 'Seat not available.'
+            });
+        }
+
+        if(!slot) {
+            slot = await Slot.create({
+                lab: lab._id,
+                date: slotDate,
+                startTime: timeIn,
+                endTime: timeOut,
+                seatNum: Number(seatNum),
+                status: 'reserved'
+            });
+        } else {
+            await Slot.findByIdAndUpdate(slot._id, {status: 'reserved'});
+        }
+
+        await Reservation.create({
+            user: userId,
+            slot: slot._id,
+            isAnonymous: !!isAnonymous,
+            status: 'active'
+        });
+
+        res.redirect('reservation');
+    }
+    catch (err) {
+        res.status(500).render('error', {message: 'Could not create reservation.'});
     }
 };
 
@@ -125,25 +168,39 @@ exports.searchAvailability = async (req, res) => {
         }
 
         const lab = await Lab.findOne({ labName: room }).lean();
-
         if (!lab) {
             return res.status(404).json({ error: 'Room not found.' });
         }
 
         const [year, month, day] = date.split('-').map(Number);
-        const slotDate = new Date(year, month - 1, day, 0, 0, 0, 0);
+        const searchDate = new Date(year, month - 1, day, 0, 0, 0, 0);
+        const nextDay = new Date(year, month - 1, day + 1, 0, 0, 0, 0);
 
-        const slots = await Slot.find({
+        const occupiedSlots = await Slot.find({
             lab: lab._id,
-            date: slotDate,
+            date: { $gte: searchDate, $lt: nextDay },
             startTime: time,
-            status: 'available'
+            status: { $in: ['reserved', 'walk-in'] }
         }).lean();
 
-        const availableSeats = slots.map(slot => slot.seatNum).sort((a, b) => a - b);
-        res.json({ availableSeats });
+        const occupiedSeats = occupiedSlots
+            .map(slot => Number(slot.seatNum))
+            .sort((a, b) => a - b);
+
+        const availableSeats = [];
+        for (let i = 1; i <= lab.capacity; i++) {
+            if (!occupiedSeats.includes(i)) {
+                availableSeats.push(i);
+            }
+        }
+
+        res.json({
+            room: lab.labName,
+            capacity: lab.capacity,
+            occupiedSeats,
+            availableSeats
+        });
     } catch (err) {
-        console.error('searchAvailability error:', err);
-        res.status(500).json({ error: 'Could not fetch available seats.' });
+        res.status(500).json({ error: 'Could not fetch seat availability.' });
     }
 };

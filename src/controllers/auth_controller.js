@@ -13,20 +13,36 @@ exports.postLogin = async (req, res) => {
     if (!errors.isEmpty()) {
         return res.render('login', { errors: errors.array() });
     }
-    
+
     try {
-        const { username, password } = req.body;
+        const { username, password, rememberMe } = req.body;
         const user = await User.findOne({ username });
+
         if (!user || !(await bcrypt.compare(password, user.password))) {
             return res.render('login', { error: 'Invalid username or password.' });
         }
+
         req.session.userId = user._id;
         req.session.username = user.username;
         req.session.isAdmin = user.role === 'admin';
-        res.redirect(user.role === 'admin' ? '/admin' : '/reservation');
+
+        if (rememberMe) {
+            req.session.cookie.maxAge = 1000 * 60 * 60 * 24 * 30;
+        } else {
+            req.session.cookie.expires = false;
+        }
+
+        req.session.save((err) => {
+            if (err) {
+                console.error('session save error:', err);
+                return res.status(500).render('login', { error: 'Could not save session. Please try again.' });
+            }
+
+            return res.redirect(user.role === 'admin' ? '/admin' : '/reservation');
+        });
     } catch (err) {
         console.error('postLogin error:', err);
-        res.status(500).render('login', { error: 'Something went wrong. Please try again.' });
+        return res.status(500).render('login', { error: 'Something went wrong. Please try again.' });
     }
 };
 
