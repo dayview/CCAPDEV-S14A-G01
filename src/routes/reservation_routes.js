@@ -5,7 +5,10 @@ const ctrl = require('../controllers/reservation_controller');
 const { requireStudent } = require('../middleware/auth');
 
 const reservationRules = [
-    body('slotId').notEmpty().withMessage('A slot must be selected.')
+    body('labName').notEmpty().withMessage('Please select a room.'),
+    body('date').notEmpty().withMessage('Please select a date.'),
+    body('timeIn').notEmpty().withMessage('Please select a time.'),
+    body('seatNum').notEmpty().withMessage('Please select a seat.')
 ];
 
 const editRules = [
@@ -17,8 +20,8 @@ router.get('/', ctrl.getReservationOverview);
 router.get('/student', requireStudent, ctrl.getStudentReservation);
 router.post('/student', requireStudent, reservationRules, ctrl.postStudentReservation);
 
-router.get('/search', requireStudent, ctrl.getSearchPage);
-router.get('/search-availability', requireStudent, ctrl.searchAvailability);
+router.get('/search', ctrl.getSearchPage);
+router.get('/search-availability', ctrl.searchAvailability);
 
 router.get('/edit', requireStudent, ctrl.getEditPage);
 router.get('/delete', requireStudent, ctrl.getDeletePage);

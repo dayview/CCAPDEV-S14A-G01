@@ -65,46 +65,76 @@ document.addEventListener("DOMContentLoaded", () => {
     function clearSelection() {
         selectedSeat = null;
         infoSeat.textContent = "--";
-        reserveBtn.disabled = true;
-
+        if (reserveBtn && reserveBtn.tagName === "BUTTON") reserveBtn.disabled = true;
         if (hiddenSeat) hiddenSeat.value = "";
     }
 
-    function renderSeats() {
+    async function renderSeats() {
         if (!seatMap) return;
 
         seatMap.innerHTML = "";
         clearSelection();
 
-        for (let i = 1; i <= 20; i++) {
-            const btn = document.createElement("button");
-            btn.type = "button";
-            btn.textContent = i;
-            btn.classList.add("seat", "available");
+        if (!inputRoom.value || !inputDate.value || !inputTime.value) {
+            return;
+        }
 
-            btn.addEventListener("click", () => {
-                if (!inputRoom.value) {
-                    alert("Please select a room first.");
-                    return;
-                }
-
-                document.querySelectorAll(".seat.selected").forEach(el => {
-                    el.classList.remove("selected");
-                    el.classList.add("available");
-                });
-
-                btn.classList.remove("available", "occupied");
-                btn.classList.add("selected");
-
-                selectedSeat = String(i);
-                infoSeat.textContent = selectedSeat;
-                infoRoom.textContent = inputRoom.value;
-                reserveBtn.disabled = false;
-
-                if (hiddenSeat) hiddenSeat.value = selectedSeat;
+        try {
+            const params = new URLSearchParams({
+                date: inputDate.value,
+                time: inputTime.value,
+                room: inputRoom.value
             });
 
-            seatMap.appendChild(btn);
+            const res = await fetch(`/reservation/search-availability?${params.toString()}`);
+            const data = await res.json();
+
+            if (!res.ok) {
+                throw new Error(data.error || "Could not load seat availability.");
+            }
+
+            const capacity = data.capacity || 20;
+            const occupiedSeats = Array.isArray(data.occupiedSeats) ? data.occupiedSeats : [];
+
+            for (let i = 1; i <= capacity; i++) {
+                const btn = document.createElement("button");
+                btn.type = "button";
+                btn.textContent = i;
+                btn.dataset.seat = String(i);
+                btn.classList.add("seat");
+
+                if (occupiedSeats.includes(i)) {
+                    btn.classList.add("occupied");
+                    btn.disabled = true;
+                } else {
+                    btn.classList.add("available");
+                    btn.disabled = false;
+
+                    btn.addEventListener("click", () => {
+                        document.querySelectorAll(".seat.selected").forEach(el => {
+                            el.classList.remove("selected");
+                            el.classList.add("available");
+                        });
+
+                        btn.classList.remove("available");
+                        btn.classList.add("selected");
+
+                        selectedSeat = String(i);
+                        infoSeat.textContent = selectedSeat;
+                        infoRoom.textContent = inputRoom.value;
+
+                        if (reserveBtn && reserveBtn.tagName === "BUTTON") {
+                            reserveBtn.disabled = false;
+                        }
+
+                        if (hiddenSeat) hiddenSeat.value = selectedSeat;
+                    });
+                }
+
+                seatMap.appendChild(btn);
+            }
+        } catch (err) {
+            seatMap.innerHTML = `<p class="text-danger">Could not load seats.</p>`;
         }
     }
 
