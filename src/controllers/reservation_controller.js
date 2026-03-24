@@ -57,67 +57,66 @@ exports.getStudentReservation = async (req, res) => {
 };
 
 exports.postStudentReservation = async (req, res) => {
-    const errors = validationResult(req);
-    if (!req.session.userId) {
-        return res.redirect('/auth/login');
-    }
-
-    if (!errors.isEmpty()) {
-        const slots = await Slot.find({ status: 'available' }).populate('lab');
-        return res.status(400).render('reservation', { errors: errors.array(), slots });
-    }
-
     try {
         const userId = req.session.userId;
-        const { slotId, labName, date, timeIn, seatNum, isAnonymous } = req.body;
-
         if (!userId) return res.redirect('/auth/login');
 
-        let slot;
+        const {labName, date, timeIn, timeOut, seatNum, isAnonymous} = req.body;
 
-        if (slotId) slot = await Slot.findById(slotId);
+        if (!labName || !date || !timeIn || !seatNum) {
+            return res.status(400).render('reservation', {
+                error: 'All booking fields are required.'
+            });
+        }
 
-        else if (labName && date && timeIn && seatNum) {
-            const lab = await Lab.findOne({labName});
-            if (!lab) {
-                return res.status(404).render('reservation', {
-                    error: 'Lab not found.',
-                    isLoggedIn: true
-                });
-            }
+        const lab = await Lab.findOne({labName});
 
-            const [year, month, day] = date.split('-').map(Number);
-            const slotDate = new Date(year, month - 1, day, 0, 0, 0, 0);
+        if(!lab) {
+            return res.status(400).render('reservation', {
+                error: 'Lab not found.'
+            });
+        }
 
-            slot = await Slot.findOne({
+        const [year, month, day] = date.split('-').map(Number);
+        const slotDate = new Date(year, month - 1, day, 0, 0, 0, 0);
+
+        let slot = await Slot.findOne({
+            lab: lab._id,
+            date: slotDate,
+            startTime: timeIn,
+            seatNum: Number(seatNum)
+        });
+
+        if (slot && slot.status !== 'available') {
+            return res.status(400).render('reservation', {
+                error: 'Seat not available.'
+            });
+        }
+
+        if(!slot) {
+            slot = await Slot.create({
                 lab: lab._id,
                 date: slotDate,
                 startTime: timeIn,
-                seatNum: Number(seatNum)
+                endTime: timeOut,
+                seatNum: Number(seatNum),
+                status: 'reserved'
             });
-        }
-        else {
-            return res.status(400).render('reservation', {
-                error: 'Incomplete reservation details.',
-                isLoggedIn: true
-            });
+        } else {
+            await Slot.findByIdAndUpdate(slot._id, {status: 'reserved'});
         }
 
-        if(!slot || slot.status !== 'available') {
-            return res.status(400).render('reservation', {
-                error: 'Slot is no longer available.',
-                isLoggedIn: true
-            });
-        }
-
-        await Reservation.create({ user: userId, slot: slot._id, isAnonymous: !!isAnonymous });
-        await Slot.findByIdAndUpdate(slot._id, { status: 'reserved' });
-        res.redirect('/reservation');
-    } catch (err) {
-        res.status(500).render('reservation', {
-            error: 'Could not create reservation.',
-            isLoggedIn: true
+        await Reservation.create({
+            user: userId,
+            slot: slot._id,
+            isAnonymous: !!isAnonymous,
+            status: 'active'
         });
+
+        res.redirect('reservation');
+    }
+    catch (err) {
+        res.status(500).render('error', {message: 'Could not create reservation.'});
     }
 };
 
@@ -169,25 +168,39 @@ exports.searchAvailability = async (req, res) => {
         }
 
         const lab = await Lab.findOne({ labName: room }).lean();
-
         if (!lab) {
             return res.status(404).json({ error: 'Room not found.' });
         }
 
         const [year, month, day] = date.split('-').map(Number);
-        const slotDate = new Date(year, month - 1, day, 0, 0, 0, 0);
+        const searchDate = new Date(year, month - 1, day, 0, 0, 0, 0);
+        const nextDay = new Date(year, month - 1, day + 1, 0, 0, 0, 0);
 
-        const slots = await Slot.find({
+        const occupiedSlots = await Slot.find({
             lab: lab._id,
-            date: slotDate,
+            date: { $gte: searchDate, $lt: nextDay },
             startTime: time,
-            status: 'available'
+            status: { $in: ['reserved', 'walk-in'] }
         }).lean();
 
-        const availableSeats = slots.map(slot => slot.seatNum).sort((a, b) => a - b);
-        res.json({ availableSeats });
+        const occupiedSeats = occupiedSlots
+            .map(slot => Number(slot.seatNum))
+            .sort((a, b) => a - b);
+
+        const availableSeats = [];
+        for (let i = 1; i <= lab.capacity; i++) {
+            if (!occupiedSeats.includes(i)) {
+                availableSeats.push(i);
+            }
+        }
+
+        res.json({
+            room: lab.labName,
+            capacity: lab.capacity,
+            occupiedSeats,
+            availableSeats
+        });
     } catch (err) {
-        console.error('searchAvailability error:', err);
-        res.status(500).json({ error: 'Could not fetch available seats.' });
+        res.status(500).json({ error: 'Could not fetch seat availability.' });
     }
 };
