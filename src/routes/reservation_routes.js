@@ -4,7 +4,12 @@ const { body } = require('express-validator');
 const ctrl = require('../controllers/reservation_controller');
 const { requireStudent } = require('../middleware/auth');
 
-const reservationRules = [];
+const reservationRules = [
+    body('labName').notEmpty().withMessage('Please select a room.'),
+    body('date').notEmpty().withMessage('Please select a date.'),
+    body('timeIn').notEmpty().withMessage('Please select a time.'),
+    body('seatNum').notEmpty().withMessage('Please select a seat.')
+];
 
 const editRules = [
     body('remarks').optional().isLength({ max: 300 }).withMessage('Remarks must be 300 characters or fewer.')
