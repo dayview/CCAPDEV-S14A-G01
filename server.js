@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config({ path: './lab_system.env' });
 const MongoStore = require('connect-mongo');
 const express = require('express');
 const session = require('express-session');
@@ -7,6 +7,9 @@ const path = require('path');
 const connectDB = require('./src/config/db');
 
 const app = express();
+
+app.set('trust proxy', 1);
+
 const PORT = process.env.PORT || 3000;
 
 connectDB();
@@ -32,6 +35,7 @@ app.use(session({
     cookie: {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
         maxAge: 1000 * 60 * 60 * 24
     }
 }));
