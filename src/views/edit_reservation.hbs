@@ -1,37 +1,51 @@
 <link rel="stylesheet" href="/css/edit_reservation.css">
-<script src="/js/editreservation.js" defer></script>
 
+{{#if hasReservation}}
 <section class="left-panel">
-    <div class="information-block">
-        <h1>Booking Information</h1>
-        <p>Date: <span id="infoDate"></span></p>
-        <p>Time In: <span id="infoTimeIn"></span></p>
-        <p>Time Out: <span id="infoTimeOut"></span></p>
-        <p>Room: <span id="infoRoom"></span></p>
-        <p>Seat: <span id="infoSeat"></span></p>
-        <div class="r_button">
-            <button class="reserve-btn" type="button" disabled>Edit Reserve</button>
-        </div>
-    </div>
+    <form id="editReservationForm" action="/reservation/edit/{{reservation._id}}" method="POST" data-reservation-id="{{reservation._id}}" data-current-slot-id="{{reservation.slot._id}}">
+        <div class="information-block">
+            <h1>BOOKING INFORMATION</h1>
+            <p>Date: <span id="infoDate"></span></p>
+            <p>Time In: <span id="infoTimeIn"></span></p>
+            <p>Time Out: <span id="infoTimeOut"></span></p>
+            <p>Room: <span id="infoRoom"></span></p>
+            <p>Seat: <span id="infoSeat">--</span></p>
 
-    <strong class="edit-label">Edit Reservation</strong>
-    <ul class="edit-list">
-        <li>You can edit your seat, room, date, and time here</li>
-        <li>Please review the booking information before saving</li>
-        <li>If you have multiple reservations, the latest one will be the one to be changed</li>
-    </ul>
+            <input type="hidden" id="hiddenLab" name="labName" value="">
+            <input type="hidden" id="hiddenDate" name="date" value="">
+            <input type="hidden" id="hiddenTimeIn" name="timeIn" value="">
+            <input type="hidden" id="hiddenTimeOut" name="timeOut" value="">
+            <input type="hidden" id="hiddenSeat" name="seatNum" value="">
+            <input type="hidden" name="originalDate" id="originalDate" value="{{formattedDate}}">
+            <input type="hidden" id="selectedSeat" name="seatNum" value="">
+
+            <input type="checkbox" name="isAnonymous" id="anonymous" {{#if reservation.isAnonymous}}checked{{/if}} />
+            <label for="anonymous">Anonymous Reservation</label>
+
+            <div class="r_button">
+                <button type="submit" class="reserve-btn">Save Changes</button>
+            </div>
+        </div>
+
+        <h2 class="edit-label">Edit Reservation</h2>
+        <ul class="edit-list">
+            <li>You can edit your seat, room, date, and time here</li>
+            <li>Please review the booking information before saving</li>
+            <li>Only your latest reservation can be edited</li>
+        </ul>
+    </form>
 </section>
 
 <section class="right-panel">
     <div class="selection">
         <section class="r_box">
             <label for="reserve_date">Date</label>
-            <input type="date" id="reserve_date" class="form-control">
+            <input type="date" id="reserve_date" name="date" class="form-control" />
         </section>
 
         <section class="r_box">
             <label for="reserve_time" class="form-label">Time In</label>
-            <select id="reserve_time" class="form-control">
+            <select id="reserve_time" name="time" class="form-control">
                 <option value="07:30">07:30</option>
                 <option value="08:00">08:00</option>
                 <option value="08:30">08:30</option>
@@ -63,11 +77,13 @@
 
         <section class="r_box">
             <label for="room_num" class="form-label">Room</label>
-            <select id="room_num" class="form-control">
-                <option value="">Select Room</option>
+            <select id="room_num" name="room" class="form-control">
+                <option value="">Select a room</option>
                 <option value="GK302A">GK302A</option>
                 <option value="GK302B">GK302B</option>
                 <option value="GK304B">GK304B</option>
+                <option value="GK305A">GK305A</option>
+                <option value="GK305B">GK305B</option>
             </select>
         </section>
     </div>
@@ -76,13 +92,28 @@
         <div class="seat-card">
             <h4 class="board-title">Board</h4>
         </div>
-        <div id="seat_map"></div>
+        <div class="seat_map" id="seat_map"></div>
     </div>
 
+    <section class="r_box remarks-box">
+        <label for="remarks">Remarks</label>
+        <textarea id="remarks" name="remarks" rows="3" class="form-control">{{reservation.remarks}}</textarea>
+    </section>
+
     <div class="legend">
-        <span class="legend-box occupied"></span> <span class="text-black">Occupied</span>
-        <span class="legend-box repair"></span> <span class="text-black">Under Repair</span>
-        <span class="legend-box available"></span> <span class="text-black">Available</span>
-        <span class="legend-box selected"></span> <span class="text-black">Selected</span>
+        <span class="legend-box occupied"></span><span class="text-white">Occupied</span>
+        <span class="legend-box repair"></span><span class="text-white">Under Repair</span>
+        <span class="legend-box available"></span><span class="text-white">Available</span>
+        <span class="legend-box selected"></span><span class="text-white">Selected</span>
     </div>
 </section>
+
+<script src="/js/editreservation.js" defer></script>
+
+{{else}}
+<section class="no-reservation">
+    <h2>No Active Reservations</h2>
+    <p>{{message}}</p>
+    <a href="/reservation/student" class="btn btn-primary">Make a Reservation</a>
+</section>
+{{/if}}

@@ -9,14 +9,8 @@ const inputTime = document.getElementById("reserve_time");
 const inputRoom = document.getElementById("room_num");
 
 const seatMap = document.getElementById("seat_map");
-const reserveBtn = document.querySelector(".reserve-btn");
-
-const labLayout = [
-    "1", "2", "3", "4", "5",
-    "6", "7", "8", "9", "10",
-    "11", "12", "13", "14", "15",
-    "16", "17", "18", "19", "20"
-];
+const selectedSeatInput = document.getElementById("selectedSeat");
+const editForm = document.getElementById("editReservationForm");
 
 let selectedSeat = null;
 
@@ -48,37 +42,72 @@ function updateTimeInfo() {
     infoTimeOut.textContent = formatTime(timeOut);
 }
 
-function renderSeats() {
-    if (!seatMap) {
-        console.log("seat_map not found");
+async function fetchAvailableSeats() {
+    const date = inputDate?.value;
+    const time = inputTime?.value;
+    const room = inputRoom?.value;
+
+    if (!date || !time || !room) {
+        return [];
+    }
+
+    try {
+        const response = await fetch(
+            `/reservation/search-availability?date=${encodeURIComponent(date)}&time=${encodeURIComponent(time)}&room=${encodeURIComponent(room)}`
+        );
+        const data = await response.json();
+        return data.availableSeats || [];
+    } catch (err) {
+        console.error("Error fetching available seats:", err);
+        return [];
+    }
+}
+
+async function renderSeats() {
+    if (!seatMap) return;
+
+    const date = inputDate?.value;
+    const time = inputTime?.value;
+    const room = inputRoom?.value;
+    
+    if (!date || !time || !room) {
+        seatMap.innerHTML = "<p>Please select date, time, and room</p>";
         return;
     }
+
+    const availableSeats = await fetchAvailableSeats();
 
     seatMap.innerHTML = "";
     selectedSeat = null;
     infoSeat.textContent = "--";
-    reserveBtn.disabled = true;
+    if (selectedSeatInput) selectedSeatInput.value = "";
 
-    labLayout.forEach(seatId => {
+    for (let i = 1; i <= 20; i++) {
         const btn = document.createElement("button");
         btn.type = "button";
-        btn.textContent = seatId;
+        btn.textContent = i;
         btn.classList.add("seat");
-
-        btn.addEventListener("click", () => {
-            document.querySelectorAll(".seat.selected").forEach(el => {
-                el.classList.remove("selected");
+        
+        if (availableSeats.includes(i)) {
+            btn.classList.add("available");
+            btn.addEventListener("click", () => {
+                document.querySelectorAll(".seat.selected").forEach(el => {
+                    el.classList.remove("selected");
+                });
+                btn.classList.add("selected");
+                selectedSeat = i;
+                infoSeat.textContent = i;
+                if (selectedSeatInput) selectedSeatInput.value = i;
             });
-
-            btn.classList.add("selected");
-            selectedSeat = seatId;
-            infoSeat.textContent = seatId;
-            reserveBtn.disabled = false;
-        });
-
+        } else {
+            btn.classList.add("reserved");
+            btn.disabled = true;
+        }
+        
         seatMap.appendChild(btn);
-    });
+    }
 }
+
 
 const today = new Date();
 const maxDate = new Date();
@@ -87,10 +116,11 @@ maxDate.setDate(today.getDate() + 6);
 if (inputDate) {
     inputDate.min = formatDate(today);
     inputDate.max = formatDate(maxDate);
-    inputDate.value = formatDate(today);
-    infoDate.textContent = inputDate.value;
+}
 
-    inputDate.addEventListener("input", () => {
+
+if (inputDate) {
+    inputDate.addEventListener("change", () => {
         infoDate.textContent = inputDate.value;
         renderSeats();
     });
@@ -108,9 +138,53 @@ if (inputRoom) {
         infoRoom.textContent = inputRoom.value || "--";
         renderSeats();
     });
+}
 
-    infoRoom.textContent = inputRoom.value || "--";
+
+if (editForm) {
+    editForm.addEventListener("submit", (e) => {
+        if (!selectedSeat) {
+            e.preventDefault();
+            alert("Please select a seat");
+            return false;
+        }
+    });
+}
+
+
+async function loadCurrentReservation() {
+    const reservationId = editForm?.dataset.reservationId;
+    if (!reservationId) return;
+    
+    try {
+        const response = await fetch(`/reservation/edit/${reservationId}/data`);
+        const data = await response.json();
+        
+        if (data.reservation) {
+            const slotDate = new Date(data.reservation.slot.date);
+            inputDate.value = formatDate(slotDate);
+            inputTime.value = data.reservation.slot.startTime;
+            inputRoom.value = data.reservation.slot.lab.labName;
+            
+            infoDate.textContent = inputDate.value;
+            infoRoom.textContent = inputRoom.value;
+            updateTimeInfo();
+            
+            await renderSeats();
+            
+            
+            const currentSeatNum = data.reservation.slot.seatNum;
+            const seats = document.querySelectorAll(".seat");
+            seats.forEach(seat => {
+                if (parseInt(seat.textContent) === currentSeatNum && !seat.disabled) {
+                    seat.click();
+                }
+            });
+        }
+    } catch (err) {
+        console.error("Error loading reservation:", err);
+    }
 }
 
 updateTimeInfo();
-renderSeats();
+loadCurrentReservation();

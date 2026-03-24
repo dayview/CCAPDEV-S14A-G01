@@ -40,6 +40,7 @@ body {
     border-radius: 10px;
     border: 1px solid #CFCFCF;
     outline: none;
+    padding: 8px;
 }
 
 .r_button {
@@ -65,12 +66,23 @@ body {
     align-items: center;
 }
 
-.Edit-list {
-    position: absolute;
+.edit-label {
     font-weight: bold;
+    margin: 24px 0 12px 0;
+    position: static;
+    font-size: 1.2rem;
 }
 
-#seat_map {
+.edit-list {
+    margin-top: 10px;
+    padding-left: 20px;
+}
+
+.edit-list li {
+    margin-bottom: 8px;
+}
+
+.seat_map {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     gap: 12px;
@@ -104,10 +116,65 @@ body {
     opacity: 0.7;
 }
 
-.seat.repair {
-    background-color: #F6C344;
-    border-color: #D9A520;
-    color: #1B1B1B;
-    cursor: not-allowed;
+.remarks-box {
+    margin-top: 20px;
+    width: 100%;
 }
 
+.remarks-box textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #CFCFCF;
+    resize: vertical;
+    font-family: inherit;
+    background-color: white;
+}
+
+.information-block {
+    background-color: #F4F7F1;
+    padding: 20px;
+    border-radius: 16px;
+    margin-bottom: 20px;
+}
+
+.information-block h1 {
+    margin-top: 0;
+    font-size: 20px;
+}
+
+.legend {
+    margin-top: 20px;
+    display: flex;
+    gap: 15px;
+    padding: 10px;
+}
+
+.legend-box {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border-radius: 3px;
+    margin-right: 5px;
+}
+
+.legend-box.occupied {
+    background-color: #CFCFCF;
+}
+
+.legend-box.repair {
+    background-color: #F6C344;
+}
+
+.legend-box.available {
+    background-color: #669D31;
+}
+
+.legend-box.selected {
+    background-color: #EAF4DE;
+    border: 2px solid #669D31;
+}
+
+.text-white {
+    color: #1B1B1B;
+}
