@@ -1,4 +1,4 @@
-require('dotenv').config({ path: './lab_system.env' });
+require('dotenv');
 const MongoStore = require('connect-mongo');
 const express = require('express');
 const session = require('express-session');
