@@ -1,0 +1,44 @@
+<link rel="stylesheet" href="/css/delete_reservation.css">
+
+<section class="table-page">
+    <h2 class="table-title">Delete Reservation</h2>
+
+    {{#if reservations.length}}
+    <div class="table-content">
+        <table id="reservationtable" class="reservation-table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Time In</th>
+                    <th>Room</th>
+                    <th>Seat</th>
+                    <th>Anonymous</th>
+                    <th>Status</th>
+                    <th class="deletebtn"></th>
+                </tr>
+            </thead>
+            <tbody id="reservationbody">
+                {{#each reservations}}
+                <tr>
+                    <td>{{this.date}}</td>
+                    <td>{{this.timeIn}}</td>
+                    <td>{{this.room}}</td>
+                    <td>{{this.seat}}</td>
+                    <td>{{#if this.isAnonymous}}Yes{{else}}No{{/if}}</td>
+                    <td><span class="status">{{this.status}}</span></td>
+                    <td class="delete">
+                        <form action="/reservation/delete/{{this._id}}" method="POST" onsubmit="return confirm('Delete this reservation?')">
+                            <button type="submit" class="deletebtn">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+    {{else}}
+    <div id="noreservation" class="no-reservation">
+        You have no reservation/s.
+    </div>
+    {{/if}}
+</section>
