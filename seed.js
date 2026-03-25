@@ -87,22 +87,22 @@ async function seed() {
     const GK305B = insertedLabs.find(l => l.labName === 'GK305B')._id;
 
     const slots = [
-    { lab: GK302A, date: d(0), startTime: '08:00', endTime: '09:30', seatNum: 1, status: 'reserved' },
-    { lab: GK302A, date: d(0), startTime: '08:00', endTime: '09:30', seatNum: 2, status: 'reserved' },
-    { lab: GK302A, date: d(0), startTime: '10:00', endTime: '11:30', seatNum: 1, status: 'available' },
-    { lab: GK302A, date: d(0), startTime: '10:00', endTime: '11:30', seatNum: 2, status: 'available' },
-    { lab: GK302A, date: d(0), startTime: '13:00', endTime: '14:30', seatNum: 1, status: 'reserved' },
-    { lab: GK302A, date: d(0), startTime: '15:00', endTime: '16:30', seatNum: 1, status: 'reserved' },
-    { lab: GK302B, date: d(0), startTime: '08:00', endTime: '09:30', seatNum: 5, status: 'walk-in' },
-    { lab: GK302B, date: d(0), startTime: '13:00', endTime: '14:30', seatNum: 3, status: 'available' },
-    { lab: GK302B, date: d(0), startTime: '16:00', endTime: '17:30', seatNum: 1, status: 'available' },
-    { lab: GK304B, date: d(0), startTime: '09:00', endTime: '10:30', seatNum: 10, status: 'reserved' },
-    { lab: GK304B, date: d(0), startTime: '14:00', endTime: '15:30', seatNum: 7, status: 'available' },
-    { lab: GK304B, date: d(0), startTime: '16:00', endTime: '17:30', seatNum: 2, status: 'available' },
-    { lab: GK305A, date: d(0), startTime: '08:00', endTime: '09:30', seatNum: 3, status: 'available' },
-    { lab: GK305A, date: d(0), startTime: '10:00', endTime: '11:30', seatNum: 5, status: 'reserved' },
-    { lab: GK305B, date: d(0), startTime: '09:00', endTime: '10:30', seatNum: 2, status: 'available' },
-    { lab: GK305B, date: d(0), startTime: '14:00', endTime: '15:30', seatNum: 4, status: 'reserved' }
+    { lab: GK302A, date: d(0), startTime: '08:00', endTime: '08:30', seatNum: 1, status: 'reserved' },
+    { lab: GK302A, date: d(0), startTime: '09:00', endTime: '09:30', seatNum: 2, status: 'reserved' },
+    { lab: GK302A, date: d(0), startTime: '10:00', endTime: '10:30', seatNum: 1, status: 'available' },
+    { lab: GK302A, date: d(0), startTime: '11:00', endTime: '11:30', seatNum: 2, status: 'available' },
+    { lab: GK302A, date: d(0), startTime: '13:00', endTime: '13:30', seatNum: 1, status: 'reserved' },
+    { lab: GK302A, date: d(0), startTime: '15:00', endTime: '15:30', seatNum: 1, status: 'reserved' },
+    { lab: GK302B, date: d(0), startTime: '08:00', endTime: '08:30', seatNum: 5, status: 'walk-in' },
+    { lab: GK302B, date: d(0), startTime: '13:00', endTime: '13:30', seatNum: 3, status: 'available' },
+    { lab: GK302B, date: d(0), startTime: '16:00', endTime: '16:30', seatNum: 1, status: 'available' },
+    { lab: GK304B, date: d(0), startTime: '09:00', endTime: '09:30', seatNum: 10, status: 'reserved' },
+    { lab: GK304B, date: d(0), startTime: '14:00', endTime: '14:30', seatNum: 7, status: 'available' },
+    { lab: GK304B, date: d(0), startTime: '16:00', endTime: '16:30', seatNum: 2, status: 'available' },
+    { lab: GK305A, date: d(0), startTime: '08:00', endTime: '08:30', seatNum: 3, status: 'available' },
+    { lab: GK305A, date: d(0), startTime: '10:00', endTime: '10:30', seatNum: 5, status: 'reserved' },
+    { lab: GK305B, date: d(0), startTime: '09:00', endTime: '09:30', seatNum: 2, status: 'available' },
+    { lab: GK305B, date: d(0), startTime: '14:00', endTime: '14:30', seatNum: 4, status: 'reserved' }
 ];
 
     const insertedSlots = await Slot.insertMany(slots);
