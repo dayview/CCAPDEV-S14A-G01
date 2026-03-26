@@ -5,8 +5,14 @@ const Lab = require('../models/Lab');
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
 
-exports.getAdminHome = (req, res) => {
-    res.render('admin/admin_homepage', { layout: 'admin' });
+exports.getAdminHome = async (req, res) => {
+    try {
+        const user = await User.findById(req.session.userId).lean();
+        res.render('admin/admin_homepage', { layout: 'admin', username: user?.username });
+    } catch (err) {
+        console.error('getAdminHome error:', err);
+        res.status(500).render('error', { message: 'Could not load dashboard.' });
+    }
 };
 
 exports.getAdminLogin = (req, res) => {
@@ -15,13 +21,18 @@ exports.getAdminLogin = (req, res) => {
 
 exports.postAdminLogin = async (req, res) => {
     try {
-        const { username, password } = req.body;
+        const { username, password, remember } = req.body;
         const admin = await User.findOne({ username, role: 'admin' });
         if (!admin || !(await bcrypt.compare(password, admin.password))) {
             return res.render('admin/admin_login', { layout: 'admin', isLoginPage: true, error: 'Invalid admin credentials.' });
         }
         req.session.userId = admin._id;
         req.session.isAdmin = true;
+        if (remember) {
+            req.session.cookie.maxAge = 1000 * 60 * 60 * 24 * 30; // 30 days
+        } else {
+            req.session.cookie.expires = false; // session cookie, expires on browser close
+        }
         res.redirect('/admin');
     } catch (err) {
         console.error('postAdminLogin error:', err);
@@ -33,21 +44,12 @@ exports.getAdminLogout = (req, res) => {
     req.session.destroy(() => res.redirect('/admin/login'));
 };
 
-exports.getAdminReservations = async (req, res) => {
-    try {
-        const reservations = await Reservation.find()
-            .populate({ path: 'slot', populate: { path: 'lab' } })
-            .populate('user')
-            .lean();
-        res.render('admin/admin_reservation', { layout: 'admin', reservations });
-    } catch (err) {
-        console.error('getAdminReservations error:', err);
-        res.status(500).render('admin/admin_reservation', { layout: 'admin', error: 'Could not load reservations.' });
-    }
+exports.getAdminReservations = (req, res) => {
+    res.render('admin/admin_reservation', { layout: 'admin' });
 };
 
 exports.getAdminStudentReservations = (req, res) => {
-    res.render('admin/admin_reservation', { layout: 'admin' });
+    res.redirect('/admin/reservations');
 };
 
 exports.getAdminStudentSearch = async (req, res) => {
@@ -80,7 +82,8 @@ exports.getAdminStudentSearch = async (req, res) => {
 exports.getAdminSlotsOverview = async (req, res) => {
     try {
         const labs = await Lab.find().sort({ labName: 1 }).lean();
-        res.render('admin/admin_slot_overview', { layout: 'admin', labs });
+        const user = await User.findById(req.session.userId).lean();
+        res.render('admin/admin_slot_overview', { layout: 'admin', labs, username: user?.username });
     } catch (err) {
         console.error('getAdminSlotsOverview error:', err);
         res.status(500).render('admin/admin_slot_overview', { layout: 'admin', error: 'Could not load slots.' });
@@ -176,14 +179,10 @@ exports.getAdminSlotSeats = async (req, res) => {
 };
 
 exports.getAdminSlotReservation = async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-    }
-
     try {
         const labs = await Lab.find().lean();
-        res.render('admin/admin_slot_reservation', { layout: 'admin', labs });
+        const user = await User.findById(req.session.userId).lean();
+        res.render('admin/admin_slot_reservation', { layout: 'admin', labs, username: user?.username });
     } catch (err) {
         console.error('getAdminSlotReservation error:', err);
         res.status(500).render('admin/admin_slot_reservation', { layout: 'admin', error: 'Could not load slot details.' });
@@ -237,7 +236,7 @@ exports.postAdminSlotReservation = async (req, res) => {
                     status: 'reserved'
                 });
             } else {
-                await Slot.findByIdAndUpdate(slot._id, { status: 'reserved', endTime: timeOut });
+                await Slot.findByIdAndUpdate(slot._id, { status: 'reserved', endTime: timeOut }, { runValidators: true });
             }
 
             await Reservation.create({
@@ -284,7 +283,7 @@ exports.postAdminSlotRemoval = async (req, res) => {
                 continue;
             }
 
-            await Slot.findByIdAndUpdate(slot._id, { status: 'available' });
+            await Slot.findByIdAndUpdate(slot._id, { status: 'available' }, { runValidators: true });
             await Reservation.updateMany({ slot: slot._id, status: 'active' }, { status: 'cancelled' });
             results.push({ seat: seatNum, success: true });
         }

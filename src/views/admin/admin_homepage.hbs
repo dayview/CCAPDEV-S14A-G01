@@ -6,7 +6,7 @@
             <div class="user_box">
                 <div class="user_top_row">
                     <div class="avatar"><img src="/images/profile.png"></div>
-                    <h2>Welcome ADMIN<br>(Username)!</h2>
+                    <h2>Welcome ADMIN<br>{{username}}!</h2>
                 </div>
             </div>
 
@@ -16,8 +16,12 @@
         </section>
 
         <section class="panel right_panel">
+            <div class="menu_box">
+                <a href="/admin/reservations" class="menu_link">RESERVATION HISTORY</a>
+            </div>
+            <div class="menu_box">
+                <a href="/admin/slots/reservation" class="menu_link">MANAGE RESERVATIONS</a>
+            </div>
         </section>
     </div>
 </main>
-<script src="/js/header_navigation.js"></script>
-<script src="/js/admin_homepage.js"></script>

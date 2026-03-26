@@ -6,7 +6,7 @@
             <div class="user_box">
                 <div class="user_top_row">
                     <div class="avatar"><img src="/images/profile.png"></div>
-                    <h2>Welcome ADMIN<br>(Username)!</h2>
+                    <h2>Welcome ADMIN<br>{{username}}!</h2>
                 </div>
             </div>
             <div class="menu_box active">SLOTS OVERVIEW</div>
@@ -26,9 +26,9 @@
                     <label class="input_label">Room:</label>
                     <select class="info_input" id="roomSelect">
                         <option value="">Select a room</option>
-                        <option value="GK302A">GK302A</option>
-                        <option value="GK302B">GK302B</option>
-                        <option value="GK304B">GK304B</option>
+                        {{#each labs}}
+                            <option value="{{this.labName}}">{{this.labName}}</option>
+                            {{/each}}
                     </select>
                 </div>
 
@@ -99,5 +99,4 @@
         </section>
     </div>
 </main>
-<script src="/js/header_navigation.js"></script>
 <script src="/js/admin_slot_overview.js"></script>
