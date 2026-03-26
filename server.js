@@ -1,4 +1,4 @@
-require('dotenv');
+require('dotenv').config();
 const MongoStore = require('connect-mongo');
 const express = require('express');
 const session = require('express-session');
@@ -7,9 +7,7 @@ const path = require('path');
 const connectDB = require('./src/config/db');
 
 const app = express();
-
 app.set('trust proxy', 1);
-
 const PORT = process.env.PORT || 3000;
 
 connectDB();
@@ -18,7 +16,10 @@ app.engine('hbs', engine({
     extname: '.hbs',
     defaultLayout: 'main',
     layoutsDir: path.join(__dirname, 'src/views/layouts'),
-    partialsDir: path.join(__dirname, 'src/views/partials')
+    partialsDir: path.join(__dirname, 'src/views/partials'),
+    helpers: {
+        formatDate: (date) => date ? new Date(date).toLocaleDateString() : ''
+    }
 }));
 app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, 'src/views'));
