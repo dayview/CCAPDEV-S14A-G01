@@ -4,8 +4,14 @@
         <a href="/reservation">Slots Overview</a>
         <a href="/lab/search">Search</a>
         <a href="/about">About</a>
-        <a href="/auth/login">Sign In</a>
-        <a href="/auth/signup">Sign Up</a>
+
+        {{#if user}}
+            <a style="pointer-events: none; color: gray; cursor: default;" title="You are already logged in">Sign In</a>
+            <a style="pointer-events: none; color: gray; cursor: default;" title="You are already logged in">Sign Up</a>
+        {{else}}
+            <a href="/auth/login">Sign In</a>
+            <a href="/auth/signup">Sign Up</a>
+        {{/if}}
         <a href="/auth/profile">My Profile</a>
     </div>
 </nav>

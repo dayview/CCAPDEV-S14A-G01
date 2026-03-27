@@ -1,15 +1,21 @@
 <link rel="stylesheet" href="/css/edit_reservation.css">
 <script src="/js/editreservation.js" defer></script>
 
-<form id = "editReservation" method = "POST">
+
+{{#if error}}
+    <script>
+        alert("{{error}}");
+    </script>
+{{/if}}
+<form id="editReservation" method="POST">
 <section class="left-panel">
     <div class="information-block">
         <h1>Booking Information</h1>
-        <p>Date: <span id="infoDate"></span></p>
-        <p>Time In: <span id="infoTimeIn"></span></p>
-        <p>Time Out: <span id="infoTimeOut"></span></p>
-        <p>Room: <span id="infoRoom"></span></p>
-        <p>Seat: <span id="infoSeat"></span></p>
+        <p>Date: <span id="infoDate">--</span></p>
+        <p>Time In: <span id="infoTimeIn">--</span></p>
+        <p>Time Out: <span id="infoTimeOut">--</span></p>
+        <p>Room: <span id="infoRoom">--</span></p>
+        <p>Seat: <span id="infoSeat">--</span></p>
         <div class="r_button">
             <button class="reserve-btn" type="submit" disabled>Save Changes</button>
         </div>
@@ -26,12 +32,12 @@
     <div class="selection">
         <section class="r_box">
             <label for="reserve_date">Date</label>
-            <input type="date" id="reserve_date" name = "date" class="form-control" required>
+            <input type="date" id="reserve_date" name="date" class="form-control" required>
         </section>
 
         <section class="r_box">
             <label for="reserve_time" class="form-label">Time In</label>
-            <select id="reserve_time" name = "timeIn" class="form-control" required>
+            <select id="reserve_time" name="timeIn" class="form-control" required>
                 <option value="07:30">07:30</option>
                 <option value="08:00">08:00</option>
                 <option value="08:30">08:30</option>
@@ -61,22 +67,24 @@
             </select>
         </section>
 
-        <label for = "reservationSelect"> Choose Reservation </label>
-        <select id="reservationSelect" class="form-control" required>
-            <option value="">Select Reservation </option>
-            {{#each reservations}}
-                <option
-                    value = "{{this._id}}"
-                    data-date = "{{this.slot.date}}"
-                    data-timein = "{{this.slot.startTime}}"
-                    data-timeout = "{{this.slot.endTime}}"
-                    data-room = "{{this.slot.lab.labName}}"
-                    data-seat = "{{this.slot.seatNum}}"
-                >
-                    {{this.displayLabel}}
-                </option>
-            {{/each}}
-        </select>
+        <section class="r_box">
+            <label for="reservationSelect">Choose Reservation</label>
+            <select id="reservationSelect" class="form-control" required>
+                <option value="">Select Reservation</option>
+                {{#each reservations}}
+                    <option
+                        value="{{this._id}}"
+                        data-date="{{this.dateValue}}"
+                        data-timein="{{this.slot.startTime}}"
+                        data-timeout="{{this.slot.endTime}}"
+                        data-room="{{this.slot.lab.labName}}"
+                        data-seat="{{this.slot.seatNum}}"
+                    >
+                        {{this.displayLabel}}
+                    </option>
+                {{/each}}
+            </select>
+        </section>
     </div>
 </section>
 </form>

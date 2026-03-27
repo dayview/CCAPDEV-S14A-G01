@@ -112,9 +112,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 if (occupiedSeats.includes(i)) {
                     btn.classList.add("occupied");
-                    btn.disabled = true;
+                    
                     btn.addEventListener("click", () => {
-                        alert(`Not available. This seat has been reserved by: ${occupiedInfo.reservedBy}`);
+                    
+                        const seatDetails = occupiedSeatMap[i];
+                        alert(`Not available. This seat has been reserved by: ${seatDetails.reservedBy}`);
                     });
                 } else {
                     btn.classList.add("available");
