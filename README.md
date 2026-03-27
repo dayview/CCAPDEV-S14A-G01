@@ -28,7 +28,7 @@ https://ccapdev-s14a-g01.onrender.com
 - View seat occupancy per lab, date, and time slot
 
 ## Technologies Used
-- **Frontend**: HTML5, CSS3, JavaScript, Bootstrap 5
+- **Frontend**: HTML5, CSS3, JavaScript
 - **Backend**: Node.js, Express.js
 - **Database**: MongoDB with Mongoose
 - **Template Engine**: Handlebars (express-handlebars)
