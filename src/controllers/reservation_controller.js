@@ -3,71 +3,35 @@ const Slot = require('../models/Slot');
 const Lab = require('../models/Lab');
 const { validationResult } = require('express-validator');
 
+function formatReservations(rawReservations) {
+    return rawReservations.map(reservation => {
+        const localDate = new Date(reservation.slot.date);
+        const adjustedDate = new Date(localDate.getTime() - localDate.getTimezoneOffset() * 60000);
+        const dateValue = adjustedDate.toISOString().split('T')[0];
+
+        return {
+            ...reservation,
+            dateValue,
+            displayLabel: `${reservation.slot.lab.labName} | Seat ${reservation.slot.seatNum} | ${dateValue} | ${reservation.slot.startTime} - ${reservation.slot.endTime}`
+        };
+    });
+}
+
 exports.getSearchPage = async (req, res) => {
     try {
         res.render('search');
     } catch (err) {
-        console.error('getSearchPage error:', err);
         res.status(500).render('error', { message: 'Could not load search page.'});
-    }
-};
-
-exports.getEditPage = async (req, res) => {
-    try {
-        const userId = req.session.userId;    
-        const latestReservation = await Reservation.findOne({ user: userId, status: 'active' }).populate({path: 'slot',populate: { path: 'lab' }}).sort({ createdAt: -1 }).lean();
-        
-      
-        if (!latestReservation) {
-            return res.render('edit_reservation', { 
-                hasReservation: false,
-                message: 'You have no active reservations to edit.'
-            });
-        }
-        
-        
-        const formattedDate = latestReservation.slot.date.toISOString().split('T')[0];
-        
-        
-        res.render('edit_reservation', { 
-            reservation: latestReservation,
-            formattedDate: formattedDate,
-            hasReservation: true
-        });
-    } catch (err) {
-        console.error('getEditPage error:', err);
-        res.status(500).render('error', { message: 'Could not load edit page.' });
     }
 };
 
 exports.getDeletePage = async (req, res) => {
     try {
-        const userId = req.session.userId;
-        
-        
-        const reservations = await Reservation.find({ user: userId, status: 'active' }).populate({ path: 'slot',populate: { path: 'lab' }}).sort({ createdAt: -1 }); 
-        
-        
-        const formattedReservations = reservations.map(reservation => ({
-            _id: reservation._id,
-            date: reservation.slot.date.toISOString().split('T')[0],
-            timeIn: reservation.slot.startTime,
-            room: reservation.slot.lab.labName,
-            seat: reservation.slot.seatNum,
-            isAnonymous: reservation.isAnonymous,
-            status: reservation.status
-        }));
-        
-        res.render('delete_reservation', { 
-            reservations: formattedReservations,
-            hasReservations: formattedReservations.length > 0
-        });
+        res.render('delete_reservation', { reservations: [] });
     } catch (err) {
-        console.error('getDeletePage error:', err);
         res.status(500).render('error', { message: 'Could not load delete page.' });
     }
 };
-
 exports.getReservationOverview = async (req, res) => {
     try {
         res.render('reservation', {
@@ -86,7 +50,7 @@ exports.getStudentReservation = async (req, res) => {
         const reservations = await Reservation.find({user: req.session.userId}).populate({
             path: 'slot',
             populate: {path: 'lab'}
-        }).lean();
+        }).sort({createdAt: -1}).lean();
         res.render('reservation_history', {reservations});
     }
     catch (err) {
@@ -151,188 +115,185 @@ exports.postStudentReservation = async (req, res) => {
             status: 'active'
         });
 
-        res.redirect('reservation');
+        res.redirect('/reservation');
     }
     catch (err) {
         res.status(500).render('error', {message: 'Could not create reservation.'});
     }
 };
 
-exports.getEditReservation = async (req, res) => {
+
+exports.getEditPage = async (req, res) => {
     try {
-        const reservation = await Reservation.findById(req.params.id).populate('slot').lean();
-        res.render('edit_reservation', { reservation });
+        const userId = req.session.userId;
+        const rawReservations = await Reservation.find({
+            user: userId,
+            status: 'active'
+        }).populate({
+            path: 'slot',
+            populate: {path: 'lab'}
+        }).lean();
+        const reservations = formatReservations(rawReservations);
+        res.render('edit_reservation', {reservations});
     } catch (err) {
-        console.error('getEditReservation error:', err);
-        res.status(500).render('edit_reservation', { error: 'Could not load reservation.' });
+        res.status(500).render('error', { message: 'Could not load reservations.' });
     }
 };
 
-exports.getEditReservationData = async (req, res) => {
-    try {
-        const userId = req.session.userId;
-        const reservationId = req.params.id;
-        
-        const reservation = await Reservation.findOne({ _id: reservationId, user: userId,status: 'active'}).populate({ path: 'slot',populate: { path: 'lab' }});
-        
-        if (!reservation) {
-            return res.status(404).json({ error: 'Reservation not found' });
-        }
-        
-        res.json({ reservation });
-    } catch (err) {
-        console.error('getEditReservationData error:', err);
-        res.status(500).json({ error: 'Could not load reservation' });
-    }
-};
 
 exports.postEditReservation = async (req, res) => {
     const errors = validationResult(req);
-    const reservationId = req.params.id;
-    
-    if (!errors.isEmpty()) {
-        const reservation = await Reservation.findById(reservationId).populate({ path: 'slot',populate: { path: 'lab' }});
-        return res.status(400).render('edit_reservation', { 
-            errors: errors.array(), 
-            reservation 
-        });
-    }
 
     try {
-        const userId = req.session.userId;
-        const { date, time, room, seatNum, isAnonymous, remarks } = req.body;
-        
-        
-        const reservation = await Reservation.findOne({_id: reservationId, user: userId, status: 'active'}).populate('slot');
-        
+        const reservation = await Reservation.findOne({
+            _id: req.params.id,
+            user: req.session.userId
+        }).populate({
+            path: 'slot',
+            populate: {path: 'lab'}
+        });
+
         if (!reservation) {
-            return res.status(404).render('error', { message: 'Reservation not found or cannot be edited.' });
-        }
-        
-        
-        const lab = await Lab.findOne({ labName: room });
-        if (!lab) {
+            const rawReservations = await Reservation.find({
+                user: req.session.userId,
+                status: 'active'
+            }).populate({
+                path: 'slot',
+                populate: {path: 'lab'}
+            }).lean();
+
+            const reservations = formatReservations(rawReservations);
+
             return res.status(400).render('edit_reservation', {
-                error: 'Room not found.',
-                reservation: reservation
+                error: 'Reservation not found.',
+                reservations
             });
         }
-        
-        
-        const isChangingSlot = (date !== req.body.originalDate || 
-                               time !== reservation.slot.startTime || 
-                               room !== reservation.slot.lab.labName || 
-                               parseInt(seatNum) !== reservation.slot.seatNum);
-        
-        if (isChangingSlot) {
-            
-            const [year, month, day] = date.split('-').map(Number);
-            const slotDate = new Date(year, month - 1, day, 0, 0, 0, 0);
-            
-            
-            let targetSlot = await Slot.findOne({
-                lab: lab._id,
+
+        if(!errors.isEmpty()) {
+            const userId = req.session.userId;
+
+            const rawReservations = await Reservation.find({
+                user: userId,
+                status: 'active'
+            }).populate({
+                path: 'slot',
+                populate: {path: 'lab'}
+            }).lean();
+
+            const reservations = formatReservations(rawReservations);
+
+            return res.status(400).render('edit_reservation', {
+                errors: errors.array(),
+                reservations
+            });
+        }
+
+        const{date, timeIn} = req.body;
+
+        const [year, month, day] = date.split('-').map(Number);
+        const slotDate = new Date(year, month - 1, day, 0, 0, 0, 0);
+
+        const timeOutDate = new Date();
+        const [hours, minutes] = timeIn.split(':').map(Number);
+        timeOutDate.setHours(hours, minutes, 0, 0);
+        timeOutDate.setMinutes(timeOutDate.getMinutes() + 30);
+
+        const timeOut = timeOutDate.getHours().toString().padStart(2, '0') + ':' + timeOutDate.getMinutes().toString().padStart(2, '0');
+
+        const currentSlot = reservation.slot;
+
+        let newSlot = await Slot.findOne({
+            lab: currentSlot.lab._id,
+            date: slotDate,
+            startTime: timeIn,
+            seatNum: currentSlot.seatNum
+        });
+
+        if(newSlot && String(newSlot._id) !== String(currentSlot._id) && newSlot.status !== 'available') {
+            const rawReservations = await Reservation.find({
+                user: req.session.userId,
+                status: 'active'
+            }).populate({
+                path: 'slot',
+                populate: {path: 'lab'}
+            }).lean();
+
+            const reservations = formatReservations(rawReservations);
+
+            return res.status(409).render('edit_reservation', {
+                error: 'Slot not available.',
+                reservations
+            });
+        }
+
+        if(!newSlot) {
+            newSlot = await Slot.create({
+                lab: currentSlot.lab._id,
                 date: slotDate,
-                startTime: time,
-                seatNum: parseInt(seatNum)
+                startTime: timeIn,
+                endTime: timeOut,
+                seatNum: currentSlot.seatNum,
+                status: 'reserved'
             });
-            
-            
-            if (!targetSlot) {
-                targetSlot = await Slot.create({
-                    lab: lab._id,
-                    date: slotDate,
-                    startTime: time,
-                    endTime: getEndTime(time),
-                    seatNum: parseInt(seatNum),
-                    status: 'available'
-                });
-            }
-            
-            
-            if (targetSlot.status !== 'available') {
-                return res.status(400).render('edit_reservation', {
-                    error: 'This seat is no longer available for the selected schedule.',
-                    reservation: reservation
-                });
-            }
-            
-            
-            await Slot.findByIdAndUpdate(reservation.slot._id, { status: 'available' });
-            
-            
-            await Reservation.findByIdAndUpdate(reservationId, {
-                slot: targetSlot._id,
-                isAnonymous: !!isAnonymous,
-                remarks: remarks || ''
-            });
-            
-            
-            await Slot.findByIdAndUpdate(targetSlot._id, { status: 'reserved' });
-            
         } else {
-           
-            await Reservation.findByIdAndUpdate(reservationId, {
-                isAnonymous: !!isAnonymous,
-                remarks: remarks || ''
+            await Slot.findByIdAndUpdate(newSlot._id, {
+                status: 'reserved',
+                endTime: timeOut
             });
         }
-        
-        res.redirect('/reservation');
-        
+
+        await Reservation.findByIdAndUpdate(reservation._id, {
+            slot: newSlot._id
+        });
+
+        if (String(currentSlot._id) !== String(newSlot._id)) {
+            await Slot.findByIdAndUpdate(currentSlot._id, {
+                status: 'available'
+            });
+        }
+
+        res.redirect('/reservation/reservation_history');
     } catch (err) {
-        console.error('postEditReservation error:', err);
-        const reservation = await Reservation.findById(req.params.id).populate({ path: 'slot',populate: { path: 'lab' }});
+        const rawReservations = await Reservation.find({
+            user: req.session.userId,
+            status: 'active'
+        }).populate({
+            path: 'slot',
+            populate: {path: 'lab'}
+        }).lean();
+
+        const reservations = formatReservations(rawReservations);
+
         res.status(500).render('edit_reservation', {
             error: 'Could not update reservation.',
-            reservation: reservation
+            reservations
         });
     }
 };
 
 exports.postDeleteReservation = async (req, res) => {
     try {
-        const reservationId = req.params.id;
-        
-        console.log("Attempting to delete reservation:", reservationId);
-        
-        
-        const reservation = await Reservation.findById(reservationId).populate('slot');
-        
-        if (!reservation) {
-            console.log("Reservation not found");
-            return res.redirect('/reservation/delete');
-        }
-        
-        console.log("Found reservation. Slot ID:", reservation.slot._id);
-        console.log("Current slot status:", reservation.slot.status);
-        
-        
-        await Slot.findByIdAndUpdate(reservation.slot._id, { status: 'available' });
-        console.log("Slot updated to available");
-        
-        
-        await Reservation.findByIdAndUpdate(reservationId, { status: 'cancelled' });
-        console.log("Reservation updated to cancelled");
-        
-        res.redirect('/reservation/delete');
+        const reservation = await Reservation.findById(req.params.id);
+        await Slot.findByIdAndUpdate(reservation.slot, { status: 'available' });
+        await Reservation.findByIdAndUpdate(req.params.id, { status: 'cancelled' });
+        res.redirect('/reservation');
     } catch(err) {
-        console.error('postDeleteReservation error:', err);
-        res.redirect('/reservation/delete');
+        res.status(500).render('delete_reservation', { error: 'Could not cancel reservation.' });
     }
 };
 
 exports.searchAvailability = async (req, res) => {
     try {
-        const { date, time, room } = req.query;
+        const {date, time, room} = req.query;
 
         if (!date || !time || !room) {
-            return res.status(400).json({ error: 'Missing date, time, or room.' });
+            return res.status(400).json({error: 'Missing date, time, or room.'});
         }
 
-        const lab = await Lab.findOne({ labName: room }).lean();
+        const lab = await Lab.findOne({labName: room}).lean();
         if (!lab) {
-            return res.status(404).json({ error: 'Room not found.' });
+            return res.status(404).json({error: 'Room not found.'});
         }
 
         const [year, month, day] = date.split('-').map(Number);
@@ -341,10 +302,36 @@ exports.searchAvailability = async (req, res) => {
 
         const occupiedSlots = await Slot.find({
             lab: lab._id,
-            date: { $gte: searchDate, $lt: nextDay },
+            date: {$gte: searchDate, $lt: nextDay},
             startTime: time,
-            status: { $in: ['reserved', 'walk-in'] }
+            status: {$in: ['reserved', 'walk-in']}
         }).lean();
+
+        const slotIds = occupiedSlots.map(slot => slot._id);
+
+        const reservation = await Reservation.find({
+            slot: {$in: slotIds},
+            status: 'active'
+        }).populate('user').lean();
+
+        const reservationMap = {};
+        reservation.forEach(reservation => {
+            reservationMap[String(reservation.slot)] = reservation;
+        });
+
+        const occupiedSeatDetails = occupiedSlots.map(slot => {
+            const reservation = reservationMap[String(slot._id)];
+
+        let reservedBy = 'Unknown';
+        if (reservation.isAnonymous) reservedBy = 'Anonymous';
+        else reservedBy = `${reservation.user.firstName} ${reservation.user.lastName}`;
+
+        return {
+            seatNum: Number(slot.seatNum),
+            status: slot.status,
+            reservedBy
+        }
+    }).sort((a, b) => a.seatNum - b.seatNum);
 
         const occupiedSeats = occupiedSlots
             .map(slot => Number(slot.seatNum))
@@ -361,6 +348,7 @@ exports.searchAvailability = async (req, res) => {
             room: lab.labName,
             capacity: lab.capacity,
             occupiedSeats,
+            occupiedSeatDetails,
             availableSeats
         });
     } catch (err) {
