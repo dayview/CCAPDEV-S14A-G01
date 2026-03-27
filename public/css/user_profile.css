@@ -49,3 +49,17 @@
     font-weight: 800;
     font-size: 14px;
 }
+
+#delete_profile_btn {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+#delete_profile_btn:hover {
+    background-color: #c82333;
+}

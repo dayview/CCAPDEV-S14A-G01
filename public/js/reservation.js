@@ -112,10 +112,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 if (occupiedSeats.includes(i)) {
                     btn.classList.add("occupied");
-                    // We removed the 'btn.disabled = true' line here
                     
                     btn.addEventListener("click", () => {
-                        // We use occupiedSeatMap to get the correct user details
+                    
                         const seatDetails = occupiedSeatMap[i];
                         alert(`Not available. This seat has been reserved by: ${seatDetails.reservedBy}`);
                     });
