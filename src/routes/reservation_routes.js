@@ -12,12 +12,13 @@ const reservationRules = [
 ];
 
 const editRules = [
-    body('remarks').optional().isLength({ max: 300 }).withMessage('Remarks must be 300 characters or fewer.')
+    body('date').notEmpty().withMessage('Please select a date.'),
+    body('timeIn').notEmpty().withMessage('Please select a time.'),
 ];
 
 router.get('/', ctrl.getReservationOverview);
 
-router.get('/student', requireStudent, ctrl.getStudentReservation);
+router.get('/reservation_history', requireStudent, ctrl.getStudentReservation);
 router.post('/student', requireStudent, reservationRules, ctrl.postStudentReservation);
 
 router.get('/search', ctrl.getSearchPage);
@@ -26,7 +27,6 @@ router.get('/search-availability', ctrl.searchAvailability);
 router.get('/edit', requireStudent, ctrl.getEditPage);
 router.get('/delete', requireStudent, ctrl.getDeletePage);
 
-router.get('/edit/:id', requireStudent, ctrl.getEditReservation);
 router.post('/edit/:id', requireStudent, editRules, ctrl.postEditReservation);
 router.post('/delete/:id', requireStudent, ctrl.postDeleteReservation);
 
