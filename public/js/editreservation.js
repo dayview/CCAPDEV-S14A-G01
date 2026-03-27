@@ -1,190 +1,94 @@
+//information
 const infoDate = document.getElementById("infoDate");
 const infoTimeIn = document.getElementById("infoTimeIn");
 const infoTimeOut = document.getElementById("infoTimeOut");
 const infoRoom = document.getElementById("infoRoom");
 const infoSeat = document.getElementById("infoSeat");
 
+//inputs
 const inputDate = document.getElementById("reserve_date");
 const inputTime = document.getElementById("reserve_time");
 const inputRoom = document.getElementById("room_num");
 
+const anonymousReservation = document.getElementById("anonymous");
 const seatMap = document.getElementById("seat_map");
-const selectedSeatInput = document.getElementById("selectedSeat");
-const editForm = document.getElementById("editReservationForm");
+const reserveBtn = document.querySelector(".reserve-btn");
+
+const lab_layout = [
+    "1", "2", "3", "4", "5",
+    "6", "7", "8", "9", "10",
+    "11", "12", "13", "14", "15",
+    "16", "17", "18", "19", "20"
+];
+
 
 let selectedSeat = null;
 
-function formatDate(date) {
+function formatDate(date){
     return date.toISOString().split("T")[0];
 }
 
-function formatTime(time) {
-    return time.getHours().toString().padStart(2, "0") + ":" +
-           time.getMinutes().toString().padStart(2, "0");
-}
-
-function updateTimeInfo() {
-    if (!inputTime.value) {
-        infoTimeIn.textContent = "--";
-        infoTimeOut.textContent = "--";
-        return;
+function formatTime(time){
+    return (
+        time.getHours().toString().padStart(2, "0") + ":" + time.getMinutes().toString().padStart(2, "0")
+        );    
     }
-
-    const [hours, minutes] = inputTime.value.split(":").map(Number);
-
-    const timeIn = new Date();
-    timeIn.setHours(hours, minutes, 0, 0);
-
-    const timeOut = new Date(timeIn);
-    timeOut.setMinutes(timeOut.getMinutes() + 30);
-
-    infoTimeIn.textContent = formatTime(timeIn);
-    infoTimeOut.textContent = formatTime(timeOut);
-}
-
-async function fetchAvailableSeats() {
-    const date = inputDate?.value;
-    const time = inputTime?.value;
-    const room = inputRoom?.value;
-
-    if (!date || !time || !room) {
-        return [];
-    }
-
-    try {
-        const response = await fetch(
-            `/reservation/search-availability?date=${encodeURIComponent(date)}&time=${encodeURIComponent(time)}&room=${encodeURIComponent(room)}`
-        );
-        const data = await response.json();
-        return data.availableSeats || [];
-    } catch (err) {
-        console.error("Error fetching available seats:", err);
-        return [];
-    }
-}
-
-async function renderSeats() {
-    if (!seatMap) return;
-
-    const date = inputDate?.value;
-    const time = inputTime?.value;
-    const room = inputRoom?.value;
     
-    if (!date || !time || !room) {
-        seatMap.innerHTML = "<p>Please select date, time, and room</p>";
-        return;
-    }
-
-    const availableSeats = await fetchAvailableSeats();
-
-    seatMap.innerHTML = "";
-    selectedSeat = null;
-    infoSeat.textContent = "--";
-    if (selectedSeatInput) selectedSeatInput.value = "";
-
-    for (let i = 1; i <= 20; i++) {
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.textContent = i;
-        btn.classList.add("seat");
-        
-        if (availableSeats.includes(i)) {
-            btn.classList.add("available");
-            btn.addEventListener("click", () => {
-                document.querySelectorAll(".seat.selected").forEach(el => {
-                    el.classList.remove("selected");
-                });
-                btn.classList.add("selected");
-                selectedSeat = i;
-                infoSeat.textContent = i;
-                if (selectedSeatInput) selectedSeatInput.value = i;
-            });
-        } else {
-            btn.classList.add("reserved");
-            btn.disabled = true;
-        }
-        
-        seatMap.appendChild(btn);
-    }
-}
-
-
 const today = new Date();
 const maxDate = new Date();
 maxDate.setDate(today.getDate() + 6);
 
-if (inputDate) {
-    inputDate.min = formatDate(today);
-    inputDate.max = formatDate(maxDate);
-}
+inputDate.min = formatDate(today);
+inputDate.max = formatDate(maxDate);
+inputDate.value = formatDate(today);
+infoDate.textContent = inputDate.value;
 
-
-if (inputDate) {
-    inputDate.addEventListener("change", () => {
-        infoDate.textContent = inputDate.value;
-        renderSeats();
-    });
-}
-
-if (inputTime) {
-    inputTime.addEventListener("change", () => {
-        updateTimeInfo();
-        renderSeats();
-    });
-}
-
-if (inputRoom) {
-    inputRoom.addEventListener("change", () => {
-        infoRoom.textContent = inputRoom.value || "--";
-        renderSeats();
-    });
-}
-
-
-if (editForm) {
-    editForm.addEventListener("submit", (e) => {
-        if (!selectedSeat) {
-            e.preventDefault();
-            alert("Please select a seat");
-            return false;
-        }
-    });
-}
-
-
-async function loadCurrentReservation() {
-    const reservationId = editForm?.dataset.reservationId;
-    if (!reservationId) return;
+function updateTimeInfo() {
+    const [hours, minutes] = inputTime.value.split(":").map(Number);
+    const timeIn = new Date();
+    timeIn.setHours(hours);
+    timeIn.setMinutes(minutes);
+    timeIn.setSeconds(0);
+    timeIn.setMilliseconds(0);
     
-    try {
-        const response = await fetch(`/reservation/edit/${reservationId}/data`);
-        const data = await response.json();
-        
-        if (data.reservation) {
-            const slotDate = new Date(data.reservation.slot.date);
-            inputDate.value = formatDate(slotDate);
-            inputTime.value = data.reservation.slot.startTime;
-            inputRoom.value = data.reservation.slot.lab.labName;
-            
-            infoDate.textContent = inputDate.value;
-            infoRoom.textContent = inputRoom.value;
-            updateTimeInfo();
-            
-            await renderSeats();
-            
-            
-            const currentSeatNum = data.reservation.slot.seatNum;
-            const seats = document.querySelectorAll(".seat");
-            seats.forEach(seat => {
-                if (parseInt(seat.textContent) === currentSeatNum && !seat.disabled) {
-                    seat.click();
-                }
-            });
-        }
-    } catch (err) {
-        console.error("Error loading reservation:", err);
-    }
+    const timeOut = new Date(timeIn);
+    timeOut.setMinutes(timeOut.getMinutes() + 30);
+    
+    infoTimeIn.textContent = formatTime(timeIn);
+    infoTimeOut.textContent = formatTime(timeOut);
 }
 
-updateTimeInfo();
-loadCurrentReservation();
+function renderSeats() {
+    seatMap.innerHTML = "";
+    selectedSeat = null;
+    infoSeat.textContent = "--";
+    reserveBtn.disabled = true;
+    
+    labLayout.forEach(seatId => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.textContent = seatId;
+        btn.classList.add("seat");
+        
+        btn.addEventListener("click", () => {
+            const prev = document.querySelector(".seat.selected");
+            if(prev) prev.classList.remove("selected");
+            
+            btn.classList.add("selected");
+            selectedSeat = seatId; 
+            infoSeat.textContent = seatId;
+            reserveBtn.disabled = false;
+        });
+        
+        seatMap.appendChild(btn);
+        });
+  }
+  
+  inputDate.addEventListener("input", () => {
+    infoDate.textContent = inputDate.value;
+    renderSeats();
+    }).
+    
+    
+    
+    
