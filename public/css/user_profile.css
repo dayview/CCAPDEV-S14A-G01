@@ -11,113 +11,6 @@
     color: white;
 }
 
-.page > a, .page > button, .page > p {
-    width: 100%;
-    border-radius: 14px;
-    padding: 12px 14px;
-    font-size: 16px;
-    box-sizing: border-box;
-}
-
-.page a {
-    display: block;
-    text-decoration: none;
-    background: rgba(255, 255, 255, 0.92);
-    color: #1F3A04;
-    font-weight: 700;
-}
-
-.page p {
-    margin: 0;
-    background: rgba(255, 255, 255, 0.14);
-    color: rgba(255, 255, 255, 0.92);
-    font-weight: 600;
-}
-
-#userInfo {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    width: 100%;
-}
-
-#userInfo label {
-    display: block;
-    font-size: 15px;
-    font-weight: 700;
-    color: white;
-    margin-bottom: -4px;
-}
-
-#userInfo input {
-    width: 100%;
-    padding: 12px 14px;
-    border-radius: 10px;
-    border: none;
-    outline: none;
-    font-size: 16px;
-    box-sizing: border-box;
-}
-
-#userInfo button[type="submit"] {
-    width: 50%;
-    margin-top: 8px;
-    padding: 12px 14px;
-    border: none;
-    border-radius: 14px;
-    background: white;
-    color: #1F3A04;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-}
-
-#userInfo textarea {
-    width: 100%;
-    padding: 12px 14px;
-    border-radius: 10px;
-    border: none;
-    outline: none;
-    font-size: 16px;
-    box-sizing: border-box;
-    resize: vertical;
-    min-height: 100px;
-}
-#logout_btn {
-    background: #1F3A04;
-    color: white;
-    border: none;
-    font-weight: 800;
-}
-
-.header .btn {
-    background: white;
-    color: #1F3A04;
-    text-decoration: none;
-    padding: 10px 16px;
-    border-radius: 18px;
-    font-weight: 800;
-    font-size: 14px;
-}
-
-.profile-pic-preview {
-    width: 120px;
-    height: 120px;
-    object-fit: cover;
-    border-radius: 50%;
-    display: block;
-    margin: 10px 0;
-}
-
-.form-error {
-    background: white;
-    color: #8B0000;
-    padding: 10px 12px;
-    border-radius: 10px;
-    margin-bottom: 12px;
-    font-weight: 700;
-}
-
 .search-container {
     background: rgba(255, 255, 255, 0.14);
     padding: 15px;
@@ -162,4 +55,62 @@
 
 .search-btn:hover {
     background-color: #D8EBC1 !important; 
+}
+
+
+.page a, .page button, .page p {
+    width: 100%;
+    border-radius: 14px;
+    padding: 12px 14px;
+    font-size: 16px;
+}
+
+.page a {
+    display: block;
+    text-decoration: none;
+    background: rgba(255, 255, 255, 0.92);
+    color: #1F3A04;
+    font-weight: 700;
+}
+
+.page p {
+    margin: 0;
+    background: rgba(255, 255, 255, 0.14);
+    color: rgba(255, 255, 255, 0.92);
+    font-weight: 600;
+}
+
+#logout_btn {
+    background: #1F3A04;
+    color: white;
+    border: none;
+    font-weight: 800;
+}
+
+.header .btn {
+    background: white;
+    color: #1F3A04;
+    text-decoration: none;
+    padding: 10px 16px;
+    border-radius: 18px;
+    font-weight: 800;
+    font-size: 14px;
+}
+
+#delete_profile_btn {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    font-weight: 800; 
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    width: 100%;
+    border-radius: 14px;
+    padding: 12px 14px;
+    font-size: 16px;
+    margin-top: 5px;
+}
+
+#delete_profile_btn:hover {
+    background-color: #c82333;
 }

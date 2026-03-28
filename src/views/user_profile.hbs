@@ -6,36 +6,11 @@
 </section>
 
 <section class="page">
-    <form id = "userInfo" action="/reservation/user_profile" method="POST" enctype = "multipart/form-data">
-            {{#if error}}
-                <p class = "form-error">{{error}}</p>
-            {{/if}}
-
-            <p><strong>Name: </strong>{{user.firstName}} {{user.lastName}}</p>
-            <p><strong>ID Number: </strong>{{user.idNum}}</p>
-
-             {{#if user.profilePicture}}
-                <img src = "{{user.profilePicture}}" alt = "Profile Picture" class = "profile-pic-preview">
-             {{/if}}
-
-            <label for = "profilePicture"><strong>Profile Picture: </strong></label>
-            <input type = "file" id = "profilePicture" name = "profilePicture" accept="image/*">
-
-            <label for = "description"><strong>Description: </strong></label>
-            <input type = "text" id = "description" name = "description" value = "{{user.description}}">
-
-            <label for = "username"><strong>Username: </strong></label>
-            <input type = "text" id = "username" name = "username" value ="{{user.username}}">
-
-            <label for = "password"><strong>New Password: </strong></label>
-            <input type = "password" id = "password" name = "password">
-
-            <label for = "password"><strong>Confirm Password: </strong></label>
-            <input type = "password" id = "confirmPassword" name = "confirmPassword">
-
-            <button type = "submit">Save Changes</button>
-    </form>
-
+    <div id="userInfo">
+        <p><strong>Name: </strong> {{user.firstName}} {{user.lastName}}</p>
+        <p><strong>Username: </strong> {{user.username}}</p>
+        <p><strong>ID Number: </strong> {{user.idNum}}</p>
+    </div>
 
     <div class="search-container">
     <h3>View another User's Profile</h3>
@@ -44,9 +19,19 @@
         <button type="submit" class="search-btn">Search</button>
     </form>
     </div>
-    
-    <a href="/reservation/reservation_history">My Reservation</a>
+
+    <a href="/auth/profile">User Information</a>
+    <a href="/reservation/search">Search Reservation</a>
     <a href="/reservation/edit">Edit Reservation</a>
     <a href="/reservation/delete">Delete Reservation</a>
-    <button id="logout_btn" type="button">Logout</button>
+    
+    <div class="profile-actions" style="margin-top: 20px;">
+        <button id="logout_btn" type="button">Logout</button>
+        
+        <form action="/auth/delete-profile" method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete your account? This will cancel all your pending reservations and cannot be undone.');">
+            <button type="submit" id="delete_profile_btn">Delete Profile</button>
+        </form>
+    </div>
 </section>
+<script src="/js/user_profile.js"></script>
+<script src = "/js/user_profile.js"></script>
