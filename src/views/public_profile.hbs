@@ -1,0 +1,28 @@
+<link rel="stylesheet" href="/css/user_profile.css">
+<link rel="stylesheet" href="/css/public_profile.css">
+
+<section class="header">
+    <h1><b>DLSU</b> Lab Reservation</h1>
+    <a href="/auth/profile" class="btn"> Back to My Profile </a>
+</section>
+
+<section class="page public-page">
+    <h2>Public Profile</h2>
+    
+    <div class="profile-avatar">
+        {{targetUser.firstName.[0]}}{{targetUser.lastName.[0]}}
+    </div>
+
+    <div id="userInfo" class="public-info">
+        <p><strong>Name: </strong> {{targetUser.firstName}} {{targetUser.lastName}}</p>
+        <p><strong>Email: </strong> {{targetUser.email}}</p>
+        <p class="profile-description">
+            <strong>Description: </strong> <br><br>
+            {{#if targetUser.description}}
+                {{targetUser.description}}
+            {{else}}
+                <i>This user hasn't added a description yet.</i>
+            {{/if}}
+        </p>
+    </div>
+</section>

@@ -124,3 +124,32 @@ exports.postDeleteProfile = async (req, res) => {
         res.status(500).send('An error occurred while deleting the profile.');
     }
 };
+
+exports.getSearchUser = async (req, res) => {
+    try {
+        if (!req.session.userId) return res.redirect('/auth/login');
+        
+        const searchQuery = req.query.q;
+        if (!searchQuery) return res.redirect('/auth/profile');
+
+        
+        const searchTerms = searchQuery.split(' ').map(term => new RegExp(term, 'i'));
+
+        // ONLY search by First Name and Last Name
+        const targetUser = await User.findOne({
+            $or: [
+                { firstName: { $in: searchTerms } },
+                { lastName: { $in: searchTerms } }
+            ]
+        }).lean();
+
+        if (!targetUser) {
+            return res.send("<script>alert('User not found. Please ensure you typed their first or last name correctly.'); window.location.href='/auth/profile';</script>");
+        }
+        res.render('public_profile', { targetUser });
+
+    } catch (err) {
+        console.error('getSearchUser error:', err);
+        res.status(500).send('An error occurred while searching for the user.');
+    }
+};
