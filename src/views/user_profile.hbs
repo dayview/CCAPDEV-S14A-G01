@@ -36,6 +36,15 @@
             <button type = "submit">Save Changes</button>
     </form>
 
+
+    <div class="search-container">
+    <h3>View another User's Profile</h3>
+    <form action="/auth/search" method="GET" class="search-form">
+        <input type="text" name="q" placeholder="First Name and Last Name" class="search-input" required>
+        <button type="submit" class="search-btn">Search</button>
+    </form>
+    </div>
+    
     <a href="/reservation/reservation_history">My Reservation</a>
     <a href="/reservation/edit">Edit Reservation</a>
     <a href="/reservation/delete">Delete Reservation</a>
