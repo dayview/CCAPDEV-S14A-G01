@@ -13,6 +13,11 @@ const adminSlotRules = [
     body('seats').isArray({ min: 1 }).withMessage('At least one seat must be selected.')
 ];
 
+const editRules = [
+    body('date').notEmpty().withMessage('Date is required.'),
+    body('timeIn').notEmpty().withMessage('Time-in is required.')
+];
+
 router.get('/login', ctrl.getAdminLogin);
 router.post('/login', ctrl.postAdminLogin);
 router.get('/logout', ctrl.getAdminLogout);
@@ -21,6 +26,11 @@ router.get('/', requireAdmin, ctrl.getAdminHome);
 router.get('/reservations', requireAdmin, ctrl.getAdminReservations);
 router.get('/student-reservations', requireAdmin, ctrl.getAdminStudentReservations);
 router.get('/student-reservations/search', requireAdmin, ctrl.getAdminStudentSearch);
+
+// Edit reservation routes
+router.get('/reservations/edit/:id', requireAdmin, ctrl.getAdminEditReservation);
+router.post('/reservations/edit/:id', requireAdmin, editRules, ctrl.postAdminEditReservation);
+
 router.get('/slots', requireAdmin, ctrl.getAdminSlotsOverview);
 router.get('/slots/search', requireAdmin, ctrl.getAdminSlotSearch);
 router.get('/slots/seats', requireAdmin, ctrl.getAdminSlotSeats);

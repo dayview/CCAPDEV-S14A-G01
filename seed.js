@@ -117,8 +117,8 @@ async function seed() {
     const insertedSlots = await Slot.insertMany(slots);
     console.log(`Inserted ${insertedSlots.length} slots.`);
 
-    const [r01, r02, r03, r04, r05, r06, r07, r08, r09, r10, r11] = insertedUsers;
-    const [u1_admin, u2_lpavino, u3_jmajor, u4_asese, u5_mcolcol] = insertedSlots;
+    const [r01, r02, r03, r04, r05, r06, r07, r08, r09, r10, r11] = insertedSlots;
+    const [u1_admin, u2_lpavino, u3_jmajor, u4_asese, u5_mcolcol] = insertedUsers;
 
     const reservations = [
         { user: u2_lpavino._id, slot: r01._id, isAnonymous: false, status: 'active',    remarks: 'Need seat near power outlet.' },
