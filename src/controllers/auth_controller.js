@@ -83,30 +83,14 @@ exports.getProfile = async (req, res) => {
     }
 };
 
-
 exports.postProfile = async (req, res) => {
     try {
         if (!req.session.userId) return res.redirect('/auth/login');
-        const { description, username, password, confirmPassword } = req.body;
-        const updateData = {
-            description,
-            username
-        };
-
-        if (req.file) {
-            updateData.profilePicture = `/uploads/${req.file.filename}`;
-        }
-
-        if (password || confirmPassword) {
-            if (password !== confirmPassword) {
-                const user = await User.findById(req.session.userId).lean();
-                return res.status(400).render('user_profile', { user, error: 'Passwords do not match' });
-            }
-            updateData.password = await bcrypt.hash(password, SALT_ROUNDS);
-        }
-        await User.findByIdAndUpdate(req.session.userId, updateData);
+        const { description } = req.body;
+        await User.findByIdAndUpdate(req.session.userId, { description });
         res.redirect('/auth/profile');
     } catch (err) {
+        console.error('postProfile error:', err);
         res.status(500).render('user_profile', { error: 'Could not update profile.' });
     }
 };

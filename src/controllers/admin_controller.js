@@ -112,7 +112,6 @@ exports.getAdminSlotSearch = async (req, res) => {
             date: { $gte: searchDate, $lt: nextDay }
         });
 
-        // Count only reserved/walk-in seats per time slot from DB records
         const reservedCountMap = {};
         for (const slot of slots) {
             if (slot.status !== 'available') {
@@ -120,7 +119,6 @@ exports.getAdminSlotSearch = async (req, res) => {
             }
         }
 
-        // Emit a full entry for every time slot using lab.capacity as the source of truth
         const ALL_TIME_SLOTS = [
             '07:30', '08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00',
             '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00',
@@ -213,7 +211,6 @@ exports.postAdminSlotReservation = async (req, res) => {
 
         const results = [];
         for (const seatNum of seats) {
-            // Upsert the slot: find or create it
             let slot = await Slot.findOne({
                 lab: lab._id,
                 date: slotDate,
@@ -303,12 +300,11 @@ exports.postDeleteProfile = async (req, res) => {
 
         const activeReservations = await Reservation.find({ user: userId, status: 'active' });
         
-        for (const res of activeReservations) {
-            await Slot.findByIdAndUpdate(res.slot, { status: 'available' });
+        for (const reservation of activeReservations) {
+            await Slot.findByIdAndUpdate(reservation.slot, { status: 'available' });
         }
         
         await Reservation.deleteMany({ user: userId });
-        
         await User.findByIdAndDelete(userId);
 
         req.session.destroy((err) => {
@@ -319,5 +315,129 @@ exports.postDeleteProfile = async (req, res) => {
     } catch (err) {
         console.error('postDeleteProfile error:', err);
         res.status(500).send('An error occurred while deleting the profile.');
+    }
+};
+
+exports.getAdminEditReservation = async (req, res) => {
+    try {
+        const reservation = await Reservation.findById(req.params.id)
+            .populate({ path: 'slot', populate: { path: 'lab' } })
+            .populate('user')
+            .lean();
+
+        if (!reservation) {
+            return res.status(404).render('error', { message: 'Reservation not found.' });
+        }
+
+        if (reservation.status !== 'active') {
+            return res.status(403).render('error', { message: 'Only active reservations can be edited.' });
+        }
+
+        const localDate = new Date(reservation.slot.date);
+        const adjusted  = new Date(localDate.getTime() - localDate.getTimezoneOffset() * 60000);
+        const dateValue = adjusted.toISOString().split('T')[0];
+
+        const labs      = await Lab.find().sort({ labName: 1 }).lean();
+        const adminUser = await User.findById(req.session.userId).lean();
+
+        const currentLabName = reservation.slot.lab.labName;
+        labs.forEach(lab => {
+            lab.selected = lab.labName === currentLabName ? 'selected' : '';
+        });
+        
+        res.render('admin/admin_edit_reservation', {
+            layout: 'admin',
+            reservation,
+            dateValue,
+            labs,
+            username: adminUser?.username
+        });
+    } catch (err) {
+        console.error('getAdminEditReservation error:', err);
+        res.status(500).render('error', { message: 'Could not load edit page.' });
+    }
+};
+
+exports.postAdminEditReservation = async (req, res) => {
+    try {
+        const reservation = await Reservation.findById(req.params.id)
+            .populate({ path: 'slot', populate: { path: 'lab' } })
+            .populate('user');
+
+        if (!reservation || reservation.status !== 'active') {
+            return res.status(403).render('error', { message: 'Reservation cannot be edited.' });
+        }
+
+        // timeOut now comes directly from the form submission
+        const { date, timeIn, timeOut, room, seatNum, isAnonymous } = req.body;
+
+        if (!timeOut) {
+            return res.status(400).render('error', { message: 'Time Out is required.' });
+        }
+
+        const lab = await Lab.findOne({ labName: room });
+        if (!lab) {
+            return res.status(404).render('error', { message: 'Lab not found.' });
+        }
+
+        const [year, month, day] = date.split('-').map(Number);
+        const slotDate = new Date(year, month - 1, day, 0, 0, 0, 0);
+
+        const currentSlot = reservation.slot;
+
+        let newSlot = await Slot.findOne({
+            lab:       lab._id,
+            date:      slotDate,
+            startTime: timeIn,
+            seatNum:   Number(seatNum)
+        });
+
+        const isSameSlot = newSlot && String(newSlot._id) === String(currentSlot._id);
+        if (newSlot && !isSameSlot && newSlot.status !== 'available') {
+            const localDate = new Date(currentSlot.date);
+            const adjusted  = new Date(localDate.getTime() - localDate.getTimezoneOffset() * 60000);
+            const dateValue = adjusted.toISOString().split('T')[0];
+            const labs      = await Lab.find().sort({ labName: 1 }).lean();
+            const adminUser = await User.findById(req.session.userId).lean();
+
+            return res.status(409).render('admin/admin_edit_reservation', {
+                layout: 'admin',
+                reservation: reservation.toObject(),
+                dateValue,
+                labs,
+                username: adminUser?.username,
+                error: 'That seat is already reserved at the selected date and time.'
+            });
+        }
+
+        if (!newSlot) {
+            newSlot = await Slot.create({
+                lab:       lab._id,
+                date:      slotDate,
+                startTime: timeIn,
+                endTime:   timeOut,
+                seatNum:   Number(seatNum),
+                status:    'reserved'
+            });
+        } else if (!isSameSlot) {
+            await Slot.findByIdAndUpdate(newSlot._id, { status: 'reserved', endTime: timeOut });
+        } else {
+            // Same slot — just update the endTime in case timeOut changed
+            await Slot.findByIdAndUpdate(newSlot._id, { endTime: timeOut });
+        }
+
+        await Reservation.findByIdAndUpdate(reservation._id, {
+            slot:        newSlot._id,
+            isAnonymous: !!isAnonymous
+        });
+
+        if (String(currentSlot._id) !== String(newSlot._id)) {
+            await Slot.findByIdAndUpdate(currentSlot._id, { status: 'available' });
+        }
+
+        res.redirect('/admin/reservations');
+    } catch (err) {
+        console.error('postAdminEditReservation error:', err);
+        res.status(500).render('error', { message: 'Could not update reservation.' });
     }
 };

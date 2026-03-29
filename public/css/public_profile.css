@@ -10,15 +10,11 @@
     margin: 20px auto;
     width: 120px;
     height: 120px;
-    background-color: #EAF4DE;
+    background-color: white; 
     border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 45px;
-    color: #1F3A04;
-    font-weight: 800;
     border: 4px solid #1F3A04;
+    object-fit: cover; 
+    display: block; 
 }
 
 .public-info {

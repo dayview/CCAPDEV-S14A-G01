@@ -1,0 +1,191 @@
+<link rel="stylesheet" href="/css/admin_slot_reservation.css">
+<link rel="stylesheet" href="/css/admin_edit_reservation.css">
+
+<main class="main_container">
+    <div class="dashboard">
+
+        <!-- LEFT PANEL: student info + time in/out + anonymous + submit -->
+        <section class="panel left_panel">
+            <div class="user_box">
+                <div class="user_top_row">
+                    <div class="avatar"><img src="/images/profile.png"></div>
+                    <h2>Welcome ADMIN<br>{{username}}!</h2>
+                </div>
+            </div>
+
+            <div class="reservation_form">
+                <h3 class="form_title">Edit Reservation</h3>
+
+                {{#if error}}
+                    <div class="form_error">{{error}}</div>
+                {{/if}}
+
+                <div class="info_block">
+                    <p><span class="info_label">Student ID:</span> <span class="info_value">{{reservation.user.idNum}}</span></p>
+                    <p><span class="info_label">Student:</span> <span class="info_value">{{reservation.user.firstName}} {{reservation.user.lastName}}</span></p>
+                </div>
+
+                <!-- Hidden inputs carry the values selected across both panels -->
+                <form id="editReservationForm" method="POST" action="/admin/reservations/edit/{{reservation._id}}">
+                    <input type="hidden" id="hiddenDate"    name="date"    value="{{dateValue}}">
+                    <input type="hidden" id="hiddenTimeIn"  name="timeIn"  value="{{reservation.slot.startTime}}">
+                    <input type="hidden" id="hiddenTimeOut" name="timeOut" value="{{reservation.slot.endTime}}">
+                    <input type="hidden" id="hiddenRoom"    name="room"    value="{{reservation.slot.lab.labName}}">
+                    <input type="hidden" id="hiddenSeat"    name="seatNum" value="{{reservation.slot.seatNum}}">
+
+                    <div class="form_group">
+                        <label class="form_label">TIME IN</label>
+                        <select class="form_input" id="timeInSelect" required>
+                            <option value="">Select time</option>
+                            <option value="07:30">7:30 AM</option>
+                            <option value="08:00">8:00 AM</option>
+                            <option value="08:30">8:30 AM</option>
+                            <option value="09:00">9:00 AM</option>
+                            <option value="09:30">9:30 AM</option>
+                            <option value="10:00">10:00 AM</option>
+                            <option value="10:30">10:30 AM</option>
+                            <option value="11:00">11:00 AM</option>
+                            <option value="11:30">11:30 AM</option>
+                            <option value="12:00">12:00 PM</option>
+                            <option value="12:30">12:30 PM</option>
+                            <option value="13:00">1:00 PM</option>
+                            <option value="13:30">1:30 PM</option>
+                            <option value="14:00">2:00 PM</option>
+                            <option value="14:30">2:30 PM</option>
+                            <option value="15:00">3:00 PM</option>
+                            <option value="15:30">3:30 PM</option>
+                            <option value="16:00">4:00 PM</option>
+                            <option value="16:30">4:30 PM</option>
+                            <option value="17:00">5:00 PM</option>
+                            <option value="17:30">5:30 PM</option>
+                            <option value="18:00">6:00 PM</option>
+                        </select>
+                    </div>
+
+                    <div class="form_group">
+                        <label class="form_label">TIME OUT</label>
+                        <select class="form_input" id="timeOutSelect" required>
+                            <option value="">Select time</option>
+                            <option value="07:30">7:30 AM</option>
+                            <option value="08:00">8:00 AM</option>
+                            <option value="08:30">8:30 AM</option>
+                            <option value="09:00">9:00 AM</option>
+                            <option value="09:30">9:30 AM</option>
+                            <option value="10:00">10:00 AM</option>
+                            <option value="10:30">10:30 AM</option>
+                            <option value="11:00">11:00 AM</option>
+                            <option value="11:30">11:30 AM</option>
+                            <option value="12:00">12:00 PM</option>
+                            <option value="12:30">12:30 PM</option>
+                            <option value="13:00">1:00 PM</option>
+                            <option value="13:30">1:30 PM</option>
+                            <option value="14:00">2:00 PM</option>
+                            <option value="14:30">2:30 PM</option>
+                            <option value="15:00">3:00 PM</option>
+                            <option value="15:30">3:30 PM</option>
+                            <option value="16:00">4:00 PM</option>
+                            <option value="16:30">4:30 PM</option>
+                            <option value="17:00">5:00 PM</option>
+                            <option value="17:30">5:30 PM</option>
+                            <option value="18:00">6:00 PM</option>
+                        </select>
+                    </div>
+
+                    <div class="form_group">
+                        <label class="form_label">
+                            <input type="checkbox" id="isAnonymous" name="isAnonymous" {{#if reservation.isAnonymous}}checked{{/if}}> Anonymous
+                        </label>
+                    </div>
+
+                    <div class="booking_info_panel" id="bookingInfo">
+                        <div class="booking_stat">
+                            <span class="booking_label">LAB:</span>
+                            <span class="booking_value" id="infoLab">{{reservation.slot.lab.labName}}</span>
+                        </div>
+                        <div class="booking_stat">
+                            <span class="booking_label">SEAT:</span>
+                            <span class="booking_value" id="infoSeat">{{reservation.slot.seatNum}}</span>
+                        </div>
+                        <div class="booking_stat">
+                            <span class="booking_label">DATE:</span>
+                            <span class="booking_value" id="infoDate">{{dateValue}}</span>
+                        </div>
+                        <div class="booking_stat">
+                            <span class="booking_label">TIME IN:</span>
+                            <span class="booking_value" id="infoTimeIn">{{reservation.slot.startTime}}</span>
+                        </div>
+                        <div class="booking_stat">
+                            <span class="booking_label">TIME OUT:</span>
+                            <span class="booking_value" id="infoTimeOut">{{reservation.slot.endTime}}</span>
+                        </div>
+                    </div>
+
+                    <div id="slotStatus" class="slot_status"></div>
+
+                    <button type="submit" class="action_button reserve_button" id="finishEditBtn" disabled>FINISH EDIT</button>
+                    <a href="/admin/reservations" class="action_button cancel_button">CANCEL</a>
+                </form>
+            </div>
+        </section>
+
+        <!-- RIGHT PANEL: date + room (editable) + seat map -->
+        <section class="panel right_panel">
+            <div class="top_section">
+                <div class="column">
+                    <label class="input_label">Date:</label>
+                    <input type="date" class="info_input" id="dateInput" value="{{dateValue}}">
+
+                    <label class="input_label">Room:</label>
+                    <select class="info_input" id="roomSelect">
+                        {{#each labs}}
+                            <option value="{{this.labName}}" data-capacity="{{this.capacity}}" {{this.selected}}>
+                                {{this.labName}}
+                            </option>
+                        {{/each}}
+                    </select>
+                </div>
+
+                <div class="column">
+                    <label class="input_label">Booking Overview:</label>
+                    <div class="booking_box">
+                        <div class="booking_stat">
+                            <span class="booking_label">SEATS AVAILABLE:</span>
+                            <span class="booking_value" id="seatsAvailable">--</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="seating_section">
+                <div class="board_label">BOARD</div>
+                <div class="seat_map" id="seat_map"></div>
+                <div class="legend_container">
+                    <div class="legend_item">
+                        <div class="legend_box legend_occupied"></div>
+                        <span>Occupied</span>
+                    </div>
+                    <div class="legend_item">
+                        <div class="legend_box legend_selected"></div>
+                        <span>Selected</span>
+                    </div>
+                    <div class="legend_item">
+                        <div class="legend_box legend_available"></div>
+                        <span>Available</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+</main>
+
+<script>
+    const RESERVATION_ID   = "{{reservation._id}}";
+    const CURRENT_SEAT     = {{reservation.slot.seatNum}};
+    const CURRENT_DATE     = "{{dateValue}}";
+    const CURRENT_TIMEIN   = "{{reservation.slot.startTime}}";
+    const CURRENT_TIMEOUT  = "{{reservation.slot.endTime}}";
+    const CURRENT_LAB      = "{{reservation.slot.lab.labName}}";
+    const CURRENT_CAPACITY = {{reservation.slot.lab.capacity}};
+</script>
+<script src="/js/admin_edit_reservation.js"></script>
