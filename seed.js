@@ -118,7 +118,6 @@ async function seed() {
     console.log(`Inserted ${insertedSlots.length} slots.`);
 
     const [r01, r02, r03, r04, r05, r06, r07, r08, r09, r10, r11] = insertedSlots;
-
     const [u1_admin, u2_lpavino, u3_jmajor, u4_asese, u5_mcolcol] = insertedUsers;
 
     const reservations = [

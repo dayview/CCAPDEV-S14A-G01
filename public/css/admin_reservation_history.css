@@ -14,7 +14,7 @@
 
 body {
     margin: 0;
-    background-image: url("/public/images/dlsu-background.jpg");
+    background-image: url("/images/dlsu-background.jpg");
     background-repeat: no-repeat;
     background-size: cover;
     background-attachment: fixed;
@@ -332,4 +332,25 @@ body::before {
     .history_table td {
         padding: 10px 8px;
     }
+}
+
+.edit_link {
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: underline;
+}
+
+.edit_active {
+    color: #1565C0;
+    cursor: pointer;
+}
+
+.edit_active:hover {
+    color: #0D47A1;
+}
+
+.edit_inactive {
+    color: #333;
+    cursor: default;
+    text-decoration: underline;
 }
