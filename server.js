@@ -41,6 +41,11 @@ app.use(session({
     }
 }));
 
+app.use((req, res, next) => {
+    res.locals.user = req.session.userId || null;
+    next();
+});
+
 app.use('/', require('./src/routes/index_routes'));
 app.use('/auth', require('./src/routes/auth_routes'));
 app.use('/reservation', require('./src/routes/reservation_routes'));

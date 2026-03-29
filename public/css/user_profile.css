@@ -11,11 +11,12 @@
     color: white;
 }
 
-.page a, .page button, .page p {
+.page > a, .page > button, .page > p {
     width: 100%;
     border-radius: 14px;
     padding: 12px 14px;
     font-size: 16px;
+    box-sizing: border-box;
 }
 
 .page a {
@@ -33,6 +34,55 @@
     font-weight: 600;
 }
 
+#userInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+
+#userInfo label {
+    display: block;
+    font-size: 15px;
+    font-weight: 700;
+    color: white;
+    margin-bottom: -4px;
+}
+
+#userInfo input {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+#userInfo button[type="submit"] {
+    width: 50%;
+    margin-top: 8px;
+    padding: 12px 14px;
+    border: none;
+    border-radius: 14px;
+    background: white;
+    color: #1F3A04;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+#userInfo textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    box-sizing: border-box;
+    resize: vertical;
+    min-height: 100px;
+}
 #logout_btn {
     background: #1F3A04;
     color: white;
@@ -48,4 +98,22 @@
     border-radius: 18px;
     font-weight: 800;
     font-size: 14px;
+}
+
+.profile-pic-preview {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 50%;
+    display: block;
+    margin: 10px 0;
+}
+
+.form-error {
+    background: white;
+    color: #8B0000;
+    padding: 10px 12px;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    font-weight: 700;
 }

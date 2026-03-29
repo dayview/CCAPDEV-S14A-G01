@@ -6,16 +6,38 @@
 </section>
 
 <section class="page">
-    <div id="userInfo">
-        <p><strong>Name: </strong> {{user.firstName}} {{user.lastName}}</p>
-        <p><strong>Username: </strong> {{user.username}}</p>
-        <p><strong>ID Number: </strong> {{user.idNum}}</p>
-    </div>
+    <form id = "userInfo" action="/reservation/user_profile" method="POST" enctype = "multipart/form-data">
+            {{#if error}}
+                <p class = "form-error">{{error}}</p>
+            {{/if}}
 
-    <a href="/auth/profile">User Information</a>
-    <a href="/reservation/search">Search Reservation</a>
+            <p><strong>Name: </strong>{{user.firstName}} {{user.lastName}}</p>
+            <p><strong>ID Number: </strong>{{user.idNum}}</p>
+
+             {{#if user.profilePicture}}
+                <img src = "{{user.profilePicture}}" alt = "Profile Picture" class = "profile-pic-preview">
+             {{/if}}
+
+            <label for = "profilePicture"><strong>Profile Picture: </strong></label>
+            <input type = "file" id = "profilePicture" name = "profilePicture" accept="image/*">
+
+            <label for = "description"><strong>Description: </strong></label>
+            <input type = "text" id = "description" name = "description" value = "{{user.description}}">
+
+            <label for = "username"><strong>Username: </strong></label>
+            <input type = "text" id = "username" name = "username" value ="{{user.username}}">
+
+            <label for = "password"><strong>New Password: </strong></label>
+            <input type = "password" id = "password" name = "password">
+
+            <label for = "password"><strong>Confirm Password: </strong></label>
+            <input type = "password" id = "confirmPassword" name = "confirmPassword">
+
+            <button type = "submit">Save Changes</button>
+    </form>
+
+    <a href="/reservation/reservation_history">My Reservation</a>
     <a href="/reservation/edit">Edit Reservation</a>
     <a href="/reservation/delete">Delete Reservation</a>
     <button id="logout_btn" type="button">Logout</button>
 </section>
-<script src = "/js/user_profile.js"></script>

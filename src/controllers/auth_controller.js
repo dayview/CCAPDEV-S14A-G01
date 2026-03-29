@@ -3,6 +3,9 @@ const bcrypt = require('bcrypt');
 const SALT_ROUNDS = 10;
 const { validationResult } = require('express-validator');
 
+const Reservation = require('../models/Reservation');
+const Slot = require('../models/Slot');
+
 exports.getLogin = (req, res) => {
     res.render('login');
 };
@@ -94,4 +97,59 @@ exports.postProfile = async (req, res) => {
 
 exports.getLogout = (req, res) => {
     req.session.destroy(() => res.redirect('/'));
+};
+
+exports.postDeleteProfile = async (req, res) => {
+    try {
+        const userId = req.session.userId;
+        if (!userId) return res.redirect('/auth/login');
+
+        const activeReservations = await Reservation.find({ user: userId, status: 'active' });
+        
+        for (const res of activeReservations) {
+            await Slot.findByIdAndUpdate(res.slot, { status: 'available' });
+        }
+        
+        await Reservation.deleteMany({ user: userId });
+        
+        await User.findByIdAndDelete(userId);
+
+        req.session.destroy((err) => {
+            if (err) console.error('Session destruction error:', err);
+            res.redirect('/');
+        });
+
+    } catch (err) {
+        console.error('postDeleteProfile error:', err);
+        res.status(500).send('An error occurred while deleting the profile.');
+    }
+};
+
+exports.getSearchUser = async (req, res) => {
+    try {
+        if (!req.session.userId) return res.redirect('/auth/login');
+        
+        const searchQuery = req.query.q;
+        if (!searchQuery) return res.redirect('/auth/profile');
+
+        
+        const searchTerms = searchQuery.split(' ').map(term => new RegExp(term, 'i'));
+
+        // ONLY search by First Name and Last Name
+        const targetUser = await User.findOne({
+            $or: [
+                { firstName: { $in: searchTerms } },
+                { lastName: { $in: searchTerms } }
+            ]
+        }).lean();
+
+        if (!targetUser) {
+            return res.send("<script>alert('User not found. Please ensure you typed their first or last name correctly.'); window.location.href='/auth/profile';</script>");
+        }
+        res.render('public_profile', { targetUser });
+
+    } catch (err) {
+        console.error('getSearchUser error:', err);
+        res.status(500).send('An error occurred while searching for the user.');
+    }
 };

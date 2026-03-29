@@ -70,6 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     async function renderSeats() {
+
         if (!seatMap) return;
 
         seatMap.innerHTML = "";
@@ -88,13 +89,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const res = await fetch(`/reservation/search-availability?${params.toString()}`);
             const data = await res.json();
+            const capacity = data.capacity | 20;
+            const occupiedSeatDetails = Array.isArray(data.occupiedSeatDetails) ? data.occupiedSeatDetails : [];
+            const occupiedSeatMap = {};
+
+            occupiedSeatDetails.forEach(seat => {
+                occupiedSeatMap[Number(seat.seatNum)] = seat;
+            })
+
+            const occupiedSeats = Array.isArray(data.occupiedSeats) ? data.occupiedSeats : [];
 
             if (!res.ok) {
                 throw new Error(data.error || "Could not load seat availability.");
             }
-
-            const capacity = data.capacity || 20;
-            const occupiedSeats = Array.isArray(data.occupiedSeats) ? data.occupiedSeats : [];
 
             for (let i = 1; i <= capacity; i++) {
                 const btn = document.createElement("button");
@@ -105,7 +112,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 if (occupiedSeats.includes(i)) {
                     btn.classList.add("occupied");
-                    btn.disabled = true;
+                    
+                    btn.addEventListener("click", () => {
+                    
+                        const seatDetails = occupiedSeatMap[i];
+                        alert(`Not available. This seat has been reserved by: ${seatDetails.reservedBy}`);
+                    });
                 } else {
                     btn.classList.add("available");
                     btn.disabled = false;
@@ -132,6 +144,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
 
                 seatMap.appendChild(btn);
+
             }
         } catch (err) {
             seatMap.innerHTML = `<p class="text-danger">Could not load seats.</p>`;
