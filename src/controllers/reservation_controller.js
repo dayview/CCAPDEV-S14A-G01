@@ -30,8 +30,28 @@ exports.getSearchPage = async (req, res) => {
 
 exports.getDeletePage = async (req, res) => {
     try {
-        res.render('delete_reservation', { reservations: [] });
+        const userId = req.session.userId;
+        
+        
+        const reservations = await Reservation.find({ user: userId, status: 'active' }).populate({ path: 'slot',populate: { path: 'lab' }}).sort({ createdAt: -1 }); 
+        
+        
+        const formattedReservations = reservations.map(reservation => ({
+            _id: reservation._id,
+            date: reservation.slot.date.toISOString().split('T')[0],
+            timeIn: reservation.slot.startTime,
+            room: reservation.slot.lab.labName,
+            seat: reservation.slot.seatNum,
+            isAnonymous: reservation.isAnonymous,
+            status: reservation.status
+        }));
+        
+        res.render('delete_reservation', { 
+            reservations: formattedReservations,
+            hasReservations: formattedReservations.length > 0
+        });
     } catch (err) {
+        console.error('getDeletePage error:', err);
         res.status(500).render('error', { message: 'Could not load delete page.' });
     }
 };
@@ -316,12 +336,33 @@ exports.postEditReservation = async (req, res) => {
 
 exports.postDeleteReservation = async (req, res) => {
     try {
-        const reservation = await Reservation.findById(req.params.id);
-        await Slot.findByIdAndUpdate(reservation.slot, { status: 'available' });
-        await Reservation.findByIdAndUpdate(req.params.id, { status: 'cancelled' });
-        res.redirect('/reservation');
+        const reservationId = req.params.id;
+        
+        console.log("Attempting to delete reservation:", reservationId);
+        
+        
+        const reservation = await Reservation.findById(reservationId).populate('slot');
+        
+        if (!reservation) {
+            console.log("Reservation not found");
+            return res.redirect('/reservation/delete');
+        }
+        
+        console.log("Found reservation. Slot ID:", reservation.slot._id);
+        console.log("Current slot status:", reservation.slot.status);
+        
+        
+        await Slot.findByIdAndUpdate(reservation.slot._id, { status: 'available' });
+        console.log("Slot updated to available");
+        
+        
+        await Reservation.findByIdAndUpdate(reservationId, { status: 'cancelled' });
+        console.log("Reservation updated to cancelled");
+        
+        res.redirect('/reservation/delete');
     } catch(err) {
-        res.status(500).render('delete_reservation', { error: 'Could not cancel reservation.' });
+        console.error('postDeleteReservation error:', err);
+        res.redirect('/reservation/delete');
     }
 };
 
