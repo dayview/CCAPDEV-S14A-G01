@@ -294,3 +294,30 @@ exports.postAdminSlotRemoval = async (req, res) => {
         res.status(500).json({ error: 'Removal failed.' });
     }
 };
+
+
+exports.postDeleteProfile = async (req, res) => {
+    try {
+        const userId = req.session.userId;
+        if (!userId) return res.redirect('/auth/login');
+
+        const activeReservations = await Reservation.find({ user: userId, status: 'active' });
+        
+        for (const res of activeReservations) {
+            await Slot.findByIdAndUpdate(res.slot, { status: 'available' });
+        }
+        
+        await Reservation.deleteMany({ user: userId });
+        
+        await User.findByIdAndDelete(userId);
+
+        req.session.destroy((err) => {
+            if (err) console.error('Session destruction error:', err);
+            res.redirect('/');
+        });
+
+    } catch (err) {
+        console.error('postDeleteProfile error:', err);
+        res.status(500).send('An error occurred while deleting the profile.');
+    }
+};

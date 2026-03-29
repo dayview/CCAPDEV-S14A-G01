@@ -26,6 +26,7 @@ router.post('/profile', ctrl.postProfile);
 
 router.get('/search', ctrl.getSearchUser);
 
+
 router.post('/delete-profile', ctrl.postDeleteProfile);
 
 router.get('/logout', ctrl.getLogout);
