@@ -1,24 +1,30 @@
 <link rel="stylesheet" href="/css/edit_reservation.css">
 <script src="/js/editreservation.js" defer></script>
 
+
+{{#if error}}
+    <script>
+        alert("{{error}}");
+    </script>
+{{/if}}
+<form id="editReservation" method="POST">
 <section class="left-panel">
     <div class="information-block">
         <h1>Booking Information</h1>
-        <p>Date: <span id="infoDate"></span></p>
-        <p>Time In: <span id="infoTimeIn"></span></p>
-        <p>Time Out: <span id="infoTimeOut"></span></p>
-        <p>Room: <span id="infoRoom"></span></p>
-        <p>Seat: <span id="infoSeat"></span></p>
+        <p>Date: <span id="infoDate">--</span></p>
+        <p>Time In: <span id="infoTimeIn">--</span></p>
+        <p>Time Out: <span id="infoTimeOut">--</span></p>
+        <p>Room: <span id="infoRoom">--</span></p>
+        <p>Seat: <span id="infoSeat">--</span></p>
         <div class="r_button">
-            <button class="reserve-btn" type="button" disabled>Edit Reserve</button>
+            <button class="reserve-btn" type="submit" disabled>Save Changes</button>
         </div>
     </div>
 
     <strong class="edit-label">Edit Reservation</strong>
     <ul class="edit-list">
-        <li>You can edit your seat, room, date, and time here</li>
+        <li>You can edit your reservation date and time here</li>
         <li>Please review the booking information before saving</li>
-        <li>If you have multiple reservations, the latest one will be the one to be changed</li>
     </ul>
 </section>
 
@@ -26,12 +32,12 @@
     <div class="selection">
         <section class="r_box">
             <label for="reserve_date">Date</label>
-            <input type="date" id="reserve_date" class="form-control">
+            <input type="date" id="reserve_date" name="date" class="form-control" required>
         </section>
 
         <section class="r_box">
             <label for="reserve_time" class="form-label">Time In</label>
-            <select id="reserve_time" class="form-control">
+            <select id="reserve_time" name="timeIn" class="form-control" required>
                 <option value="07:30">07:30</option>
                 <option value="08:00">08:00</option>
                 <option value="08:30">08:30</option>
@@ -62,27 +68,23 @@
         </section>
 
         <section class="r_box">
-            <label for="room_num" class="form-label">Room</label>
-            <select id="room_num" class="form-control">
-                <option value="">Select Room</option>
-                <option value="GK302A">GK302A</option>
-                <option value="GK302B">GK302B</option>
-                <option value="GK304B">GK304B</option>
+            <label for="reservationSelect">Choose Reservation</label>
+            <select id="reservationSelect" class="form-control" required>
+                <option value="">Select Reservation</option>
+                {{#each reservations}}
+                    <option
+                        value="{{this._id}}"
+                        data-date="{{this.dateValue}}"
+                        data-timein="{{this.slot.startTime}}"
+                        data-timeout="{{this.slot.endTime}}"
+                        data-room="{{this.slot.lab.labName}}"
+                        data-seat="{{this.slot.seatNum}}"
+                    >
+                        {{this.displayLabel}}
+                    </option>
+                {{/each}}
             </select>
         </section>
     </div>
-
-    <div class="room">
-        <div class="seat-card">
-            <h4 class="board-title">Board</h4>
-        </div>
-        <div id="seat_map"></div>
-    </div>
-
-    <div class="legend">
-        <span class="legend-box occupied"></span> <span class="text-black">Occupied</span>
-        <span class="legend-box repair"></span> <span class="text-black">Under Repair</span>
-        <span class="legend-box available"></span> <span class="text-black">Available</span>
-        <span class="legend-box selected"></span> <span class="text-black">Selected</span>
-    </div>
 </section>
+</form>

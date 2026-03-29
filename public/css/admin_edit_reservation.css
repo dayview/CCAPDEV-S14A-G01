@@ -1,0 +1,124 @@
+.dashboard {
+    align-items: stretch;
+    min-height: calc(100vh - 104px);
+}
+
+.left_panel {
+    max-height: none !important;
+    overflow-y: visible !important;
+}
+
+.right_panel {
+    display: flex;
+    flex-direction: column;
+}
+
+.seating_section {
+    flex: 1;
+}
+
+.info_block {
+    background: white;
+    border-radius: 10px;
+    padding: 14px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 14px;
+}
+
+.info_label {
+    font-weight: 700;
+    color: #3C5A14;
+    margin-right: 6px;
+}
+
+.info_value {
+    color: #222;
+}
+
+.form_error {
+    background: #ffebee;
+    border-left: 4px solid #d32f2f;
+    color: #d32f2f;
+    padding: 10px 14px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.booking_info_panel {
+    background: white;
+    border-radius: 10px;
+    padding: 12px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 14px;
+}
+
+.slot_status {
+    font-size: 13px;
+    font-weight: 600;
+    padding: 4px 0;
+    min-height: 20px;
+}
+
+.slot_ok       { color: #2e7d32; }
+.slot_error    { color: #c62828; }
+.slot_checking { color: #555;    }
+
+.cancel_button {
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    background: #888;
+    color: white;
+    margin-top: 4px;
+    padding: 12px 20px;
+    border-radius: 25px;
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: background 0.2s ease;
+}
+
+.cancel_button:hover {
+    background: #666;
+}
+
+#dateInput,
+#roomSelect {
+    cursor: pointer;
+    background: white;
+    color: #1a1a1a;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 14px;
+    width: 100%;
+    font-family: inherit;
+}
+
+#dateInput:focus,
+#roomSelect:focus {
+    outline: none;
+    border-color: #2f5e1e;
+    box-shadow: 0 0 0 2px rgba(47, 94, 30, 0.15);
+}
+
+#timeOutDisplay {
+    background: #f0f0f0;
+    color: #555;
+    cursor: not-allowed;
+}
+.seat.selected {
+    background-color: #FFD700;
+    border-color: #FFC107;
+    color: #000;
+}
+
+.legend_selected {
+    background: #FFD700;
+    border-color: #FFC107;
+}

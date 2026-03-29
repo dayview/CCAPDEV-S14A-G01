@@ -4,6 +4,6 @@ exports.requireStudent = (req, res, next) => {
 };
 
 exports.requireAdmin = (req, res, next) => {
-    if (!req.session.userId || !req.session.isAdmin) return res.redirect('/admin/login');
+    if (!req.session.isAdmin) return res.redirect('/admin/login');
     next();
 };

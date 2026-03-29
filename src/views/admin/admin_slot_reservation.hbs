@@ -84,8 +84,11 @@
                 <div class="form_group">
                     <label class="form_label">
                         <input type="checkbox" id="isAnonymous"> Anonymous
-                        </label>
+                    </label>
                 </div>
+
+                <!-- Hidden input so JS can read/sync the selected room -->
+                <input type="hidden" id="roomNumber">
             </div>
 
             <button class="action_button reserve_button">RESERVE SLOT</button>
@@ -102,7 +105,7 @@
                     <select class="info_input" id="roomSelect">
                         <option value="">Select a room</option>
                         {{#each labs}}
-                            <option value="{{this.labName}}">{{this.labName}}</option>
+                            <option value="{{this.labName}}" data-capacity="{{this.capacity}}">{{this.labName}}</option>
                         {{/each}}
                     </select>
                 </div>
@@ -112,7 +115,7 @@
                     <div class="booking_box">
                         <div class="booking_stat">
                             <span class="booking_label">SEATS AVAILABLE:</span>
-                            <span class="booking_value" id="seatsAvailable">20/20</span>
+                            <span class="booking_value" id="seatsAvailable">0/0</span>
                         </div>
                         <div class="booking_stat">
                             <span class="booking_label">SEATS FOR REPAIR:</span>
@@ -125,8 +128,7 @@
             <div class="seating_section">
                 <div class="board_label">BOARD</div>
 
-                <div class="seat_map" id="seat_map">
-                </div>
+                <div class="seat_map" id="seat_map"></div>
 
                 <div class="legend_container">
                     <div class="legend_item">
@@ -150,11 +152,5 @@
         </section>
     </div>
 </main>
-<script>
-    const ROOM_SEATS = {
-        {{#each labs}}
-        "{{{this.labName}}}": {{{this.capacity}}}{{#unless @last}},{{/unless}}
-        {{/each}}
-    };
-</script>
+
 <script src="/js/admin_slot_reservation.js"></script>

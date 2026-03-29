@@ -1,29 +1,48 @@
 const express = require('express');
 const router = express.Router();
+const multer = require('multer');
+const path = require('path');
 const { body } = require('express-validator');
 const ctrl = require('../controllers/reservation_controller');
 const { requireStudent } = require('../middleware/auth');
 
 const reservationRules = [
-    body('slotId').notEmpty().withMessage('A slot must be selected.')
+    body('labName').notEmpty().withMessage('Please select a room.'),
+    body('date').notEmpty().withMessage('Please select a date.'),
+    body('timeIn').notEmpty().withMessage('Please select a time.'),
+    body('seatNum').notEmpty().withMessage('Please select a seat.')
 ];
 
 const editRules = [
-    body('remarks').optional().isLength({ max: 300 }).withMessage('Remarks must be 300 characters or fewer.')
+    body('date').notEmpty().withMessage('Please select a date.'),
+    body('timeIn').notEmpty().withMessage('Please select a time.'),
 ];
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'public/uploads');
+    },
+    filename: (req, file, cb) => {
+        const ext = path.extname(file.originalname);
+        cb(null, `${req.session.userId}-${Date.now()}${ext}`);
+    }
+});
+
+const upload = multer({ storage });
 
 router.get('/', ctrl.getReservationOverview);
 
-router.get('/student', requireStudent, ctrl.getStudentReservation);
-router.post('/student', requireStudent, reservationRules, ctrl.postStudentReservation);
+router.get('/reservation_history', requireStudent, ctrl.getStudentReservation);
+router.post('/student', requireStudent, ctrl.postStudentReservation);
 
-router.get('/search', requireStudent, ctrl.getSearchPage);
-router.get('/search-availability', requireStudent, ctrl.searchAvailability);
+router.post('/user_profile', requireStudent, upload.single('profilePicture'), ctrl.postEditProfile);
+
+router.get('/search', ctrl.getSearchPage);
+router.get('/search-availability', ctrl.searchAvailability);
 
 router.get('/edit', requireStudent, ctrl.getEditPage);
 router.get('/delete', requireStudent, ctrl.getDeletePage);
 
-router.get('/edit/:id', requireStudent, ctrl.getEditReservation);
 router.post('/edit/:id', requireStudent, editRules, ctrl.postEditReservation);
 router.post('/delete/:id', requireStudent, ctrl.postDeleteReservation);
 

@@ -3,6 +3,9 @@ const bcrypt = require('bcrypt');
 const SALT_ROUNDS = 10;
 const { validationResult } = require('express-validator');
 
+const Reservation = require('../models/Reservation');
+const Slot = require('../models/Slot');
+
 exports.getLogin = (req, res) => {
     res.render('login');
 };
@@ -13,20 +16,36 @@ exports.postLogin = async (req, res) => {
     if (!errors.isEmpty()) {
         return res.render('login', { errors: errors.array() });
     }
-    
+
     try {
-        const { username, password } = req.body;
+        const { username, password, rememberMe } = req.body;
         const user = await User.findOne({ username });
+
         if (!user || !(await bcrypt.compare(password, user.password))) {
             return res.render('login', { error: 'Invalid username or password.' });
         }
+
         req.session.userId = user._id;
         req.session.username = user.username;
         req.session.isAdmin = user.role === 'admin';
-        res.redirect(user.role === 'admin' ? '/admin' : '/reservation');
+
+        if (rememberMe) {
+            req.session.cookie.maxAge = 1000 * 60 * 60 * 24 * 30;
+        } else {
+            req.session.cookie.expires = false;
+        }
+
+        req.session.save((err) => {
+            if (err) {
+                console.error('session save error:', err);
+                return res.status(500).render('login', { error: 'Could not save session. Please try again.' });
+            }
+
+            return res.redirect(user.role === 'admin' ? '/admin' : '/reservation');
+        });
     } catch (err) {
         console.error('postLogin error:', err);
-        res.status(500).render('login', { error: 'Something went wrong. Please try again.' });
+        return res.status(500).render('login', { error: 'Something went wrong. Please try again.' });
     }
 };
 
@@ -79,3 +98,59 @@ exports.postProfile = async (req, res) => {
 exports.getLogout = (req, res) => {
     req.session.destroy(() => res.redirect('/'));
 };
+
+exports.postDeleteProfile = async (req, res) => {
+    try {
+        const userId = req.session.userId;
+        if (!userId) return res.redirect('/auth/login');
+
+        const activeReservations = await Reservation.find({ user: userId, status: 'active' });
+        
+        for (const res of activeReservations) {
+            await Slot.findByIdAndUpdate(res.slot, { status: 'available' });
+        }
+        
+        await Reservation.deleteMany({ user: userId });
+        
+        await User.findByIdAndDelete(userId);
+
+        req.session.destroy((err) => {
+            if (err) console.error('Session destruction error:', err);
+            res.redirect('/');
+        });
+
+    } catch (err) {
+        console.error('postDeleteProfile error:', err);
+        res.status(500).send('An error occurred while deleting the profile.');
+    }
+};
+
+exports.getSearchUser = async (req, res) => {
+    try {
+        if (!req.session.userId) return res.redirect('/auth/login');
+        
+        const searchQuery = req.query.q;
+        if (!searchQuery) return res.redirect('/auth/profile');
+
+        
+        const searchTerms = searchQuery.split(' ').map(term => new RegExp(term, 'i'));
+
+        // ONLY search by First Name and Last Name
+        const targetUser = await User.findOne({
+            $or: [
+                { firstName: { $in: searchTerms } },
+                { lastName: { $in: searchTerms } }
+            ]
+        }).lean();
+
+        if (!targetUser) {
+            return res.send("<script>alert('User not found. Please ensure you typed their first or last name correctly.'); window.location.href='/auth/profile';</script>");
+        }
+        res.render('public_profile', { targetUser });
+
+    } catch (err) {
+        console.error('getSearchUser error:', err);
+        res.status(500).send('An error occurred while searching for the user.');
+    }
+};
+

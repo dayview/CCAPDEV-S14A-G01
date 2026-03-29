@@ -4,7 +4,7 @@ const scheduleBody = document.getElementById('scheduleBody');
 const seatsAvailableEl = document.getElementById('seatsAvailable');
 const seatsRepairEl = document.getElementById('seatsRepair');
 
-dateInput.value = new Date().toISOString().split('T')[0];
+dateInput.valueAsDate = new Date();
 
 let selectedCell = null;
 
