@@ -70,10 +70,13 @@ exports.getReservationOverview = async (req, res) => {
 
 exports.getStudentReservation = async (req, res) => {
     try {
-        const reservations = await Reservation.find({user: req.session.userId}).populate({
+        const rawReservations = await Reservation.find({user: req.session.userId}).populate({
             path: 'slot',
             populate: {path: 'lab'}
         }).sort({createdAt: -1}).lean();
+
+        const reservations = formatReservations(rawReservations);
+
         res.render('reservation_history', {reservations});
     }
     catch (err) {
@@ -128,7 +131,10 @@ exports.postStudentReservation = async (req, res) => {
                 status: 'reserved'
             });
         } else {
-            await Slot.findByIdAndUpdate(slot._id, {status: 'reserved'});
+            await Slot.findByIdAndUpdate(slot._id, {
+                status: 'reserved',
+                endTime: timeOut
+            });
         }
 
         await Reservation.create({
@@ -406,8 +412,9 @@ exports.searchAvailability = async (req, res) => {
             const reservation = reservationMap[String(slot._id)];
 
         let reservedBy = 'Unknown';
-        if (reservation.isAnonymous) reservedBy = 'Anonymous';
-        else reservedBy = `${reservation.user.firstName} ${reservation.user.lastName}`;
+        if (!reservation) reservedBy = slot.status === 'walk-in' ? 'Walk-in' : 'Unknown';
+        else if (reservation.isAnonymous) reservedBy = 'Anonymous';
+        else if (reservation.user) `${reservation.user.firstName} ${reservation.user.lastName}`;
 
         return {
             seatNum: Number(slot.seatNum),
