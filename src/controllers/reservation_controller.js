@@ -344,26 +344,15 @@ exports.postDeleteReservation = async (req, res) => {
     try {
         const reservationId = req.params.id;
         
-        console.log("Attempting to delete reservation:", reservationId);
-        
-        
         const reservation = await Reservation.findById(reservationId).populate('slot');
         
         if (!reservation) {
-            console.log("Reservation not found");
             return res.redirect('/reservation/delete');
         }
         
-        console.log("Found reservation. Slot ID:", reservation.slot._id);
-        console.log("Current slot status:", reservation.slot.status);
-        
-        
         await Slot.findByIdAndUpdate(reservation.slot._id, { status: 'available' });
-        console.log("Slot updated to available");
-        
-        
+     
         await Reservation.findByIdAndUpdate(reservationId, { status: 'cancelled' });
-        console.log("Reservation updated to cancelled");
         
         res.redirect('/reservation/delete');
     } catch(err) {
