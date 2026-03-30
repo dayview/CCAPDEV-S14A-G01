@@ -30,7 +30,7 @@ exports.postLogin = async (req, res) => {
         req.session.isAdmin = user.role === 'admin';
 
         if (rememberMe) {
-            req.session.cookie.maxAge = 1000 * 60 * 60 * 24 * 30;
+            req.session.cookie.maxAge = 1000 * 60 * 60 * 24 * 21;
         } else {
             req.session.cookie.expires = false;
         }
