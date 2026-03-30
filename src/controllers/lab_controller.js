@@ -10,7 +10,6 @@ exports.getSearch = async (req, res) => {
         const labs = await Lab.find();
         res.render('search', { slots, labs, query: req.query });
     } catch (err) {
-        console.error('getSearch error:', err);
         res.status(500).render('search', { error: 'Could not perform search.' });
     }
 };
