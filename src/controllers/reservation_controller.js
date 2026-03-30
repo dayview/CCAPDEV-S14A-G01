@@ -112,7 +112,7 @@ exports.postStudentReservation = async (req, res) => {
         }
 
         const [year, month, day] = date.split('-').map(Number);
-        const slotDate = new Date(year, month - 1, day, 0, 0, 0, 0);
+        const slotDate = new Date(Date.UTC(year, month - 1, day));
 
         let slot = await Slot.findOne({
             lab: lab._id,
@@ -276,7 +276,7 @@ exports.postEditReservation = async (req, res) => {
         const{date, timeIn} = req.body;
 
         const [year, month, day] = date.split('-').map(Number);
-        const slotDate = new Date(year, month - 1, day, 0, 0, 0, 0);
+        const slotDate = new Date(Date.UTC(year, month - 1, day));
 
         const timeOutDate = new Date();
         const [hours, minutes] = timeIn.split(':').map(Number);
@@ -394,8 +394,8 @@ exports.searchAvailability = async (req, res) => {
         }
 
         const [year, month, day] = date.split('-').map(Number);
-        const searchDate = new Date(year, month - 1, day, 0, 0, 0, 0);
-        const nextDay = new Date(year, month - 1, day + 1, 0, 0, 0, 0);
+        const searchDate = new Date(Date.UTC(year, month - 1, day));
+        const nextDay = new Date(Date.UTC(year, month - 1, day + 1));
 
         const occupiedSlots = await Slot.find({
             lab: lab._id,
