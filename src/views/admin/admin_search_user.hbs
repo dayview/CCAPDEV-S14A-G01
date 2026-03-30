@@ -1,0 +1,92 @@
+<link rel="stylesheet" href="/css/admin_reservation_history.css">
+<link rel="stylesheet" href="/css/admin_search_user.css">
+
+<section class="history_page">
+    <div class="history_container">
+        <h1 class="page_title">SEARCH USER</h1>
+
+        <div class="search_section">
+            <label class="input_label">USER ID</label>
+            <div class="search_row">
+                <input type="text" class="student_input" id="user_id_input" placeholder="Enter 8-digit User ID" maxlength="8">
+                <button class="search_button" id="search_btn">SEARCH</button>
+            </div>
+        </div>
+
+        <div class="error_message" id="error_message" style="display: none;">
+            <p>Error: User ID not registered in the system.</p>
+        </div>
+
+        <div class="user_profile_card" id="user_profile_card" style="display: none;">
+            <div class="profile_avatar" id="profile_avatar"></div>
+
+            <div class="profile_info">
+                <div class="profile_field">
+                    <span class="field_label">Name</span>
+                    <span class="field_value" id="display_name"></span>
+                </div>
+                <div class="profile_field">
+                    <span class="field_label">ID Number</span>
+                    <span class="field_value" id="display_idnum"></span>
+                </div>
+                <div class="profile_field">
+                    <span class="field_label">Email</span>
+                    <span class="field_value" id="display_email"></span>
+                </div>
+                <div class="profile_field">
+                    <span class="field_label">Username</span>
+                    <span class="field_value" id="display_username"></span>
+                </div>
+                <div class="profile_field">
+                    <span class="field_label">Role</span>
+                    <span class="field_value" id="display_role"></span>
+                </div>
+                <div class="profile_field">
+                    <span class="field_label">Description</span>
+                    <span class="field_value" id="display_description"></span>
+                </div>
+            </div>
+
+            <div class="edit_btn_wrapper">
+                <button class="edit_profile_btn" id="edit_profile_btn">Edit Profile</button>
+                <span class="admin_note" id="admin_note" style="display: none;">Admin accounts cannot be edited.</span>
+            </div>
+        </div>
+
+        <!-- Edit Profile Form (hidden by default) -->
+        <div class="edit_profile_card" id="edit_profile_card" style="display: none;">
+            <h2 class="edit_title">Edit Profile</h2>
+
+            <div class="edit_field">
+                <label class="field_label">Username</label>
+                <input type="text" class="edit_input" id="edit_username" placeholder="Username">
+            </div>
+            <div class="edit_field">
+                <label class="field_label">Description</label>
+                <textarea class="edit_input edit_textarea" id="edit_description" placeholder="Description" maxlength="300"></textarea>
+            </div>
+            <div class="edit_field">
+                <label class="field_label">New Password <span class="optional_label">(leave blank to keep current)</span></label>
+                <input type="password" class="edit_input" id="edit_password" placeholder="New password">
+            </div>
+            <div class="edit_field">
+                <label class="field_label">Confirm New Password</label>
+                <input type="password" class="edit_input" id="edit_confirm_password" placeholder="Confirm new password">
+            </div>
+
+            <div class="edit_error" id="edit_error" style="display: none;"></div>
+            <div class="edit_success" id="edit_success" style="display: none;">Profile updated successfully!</div>
+
+            <div class="edit_actions">
+                <div class="edit_actions_left">
+                    <button class="finish_edit_btn" id="finish_edit_btn">Finish Edit</button>
+                    <button class="cancel_edit_btn" id="cancel_edit_btn">Cancel</button>
+                </div>
+                <button class="delete_account_btn" id="delete_account_btn">Delete Account</button>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<script src="/js/admin_search_user.js"></script>

@@ -38,4 +38,10 @@ router.get('/slots/reservation', requireAdmin, ctrl.getAdminSlotReservation);
 router.post('/slots/reservation', requireAdmin, adminSlotRules, ctrl.postAdminSlotReservation);
 router.post('/slots/removal', requireAdmin, ctrl.postAdminSlotRemoval);
 
+// Search user routes
+router.get("/search-user", requireAdmin, ctrl.getAdminSearchUser);
+router.get("/search-user/lookup", requireAdmin, ctrl.getAdminUserLookup);
+router.post("/search-user/edit/:id", requireAdmin, ctrl.postAdminEditUser);
+router.post("/search-user/delete/:id", requireAdmin, ctrl.postAdminDeleteUser);
+
 module.exports = router;

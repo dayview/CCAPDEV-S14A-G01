@@ -441,3 +441,70 @@ exports.postAdminEditReservation = async (req, res) => {
         res.status(500).render('error', { message: 'Could not update reservation.' });
     }
 };
+exports.getAdminSearchUser = (req, res) => {
+    res.render('admin/admin_search_user', { layout: 'admin' });
+};
+
+exports.getAdminUserLookup = async (req, res) => {
+    try {
+        const { idNum } = req.query;
+        const user = await User.findOne({ idNum }).lean();
+        if (!user) return res.json({ notFound: true });
+        // Don't expose the hashed password
+        const { password: _pw, ...safeUser } = user;
+        res.json({ notFound: false, user: safeUser });
+    } catch (err) {
+        console.error('getAdminUserLookup error:', err);
+        res.status(500).json({ error: 'Lookup failed.' });
+    }
+};
+
+exports.postAdminEditUser = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { username, description, password } = req.body;
+
+        const target = await User.findById(id);
+        if (!target) return res.status(404).json({ error: 'User not found.' });
+        if (target.role === 'admin') return res.status(403).json({ error: 'Admin accounts cannot be edited.' });
+
+        // Check username uniqueness (excluding self)
+        const existing = await User.findOne({ username, _id: { $ne: id } });
+        if (existing) return res.status(409).json({ error: 'Username is already taken.' });
+
+        const update = { username, description };
+        if (password) {
+            update.password = await bcrypt.hash(password, 10);
+        }
+
+        await User.findByIdAndUpdate(id, update, { runValidators: true });
+        res.json({ success: true });
+    } catch (err) {
+        console.error('postAdminEditUser error:', err);
+        res.status(500).json({ error: 'Update failed.' });
+    }
+};
+
+exports.postAdminDeleteUser = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const target = await User.findById(id);
+        if (!target) return res.status(404).json({ error: 'User not found.' });
+        if (target.role === 'admin') return res.status(403).json({ error: 'Admin accounts cannot be deleted.' });
+
+        // Cancel active reservations and free up their slots
+        const activeReservations = await Reservation.find({ user: id, status: 'active' });
+        for (const reservation of activeReservations) {
+            await Slot.findByIdAndUpdate(reservation.slot, { status: 'available' });
+        }
+
+        await Reservation.deleteMany({ user: id });
+        await User.findByIdAndDelete(id);
+
+        res.json({ success: true });
+    } catch (err) {
+        console.error('postAdminDeleteUser error:', err);
+        res.status(500).json({ error: 'Delete failed.' });
+    }
+};

@@ -1,0 +1,232 @@
+.user_profile_card {
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    margin-top: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.profile_avatar {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: #3C5A14;
+    color: white;
+    font-size: 32px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    letter-spacing: 2px;
+    flex-shrink: 0;
+}
+
+.profile_info {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px 30px;
+}
+
+.profile_field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.field_label {
+    font-size: 12px;
+    font-weight: 700;
+    color: #3C5A14;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.field_value {
+    font-size: 15px;
+    color: #333;
+    background: #f5f5f5;
+    padding: 8px 12px;
+    border-radius: 6px;
+    min-height: 36px;
+}
+
+.edit_btn_wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.edit_profile_btn {
+    padding: 10px 36px;
+    background: #3C5A14;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.edit_profile_btn:hover:not(:disabled) {
+    background: #669D31;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(60,90,20,0.25);
+}
+
+.edit_profile_btn:disabled {
+    background: #aaa;
+    cursor: not-allowed;
+}
+
+.admin_note {
+    font-size: 13px;
+    color: #b71c1c;
+    font-weight: 600;
+}
+
+/* Edit form */
+.edit_profile_card {
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    margin-top: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
+
+.edit_title {
+    font-size: 20px;
+    color: #3C5A14;
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+.edit_field {
+    margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.edit_input {
+    padding: 10px 14px;
+    border: 2px solid #3C5A14;
+    border-radius: 8px;
+    font-size: 15px;
+    font-family: Inter, sans-serif;
+    transition: border-color 0.2s;
+}
+
+.edit_input:focus {
+    outline: none;
+    border-color: #669D31;
+    box-shadow: 0 0 0 3px rgba(102,157,49,0.1);
+}
+
+.edit_textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.optional_label {
+    font-size: 11px;
+    color: #888;
+    font-weight: 400;
+    text-transform: none;
+}
+
+.edit_error {
+    background: #ffebee;
+    color: #d32f2f;
+    padding: 10px 16px;
+    border-radius: 8px;
+    border-left: 4px solid #d32f2f;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.edit_success {
+    background: #e8f5e9;
+    color: #2e7d32;
+    padding: 10px 16px;
+    border-radius: 8px;
+    border-left: 4px solid #2e7d32;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.edit_actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.edit_actions_left {
+    display: flex;
+    gap: 12px;
+}
+
+.finish_edit_btn {
+    padding: 10px 30px;
+    background: #3C5A14;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.finish_edit_btn:hover {
+    background: #669D31;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(60,90,20,0.25);
+}
+
+.cancel_edit_btn {
+    padding: 10px 30px;
+    background: white;
+    color: #3C5A14;
+    border: 2px solid #3C5A14;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.cancel_edit_btn:hover {
+    background: #f0f7e8;
+}
+
+@media (max-width: 600px) {
+    .profile_info {
+        grid-template-columns: 1fr;
+    }
+}
+
+.delete_account_btn {
+    padding: 10px 24px;
+    background: #d32f2f;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.delete_account_btn:hover {
+    background: #b71c1c;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(211,47,47,0.3);
+}
