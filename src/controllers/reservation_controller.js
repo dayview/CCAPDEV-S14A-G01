@@ -156,10 +156,11 @@ exports.postEditProfile = async (req, res) => {
     try {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
+            const user = await User.findById(req.session.userId).lean();
             return res.status(400).render('user_profile', {
                 errors: errors.array(),
                 isLoggedIn: true,
-                user: req.session.user
+                user
             });
         }
 

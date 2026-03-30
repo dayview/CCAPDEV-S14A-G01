@@ -21,7 +21,7 @@ const editRules = [
 const profileRules = [
     body('username').notEmpty().trim().escape().withMessage('Username is required.'),
     body('bio').optional({ checkFalsy: true }).trim().escape(),
-    body('password').optional({ checkFalsy: true }).isLength({ min: 8 }).withMessage('Passowrd must be at least 8 characters.')
+    body('password').optional({ checkFalsy: true }).isLength({ min: 8 }).withMessage('Password must be at least 8 characters.')
 ];
 
 const storage = multer.diskStorage({
