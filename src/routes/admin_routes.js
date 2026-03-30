@@ -27,7 +27,6 @@ router.get('/logout', ctrl.getAdminLogout);
 
 router.get('/', requireAdmin, ctrl.getAdminHome);
 router.get('/reservations', requireAdmin, ctrl.getAdminReservations);
-router.get('/student-reservations', requireAdmin, ctrl.getAdminStudentReservations);
 router.get('/student-reservations/search', requireAdmin, ctrl.getAdminStudentSearch);
 
 // Edit reservation routes
