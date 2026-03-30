@@ -15,7 +15,10 @@ const adminSlotRules = [
 
 const editRules = [
     body('date').notEmpty().withMessage('Date is required.'),
-    body('timeIn').notEmpty().withMessage('Time-in is required.')
+    body('timeIn').notEmpty().withMessage('Time-in is required.'),
+    body('timeOut').notEmpty().withMessage('Time-out is required.'),
+    body('room').notEmpty().withMessage('Room is required.'),
+    body('seatNum').notEmpty().withMessage('Seat number is required.')
 ];
 
 router.get('/login', ctrl.getAdminLogin);

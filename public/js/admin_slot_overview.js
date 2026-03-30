@@ -11,7 +11,7 @@ let selectedCell = null;
 const TIME_SLOTS = [
   '07:30', '08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00',
   '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00',
-  '15:30', '16:00', '16:30', '17:00', '17:30', '18:00'
+  '15:30', '16:00', '16:30', '17:00', '17:30'
 ];
 
 async function fetchSlotData(lab, date) {
@@ -25,12 +25,12 @@ async function generateScheduleTable(room, date) {
   selectedCell = null;
 
   if (!room || !date) {
-    scheduleBody.innerHTML = '<tr><td colspan="23" class="empty_message">Please select a room and date to view availability</td></tr>';
+    scheduleBody.innerHTML = '<tr><td colspan="22" class="empty_message">Please select a room and date to view availability</td></tr>';
     updateBookingOverview(null, null);
     return;
   }
 
-  scheduleBody.innerHTML = '<tr><td colspan="23" class="empty_message">Loading...</td></tr>';
+  scheduleBody.innerHTML = '<tr><td colspan="22" class="empty_message">Loading...</td></tr>';
 
   try {
     const data = await fetchSlotData(room, date);
@@ -80,7 +80,7 @@ async function generateScheduleTable(room, date) {
     updateBookingOverview(null, data.lab.capacity);
   } catch (err) {
     console.error('generateScheduleTable error:', err);
-    scheduleBody.innerHTML = '<tr><td colspan="23" class="empty_message">Failed to load slot data. Please try again.</td></tr>';
+    scheduleBody.innerHTML = '<tr><td colspan="22" class="empty_message">Failed to load slot data. Please try again.</td></tr>';
     updateBookingOverview(null, null);
   }
 }

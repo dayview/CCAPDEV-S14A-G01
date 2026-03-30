@@ -7,8 +7,8 @@
         alert("{{error}}");
     </script>
 {{/if}}
-<form id="editReservation" method="POST" action = "/reservation/edit">
-    <input type = "hidden" id = "reservationId" name = "reservationId>
+<form id="editReservation" method="POST" action = "/reservation/edit/:id">
+    <input type="hidden" id="reservationId" name="reservationId"> 
 <section class="left-panel">
     <div class="information-block">
         <h1>Booking Information</h1>
