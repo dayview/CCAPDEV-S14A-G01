@@ -111,12 +111,19 @@ async function seed() {
         { lab: GK305B, date: d(7),  startTime: '09:00', endTime: '09:30', seatNum: 9,  status: 'available' },
         { lab: GK305A, date: d(10), startTime: '15:00', endTime: '15:30', seatNum: 6,  status: 'available' },
         { lab: GK302B, date: d(3),  startTime: '07:30', endTime: '08:00', seatNum: 1,  status: 'walk-in'   },
+
+        // History slots (past dates and unique to each users, not shared with active reservations)
+        { lab: GK302B, date: d(-7), startTime: '11:00', endTime: '11:30', seatNum: 4, status: 'available' },
+        { lab: GK302A, date: d(-5), startTime: '08:00', endTime: '08:30', seatNum: 3, status: 'available' },
+        { lab: GK302A, date: d(-3), startTime: '09:00', endTime: '09:30', seatNum: 1, status: 'available' },
+        { lab: GK302A, date: d(-2), startTime: '09:00', endTime: '09:30', seatNum: 2, status: 'available' },
     ];
 
     const insertedSlots = await Slot.insertMany(slots);
     console.log(`Inserted ${insertedSlots.length} slots.`);
 
     const [r01, r02, r03, r04, r05, r06, r07, r08, r09, r10, r11] = insertedSlots;
+    const [,,,,,,,,,,,,,,,,,, h01, h02, h03, h04] = insertedSlots;
     const [u1_admin, u2_lpavino, u3_jmajor, u4_asese, u5_mcolcol] = insertedUsers;
 
     const reservations = [
@@ -133,10 +140,10 @@ async function seed() {
         { user: u5_mcolcol._id, slot: r08._id, isAnonymous: false, status: 'active',    remarks: 'Capstone project work.' },
 
         // For reservation history view demo
-        { user: u2_lpavino._id, slot: r04._id, isAnonymous: false, status: 'cancelled', remarks: 'Schedule conflict.' },
-        { user: u3_jmajor._id,  slot: r03._id, isAnonymous: false, status: 'completed', remarks: 'Completed database project.' },
-        { user: u4_asese._id,   slot: r01._id, isAnonymous: false, status: 'cancelled', remarks: 'Class was moved online.' },
-        { user: u5_mcolcol._id, slot: r02._id, isAnonymous: false, status: 'completed', remarks: 'Finished CCAPDEV phase 2.' },
+        { user: u2_lpavino._id, slot: h01._id, isAnonymous: false, status: 'cancelled', remarks: 'Schedule conflict.' },
+        { user: u3_jmajor._id,  slot: h02._id, isAnonymous: false, status: 'completed', remarks: 'Completed database project.' },
+        { user: u4_asese._id,   slot: h03._id, isAnonymous: false, status: 'cancelled', remarks: 'Class was moved online.' },
+        { user: u5_mcolcol._id, slot: h04._id, isAnonymous: false, status: 'completed', remarks: 'Finished CCAPDEV phase 2.' },
     ];
 
     const insertedReservations = await Reservation.insertMany(reservations);

@@ -422,7 +422,7 @@ exports.searchAvailability = async (req, res) => {
         let reservedBy = 'Unknown';
         if (!reservation) reservedBy = slot.status === 'walk-in' ? 'Walk-in' : 'Unknown';
         else if (reservation.isAnonymous) reservedBy = 'Anonymous';
-        else if (reservation.user) `${reservation.user.firstName} ${reservation.user.lastName}`;
+        else if (reservation.user) reservedBy = `${reservation.user.firstName} ${reservation.user.lastName}`;
 
         return {
             seatNum: Number(slot.seatNum),
