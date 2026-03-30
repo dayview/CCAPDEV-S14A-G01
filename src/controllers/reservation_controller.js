@@ -7,9 +7,7 @@ const bcrypt = require('bcrypt');
 
 function formatReservations(rawReservations) {
     return rawReservations.map(reservation => {
-        const localDate = new Date(reservation.slot.date);
-        const adjustedDate = new Date(localDate.getTime() - localDate.getTimezoneOffset() * 60000);
-        const dateValue = adjustedDate.toISOString().split('T')[0];
+        const dateValue = new Date(reservation.slot.date).toISOString().split('T')[0];
 
         return {
             ...reservation,
