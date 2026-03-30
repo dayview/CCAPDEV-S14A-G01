@@ -65,7 +65,6 @@ async function showAvailableSeats() {
                 ? availableSeats.join(", ")
                 : "No available seats for that schedule.";
     } catch (err) {
-        console.error("Search error:", err);
         resultstext.textContent = "";
         seattext.textContent = err.message || "Could not fetch seat availability.";
     }
