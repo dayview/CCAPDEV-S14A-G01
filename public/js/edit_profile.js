@@ -19,7 +19,7 @@ form.addEventListener("submit", async (event) => {
     });
 
     try {
-        const response = await fetch("/edit_profile", {
+        const response = await fetch("/user_profile", requireStudent {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
