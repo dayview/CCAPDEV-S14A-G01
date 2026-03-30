@@ -114,10 +114,10 @@ exports.getAdminSlotSearch = async (req, res) => {
         }
 
         const [year, month, day] = date.split('-').map(Number);
-        const searchDate = new Date(year, month - 1, day, 0, 0, 0, 0);
-        const nextDay = new Date(year, month - 1, day + 1, 0, 0, 0, 0);
+const searchDate = new Date(Date.UTC(year, month - 1, day));
+const nextDay = new Date(Date.UTC(year, month - 1, day + 1));
 
-        const slots = await Slot.find({
+const slots = await Slot.find({
             lab: lab._id,
             date: { $gte: searchDate, $lt: nextDay }
         });
@@ -175,13 +175,9 @@ exports.getAdminSlotSeats = async (req, res) => {
         }
 
         const [year, month, day] = date.split('-').map(Number);
-        const searchDate = new Date(year, month - 1, day, 0, 0, 0, 0);
-        const nextDay = new Date(year, month - 1, day + 1, 0, 0, 0, 0);
-
-        // FIX: fetch all reserved/walk-in slots for the day, then filter to those
-        // whose time range overlaps the queried timeIn (startTime <= timeIn < endTime).
-        // Previously only exact startTime matches were returned, so seats booked from
-        // e.g. 07:30–18:00 were invisible when querying any timeIn other than 07:30.
+        const searchDate = new Date(Date.UTC(year, month - 1, day));
+        const nextDay = new Date(Date.UTC(year, month - 1, day + 1));
+        postAdminSlotReservation
         const allSlots = await Slot.find({
             lab: lab._id,
             date: { $gte: searchDate, $lt: nextDay },
@@ -236,7 +232,7 @@ exports.postAdminSlotReservation = async (req, res) => {
         }
 
         const [year, month, day] = date.split('-').map(Number);
-        const slotDate = new Date(year, month - 1, day, 0, 0, 0, 0);
+        const slotDate = new Date(Date.UTC(year, month - 1, day));
 
         const results = [];
         for (const seatNum of seats) {
@@ -299,12 +295,12 @@ exports.postAdminSlotRemoval = async (req, res) => {
         }
 
         const [year, month, day] = date.split('-').map(Number);
-        const slotDate = new Date(year, month - 1, day, 0, 0, 0, 0);
-        const nextDay = new Date(year, month - 1, day + 1, 0, 0, 0, 0);
+        const slotDate = new Date(Date.UTC(year, month - 1, day));
+        const nextDay = new Date(Date.UTC(year, month - 1, day + 1));
 
         const results = [];
         for (const seatNum of seats) {
-    // Fetch ALL reserved/walk-in slots for this seat on this day
+
     const daySlots = await Slot.find({
         lab: lab._id,
         date: { $gte: slotDate, $lt: nextDay },
@@ -312,7 +308,6 @@ exports.postAdminSlotRemoval = async (req, res) => {
         status: { $in: ['reserved', 'walk-in'] }
     });
 
-    // Find the slot whose time range contains the queried timeIn
     const reqMinutes = timeToMinutes(timeIn);
 
     const slot = daySlots.find(s => {
@@ -405,7 +400,7 @@ exports.postAdminEditReservation = async (req, res) => {
         }
 
         const [year, month, day] = date.split('-').map(Number);
-        const slotDate = new Date(year, month - 1, day, 0, 0, 0, 0);
+        const slotDate = new Date(Date.UTC(year, month - 1, day));
 
         const currentSlot = reservation.slot;
 
