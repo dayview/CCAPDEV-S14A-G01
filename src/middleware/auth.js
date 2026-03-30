@@ -1,5 +1,5 @@
 exports.requireStudent = (req, res, next) => {
-    if (!req.session.userId) return res.redirect('/auth/login');
+    if (!req.session.userId || req.session.isAdmin) return res.redirect('/auth/login');
     next();
 };
 

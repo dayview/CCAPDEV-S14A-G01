@@ -156,7 +156,10 @@ finishEditBtn.addEventListener('click', async () => {
 deleteAccountBtn.addEventListener('click', async () => {
     if (!currentUser) return;
 
-    const confirmed = confirm(`Are you sure you want to delete the account of ${currentUser.firstName} ${currentUser.lastName} (${currentUser.idNum})? This will cancel all their pending reservations and cannot be undone.`);
+    const deletedName = `${currentUser.firstName} ${currentUser.lastName}`;
+    const deletedId   = currentUser.idNum;
+
+    const confirmed = confirm(`Are you sure you want to delete the account of ${deletedName} (${deletedId})? This will cancel all their pending reservations and cannot be undone.`);
     if (!confirmed) return;
 
     try {
@@ -171,11 +174,9 @@ deleteAccountBtn.addEventListener('click', async () => {
             return;
         }
 
-        // Reset the whole page UI after successful deletion
         resetUI();
         userIdInput.value = '';
-        alert(`Account for ${currentUser ? currentUser.firstName : 'User'} has been deleted successfully.`);
-        currentUser = null;
+        alert(`Account for ${deletedName} has been deleted successfully.`);
     } catch (err) {
         console.error('Delete error:', err);
         alert('Something went wrong. Please try again.');

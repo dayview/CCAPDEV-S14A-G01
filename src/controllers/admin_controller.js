@@ -27,6 +27,7 @@ exports.postAdminLogin = async (req, res) => {
             return res.render('admin/admin_login', { layout: 'admin', isLoginPage: true, error: 'Invalid admin credentials.' });
         }
         req.session.userId = admin._id;
+        req.session.username = admin.username;
         req.session.isAdmin = true;
         if (remember) {
             req.session.cookie.maxAge = 1000 * 60 * 60 * 24 * 30; // 30 days
@@ -55,6 +56,9 @@ exports.getAdminStudentReservations = (req, res) => {
 exports.getAdminStudentSearch = async (req, res) => {
     try {
         const { idNum } = req.query;
+        if (!idNum) {
+            return res.render('admin/admin_reservation', { layout: 'admin' });
+        }
         const user = await User.findOne({ idNum });
         let reservations = [];
         if (user) {
@@ -90,6 +94,12 @@ exports.getAdminSlotsOverview = async (req, res) => {
     }
 };
 
+// Helper: convert "HH:MM" to total minutes
+function timeToMinutes(t) {
+    const [h, m] = t.split(':').map(Number);
+    return h * 60 + m;
+}
+
 exports.getAdminSlotSearch = async (req, res) => {
     try {
         const { lab: labName, date } = req.query;
@@ -112,18 +122,26 @@ exports.getAdminSlotSearch = async (req, res) => {
             date: { $gte: searchDate, $lt: nextDay }
         });
 
-        const reservedCountMap = {};
-        for (const slot of slots) {
-            if (slot.status !== 'available') {
-                reservedCountMap[slot.startTime] = (reservedCountMap[slot.startTime] || 0) + 1;
-            }
-        }
-
         const ALL_TIME_SLOTS = [
             '07:30', '08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00',
             '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00',
-            '15:30', '16:00', '16:30', '17:00', '17:30', '18:00'
+            '15:30', '16:00', '16:30', '17:00', '17:30'
         ];
+
+        // FIX: expand each slot across all 30-min intervals it covers (startTime to endTime)
+        const reservedCountMap = {};
+        for (const slot of slots) {
+            if (slot.status !== 'available') {
+                const start = timeToMinutes(slot.startTime);
+                const end   = timeToMinutes(slot.endTime);
+                for (const ts of ALL_TIME_SLOTS) {
+                    const tsMin = timeToMinutes(ts);
+                    if (tsMin >= start && tsMin < end) {
+                        reservedCountMap[ts] = (reservedCountMap[ts] || 0) + 1;
+                    }
+                }
+            }
+        }
 
         const timeSlots = ALL_TIME_SLOTS.map(startTime => {
             const reservedSeats = reservedCountMap[startTime] || 0;
@@ -160,14 +178,25 @@ exports.getAdminSlotSeats = async (req, res) => {
         const searchDate = new Date(year, month - 1, day, 0, 0, 0, 0);
         const nextDay = new Date(year, month - 1, day + 1, 0, 0, 0, 0);
 
-        const slots = await Slot.find({
+        // FIX: fetch all reserved/walk-in slots for the day, then filter to those
+        // whose time range overlaps the queried timeIn (startTime <= timeIn < endTime).
+        // Previously only exact startTime matches were returned, so seats booked from
+        // e.g. 07:30–18:00 were invisible when querying any timeIn other than 07:30.
+        const allSlots = await Slot.find({
             lab: lab._id,
             date: { $gte: searchDate, $lt: nextDay },
-            startTime: timeIn,
             status: { $in: ['reserved', 'walk-in'] }
         });
 
-        const occupiedSeats = slots.map(s => String(s.seatNum));
+        const queryMinutes = timeToMinutes(timeIn);
+
+        const occupiedSeats = allSlots
+            .filter(s => {
+                const start = timeToMinutes(s.startTime);
+                const end   = timeToMinutes(s.endTime);
+                return queryMinutes >= start && queryMinutes < end;
+            })
+            .map(s => String(s.seatNum));
 
         res.json({ occupiedSeats });
     } catch (err) {
@@ -211,40 +240,47 @@ exports.postAdminSlotReservation = async (req, res) => {
 
         const results = [];
         for (const seatNum of seats) {
-            let slot = await Slot.findOne({
-                lab: lab._id,
-                date: slotDate,
-                startTime: timeIn,
-                seatNum: Number(seatNum)
-            });
+    // Fetch ALL reserved/walk-in slots for this seat on this day
+    const daySlots = await Slot.find({
+        lab: lab._id,
+        date: slotDate,
+        seatNum: Number(seatNum),
+        status: { $in: ['reserved', 'walk-in'] }
+    });
 
-            if (slot && slot.status !== 'available') {
-                results.push({ seat: seatNum, success: false, reason: 'Already reserved' });
-                continue;
-            }
+    // Check if any existing slot overlaps the requested timeIn–timeOut window
+    const reqStart = timeToMinutes(timeIn);
+    const reqEnd   = timeToMinutes(timeOut);
 
-            if (!slot) {
-                slot = await Slot.create({
-                    lab: lab._id,
-                    date: slotDate,
-                    startTime: timeIn,
-                    endTime: timeOut,
-                    seatNum: Number(seatNum),
-                    status: 'reserved'
-                });
-            } else {
-                await Slot.findByIdAndUpdate(slot._id, { status: 'reserved', endTime: timeOut }, { runValidators: true });
-            }
+    const conflict = daySlots.find(s => {
+        const sStart = timeToMinutes(s.startTime);
+        const sEnd   = timeToMinutes(s.endTime);
+        return reqStart < sEnd && reqEnd > sStart;
+    });
 
-            await Reservation.create({
-                user: user._id,
-                slot: slot._id,
-                isAnonymous: !!isAnonymous,
-                status: 'active'
-            });
+    if (conflict) {
+        results.push({ seat: seatNum, success: false, reason: 'Already reserved' });
+        continue;
+    }
 
-            results.push({ seat: seatNum, success: true });
-        }
+    const slot = await Slot.create({
+        lab: lab._id,
+        date: slotDate,
+        startTime: timeIn,
+        endTime: timeOut,
+        seatNum: Number(seatNum),
+        status: 'reserved'
+    });
+
+    await Reservation.create({
+        user: user._id,
+        slot: slot._id,
+        isAnonymous: !!isAnonymous,
+        status: 'active'
+    });
+
+    results.push({ seat: seatNum, success: true });
+}
 
         res.json({ results });
     } catch (err) {
@@ -268,53 +304,37 @@ exports.postAdminSlotRemoval = async (req, res) => {
 
         const results = [];
         for (const seatNum of seats) {
-            const slot = await Slot.findOne({
-                lab: lab._id,
-                date: { $gte: slotDate, $lt: nextDay },
-                startTime: timeIn,
-                seatNum: Number(seatNum)
-            });
+    // Fetch ALL reserved/walk-in slots for this seat on this day
+    const daySlots = await Slot.find({
+        lab: lab._id,
+        date: { $gte: slotDate, $lt: nextDay },
+        seatNum: Number(seatNum),
+        status: { $in: ['reserved', 'walk-in'] }
+    });
 
-            if (!slot) {
-                results.push({ seat: seatNum, success: false, reason: 'Slot not found' });
-                continue;
-            }
+    // Find the slot whose time range contains the queried timeIn
+    const reqMinutes = timeToMinutes(timeIn);
 
-            await Slot.findByIdAndUpdate(slot._id, { status: 'available' }, { runValidators: true });
-            await Reservation.updateMany({ slot: slot._id, status: 'active' }, { status: 'cancelled' });
-            results.push({ seat: seatNum, success: true });
-        }
+    const slot = daySlots.find(s => {
+        const sStart = timeToMinutes(s.startTime);
+        const sEnd   = timeToMinutes(s.endTime);
+        return reqMinutes >= sStart && reqMinutes < sEnd;
+    });
+
+    if (!slot) {
+        results.push({ seat: seatNum, success: false, reason: 'Slot not found' });
+        continue;
+    }
+
+    await Slot.findByIdAndUpdate(slot._id, { status: 'available' }, { runValidators: true });
+    await Reservation.updateMany({ slot: slot._id, status: 'active' }, { status: 'cancelled' });
+    results.push({ seat: seatNum, success: true });
+}
 
         res.json({ results });
     } catch (err) {
         console.error('postAdminSlotRemoval error:', err);
         res.status(500).json({ error: 'Removal failed.' });
-    }
-};
-
-
-exports.postDeleteProfile = async (req, res) => {
-    try {
-        const userId = req.session.userId;
-        if (!userId) return res.redirect('/auth/login');
-
-        const activeReservations = await Reservation.find({ user: userId, status: 'active' });
-        
-        for (const reservation of activeReservations) {
-            await Slot.findByIdAndUpdate(reservation.slot, { status: 'available' });
-        }
-        
-        await Reservation.deleteMany({ user: userId });
-        await User.findByIdAndDelete(userId);
-
-        req.session.destroy((err) => {
-            if (err) console.error('Session destruction error:', err);
-            res.redirect('/');
-        });
-
-    } catch (err) {
-        console.error('postDeleteProfile error:', err);
-        res.status(500).send('An error occurred while deleting the profile.');
     }
 };
 
@@ -359,6 +379,10 @@ exports.getAdminEditReservation = async (req, res) => {
 };
 
 exports.postAdminEditReservation = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
     try {
         const reservation = await Reservation.findById(req.params.id)
             .populate({ path: 'slot', populate: { path: 'lab' } })
@@ -411,14 +435,33 @@ exports.postAdminEditReservation = async (req, res) => {
         }
 
         if (!newSlot) {
-            newSlot = await Slot.create({
-                lab:       lab._id,
-                date:      slotDate,
-                startTime: timeIn,
-                endTime:   timeOut,
-                seatNum:   Number(seatNum),
-                status:    'reserved'
-            });
+            try {
+                newSlot = await Slot.create({
+                    lab:       lab._id,
+                    date:      slotDate,
+                    startTime: timeIn,
+                    endTime:   timeOut,
+                    seatNum:   Number(seatNum),
+                    status:    'reserved'
+                });
+            } catch (createErr) {
+                if (createErr.code === 11000) {
+                    const localDate = new Date(currentSlot.date);
+                    const adjusted  = new Date(localDate.getTime() - localDate.getTimezoneOffset() * 60000);
+                    const dateValue = adjusted.toISOString().split('T')[0];
+                    const labs      = await Lab.find().sort({ labName: 1 }).lean();
+                    const adminUser = await User.findById(req.session.userId).lean();
+                    return res.status(409).render('admin/admin_edit_reservation', {
+                        layout: 'admin',
+                        reservation: reservation.toObject(),
+                        dateValue,
+                        labs,
+                        username: adminUser?.username,
+                        error: 'That seat was just reserved by someone else. Please choose another.'
+                    });
+                }
+                throw createErr;
+            }
         } else if (!isSameSlot) {
             await Slot.findByIdAndUpdate(newSlot._id, { status: 'reserved', endTime: timeOut });
         } else {
@@ -441,6 +484,7 @@ exports.postAdminEditReservation = async (req, res) => {
         res.status(500).render('error', { message: 'Could not update reservation.' });
     }
 };
+
 exports.getAdminSearchUser = (req, res) => {
     res.render('admin/admin_search_user', { layout: 'admin' });
 };
