@@ -177,7 +177,6 @@ exports.getAdminSlotSeats = async (req, res) => {
         const [year, month, day] = date.split('-').map(Number);
         const searchDate = new Date(Date.UTC(year, month - 1, day));
         const nextDay = new Date(Date.UTC(year, month - 1, day + 1));
-        postAdminSlotReservation
         const allSlots = await Slot.find({
             lab: lab._id,
             date: { $gte: searchDate, $lt: nextDay },
@@ -547,3 +546,4 @@ exports.postAdminDeleteUser = async (req, res) => {
         res.status(500).json({ error: 'Delete failed.' });
     }
 };
+
