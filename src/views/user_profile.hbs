@@ -49,7 +49,7 @@
     <a href="/reservation/edit">Edit Reservation</a>
     <a href="/reservation/delete">Delete Reservation</a>
     <div class="profile-actions" style="margin-top: 20px;">
-        <button id="logout_btn" type="button">Logout</button>
+        <a href = "/auth/logout" id="logout_btn">Logout</a>
         
         <form action="/auth/delete-profile" method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete your account? This will cancel all your pending reservations and cannot be undone.');">
             <button type="submit" id="delete_profile_btn">Delete Profile</button>

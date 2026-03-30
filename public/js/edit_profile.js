@@ -45,7 +45,6 @@ form.addEventListener("submit", async (event) => {
 
         alert("The changes made have been saved.");
     } catch (error) {
-        console.error("Profile update error:", error);
         alert("Something went wrong while updating your profile.");
     }
 });

@@ -18,6 +18,12 @@ const editRules = [
     body('timeIn').notEmpty().withMessage('Please select a time.'),
 ];
 
+const profileRules = [
+    body('username').notEmpty().trim().escape().withMessage('Username is required.'),
+    body('bio').optional({ checkFalsy: true }).trim().escape(),
+    body('password').optional({ checkFalsy: true }).isLength({ min: 8 }).withMessage('Password must be at least 8 characters.')
+];
+
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, 'public/uploads');
@@ -35,7 +41,7 @@ router.get('/', ctrl.getReservationOverview);
 router.get('/reservation_history', requireStudent, ctrl.getStudentReservation);
 router.post('/student', requireStudent, ctrl.postStudentReservation);
 
-router.post('/user_profile', requireStudent, upload.single('profilePicture'), ctrl.postEditProfile);
+router.post('/user_profile', requireStudent, upload.single('profilePicture'), profileRules, ctrl.postEditProfile);
 
 router.get('/search', ctrl.getSearchPage);
 router.get('/search-availability', ctrl.searchAvailability);

@@ -37,14 +37,12 @@ exports.postLogin = async (req, res) => {
 
         req.session.save((err) => {
             if (err) {
-                console.error('session save error:', err);
                 return res.status(500).render('login', { error: 'Could not save session. Please try again.' });
             }
 
             return res.redirect(user.role === 'admin' ? '/admin' : '/reservation');
         });
     } catch (err) {
-        console.error('postLogin error:', err);
         return res.status(500).render('login', { error: 'Something went wrong. Please try again.' });
     }
 };
@@ -66,7 +64,6 @@ exports.postSignup = async (req, res) => {
         await User.create({ idNum, username, firstName, lastName, email, password: hashedPassword });
         res.redirect('/auth/login');
     } catch (err) {
-        console.error('postSignup error:', err);
         res.status(500).render('signup', { error: 'Could not create account. Please try again.' });
     }
 };
@@ -78,7 +75,6 @@ exports.getProfile = async (req, res) => {
         if (!user) return res.redirect('/auth/login');
         res.render('user_profile', { user });
     } catch (err) {
-        console.error('getProfile error:', err);
         res.status(500).render('user_profile', { error: 'Could not load profile.' });
     }
 };
@@ -90,12 +86,11 @@ exports.postProfile = async (req, res) => {
         await User.findByIdAndUpdate(req.session.userId, { description });
         res.redirect('/auth/profile');
     } catch (err) {
-        console.error('postProfile error:', err);
         res.status(500).render('user_profile', { error: 'Could not update profile.' });
     }
 };
 
-exports.getLogout = (req, res) => {
+exports.postLogout = (req, res) => {
     req.session.destroy(() => res.redirect('/'));
 };
 
@@ -106,8 +101,8 @@ exports.postDeleteProfile = async (req, res) => {
 
         const activeReservations = await Reservation.find({ user: userId, status: 'active' });
         
-        for (const res of activeReservations) {
-            await Slot.findByIdAndUpdate(res.slot, { status: 'available' });
+        for (const resv of activeReservations) {
+            await Slot.findByIdAndUpdate(resv.slot, { status: 'available' });
         }
         
         await Reservation.deleteMany({ user: userId });
@@ -115,12 +110,10 @@ exports.postDeleteProfile = async (req, res) => {
         await User.findByIdAndDelete(userId);
 
         req.session.destroy((err) => {
-            if (err) console.error('Session destruction error:', err);
             res.redirect('/');
         });
 
     } catch (err) {
-        console.error('postDeleteProfile error:', err);
         res.status(500).send('An error occurred while deleting the profile.');
     }
 };
@@ -149,7 +142,6 @@ exports.getSearchUser = async (req, res) => {
         res.render('public_profile', { targetUser });
 
     } catch (err) {
-        console.error('getSearchUser error:', err);
         res.status(500).send('An error occurred while searching for the user.');
     }
 };

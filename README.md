@@ -45,7 +45,7 @@ https://ccapdev-s14a-g01.onrender.com
 | `connect-mongo` | latest | Persistent MongoDB-backed session store |
 | `bcrypt` | latest | Password hashing |
 | `express-validator` | latest | Back-end form validation |
-| `dotenv` | ^16.4.1 | Environment variable management |
+| `dotenv` (devDependency) | ^16.4.1 | Environment variable management |
 | `nodemon` | ^3.1.0 | Auto-restart during development |
 
 ## File Structure
