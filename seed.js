@@ -9,9 +9,8 @@ const Slot = require('./src/models/Slot');
 const Reservation = require('./src/models/Reservation');
 
 const d = (offsetDays = 0) => {
-    const date = new Date();
-    date.setHours(0, 0, 0, 0);
-    date.setDate(date.getDate() + offsetDays);
+    const now = new Date();
+    const date = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + offsetDays));
     return date;
 };
 
