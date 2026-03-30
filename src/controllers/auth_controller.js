@@ -90,7 +90,7 @@ exports.postProfile = async (req, res) => {
     }
 };
 
-exports.getLogout = (req, res) => {
+exports.postLogout = (req, res) => {
     req.session.destroy(() => res.redirect('/'));
 };
 
@@ -101,8 +101,8 @@ exports.postDeleteProfile = async (req, res) => {
 
         const activeReservations = await Reservation.find({ user: userId, status: 'active' });
         
-        for (const res of activeReservations) {
-            await Slot.findByIdAndUpdate(res.slot, { status: 'available' });
+        for (const resv of activeReservations) {
+            await Slot.findByIdAndUpdate(resv.slot, { status: 'available' });
         }
         
         await Reservation.deleteMany({ user: userId });

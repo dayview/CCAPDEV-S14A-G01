@@ -36,13 +36,11 @@ router.get('/signup', ctrl.getSignup);
 router.post('/signup', signupRules, ctrl.postSignup);
 
 router.get('/profile', ctrl.getProfile);
-router.post('/profile', upload.single('profilePicture'), ctrl.postProfile);
 
 router.get('/search', ctrl.getSearchUser);
 
-
 router.post('/delete-profile', ctrl.postDeleteProfile);
 
-router.get('/logout', ctrl.getLogout);
+router.post('/logout', ctrl.postLogout);
 
 module.exports = router;

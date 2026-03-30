@@ -8,10 +8,13 @@
         {{#if user}}
             <a style="pointer-events: none; color: gray; cursor: default;" title="You are already logged in">Sign In</a>
             <a style="pointer-events: none; color: gray; cursor: default;" title="You are already logged in">Sign Up</a>
+            <a href="/auth/profile">My Profile</a>
+            <form method="POST" action="/auth/logout" style="display:contents;">
+                <button type="submit" class="nav-logout-btn">Logout</button>
+            </form>
         {{else}}
             <a href="/auth/login">Sign In</a>
             <a href="/auth/signup">Sign Up</a>
         {{/if}}
-        <a href="/auth/profile">My Profile</a>
     </div>
 </nav>
